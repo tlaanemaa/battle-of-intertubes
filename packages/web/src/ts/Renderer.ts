@@ -40,8 +40,8 @@ export class Renderer {
   public draw() {
     const entities = this.stateStore.getStateForRendering();
     const ctx = this.canvas.getContext();
-    const canvasWidth = this.canvas.width;
-    const canvasHeight = this.canvas.height;
+    const canvasWidthOffset = this.canvas.width / 2;
+    const canvasHeightOffset = this.canvas.height / 2;
 
     this.canvas.clear();
     entities.forEach((entity) => {
@@ -50,11 +50,11 @@ export class Renderer {
       const renderX =
         (entity.x - this.cameraX) * this.zoomModifier -
         scaledWidth / 2 +
-        canvasWidth / 2;
+        canvasWidthOffset;
       const renderY =
         (entity.y - this.cameraY) * this.zoomModifier -
         scaledHeight / 2 +
-        canvasHeight / 2;
+        canvasHeightOffset;
 
       ctx.drawImage(
         entity.texture,
