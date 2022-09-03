@@ -1,27 +1,24 @@
-import { Entity } from "./Entity";
+import { Object2D } from "./interfaces";
 
-export class PhysicalObject implements Entity {
-  public readonly texture: CanvasImageSource;
-  public readonly height = 20;
-  public readonly width = 40;
+export class PhysicalObject {
+  public height: number = 50;
+  public width: number = 50;
 
   private lastCalculationTime = Date.now();
-  private mass = 1000;
-  private dragCoefficient = 0.95; // in a second
-  private speedX = 0; // meter per sec
-  private speedY = 0; // meter per sec
   private _x = 0;
   private _y = 0;
-
-  constructor() {
-    this.texture = new Image();
-    this.texture.src =
-      "https://images.vexels.com/media/users/3/227446/isolated/lists/7867873566b6dda4db49b5d752009b07-cute-moose-flat.png";
-  }
+  private _dragCoefficient = 0.95; // in a second (FIXME: This makes no sense, fix this)
+  private _velocity: Object2D = { x: 0, y: 0 };
+  private _mass = 1000;
 
   public get x() {
     this.recalculatePosition();
     return this._x;
+  }
+
+  public set x(x: number) {
+    this.recalculatePosition();
+    this._x = x;
   }
 
   public get y() {
@@ -29,23 +26,62 @@ export class PhysicalObject implements Entity {
     return this._y;
   }
 
-  public applyForce(forceX: number, forceY: number) {
+  public set y(y: number) {
     this.recalculatePosition();
-    this.speedX += forceX / this.mass;
-    this.speedY += forceY / this.mass;
+    this._y = y;
   }
 
-  private recalculatePosition() {
-    const timeDiffSeconds = (Date.now() - this.lastCalculationTime) / 1000;
-    this.lastCalculationTime = Date.now();
+  public get dragCoefficient() {
+    return this._dragCoefficient;
+  }
 
-    this.speedX *= this.dragCoefficient ** timeDiffSeconds;
-    this.speedY *= this.dragCoefficient ** timeDiffSeconds;
+  public set dragCoefficient(value: number) {
+    this.recalculatePosition();
+    this._dragCoefficient = value;
+  }
 
-    // We need to calculate the definite integral in the range of 0 - seconds passed
-    // for this function "y = 0.95^x * 50" where 95 is the coef and 50 is starting speed
-    // to get the cumulative distance moved in the time period.
-    // Use this to fool around with the numbers: https://www.desmos.com/calculator
+  public get velocity() {
+    this.recalculatePosition();
+    return this._velocity;
+  }
+
+  public set velocity(velocity: Object2D) {
+    this.recalculatePosition();
+    this._velocity = { ...velocity };
+  }
+
+  public get mass() {
+    return this._mass;
+  }
+
+  public set mass(mass: number) {
+    this._mass = mass;
+  }
+
+  public applyForce(force: Object2D) {
+    this.recalculatePosition();
+    this._velocity.x += force.x / this.mass;
+    this._velocity.y += force.y / this.mass;
+  }
+
+  /**
+   * Recalculates the position and velocity of the object
+   */
+  public recalculatePosition() {
+    const now = Date.now();
+    const secondsElapsed = (now - this.lastCalculationTime) / 1000;
+    this.lastCalculationTime = now;
+
+    this._x += this.calculateDistanceTraveled(this._velocity.x, secondsElapsed);
+    this._y += this.calculateDistanceTraveled(this._velocity.y, secondsElapsed);
+    this._velocity.x = this.calculateCurrentVelocity(
+      this._velocity.x,
+      secondsElapsed
+    );
+    this._velocity.y = this.calculateCurrentVelocity(
+      this._velocity.y,
+      secondsElapsed
+    );
   }
 
   /**
@@ -64,14 +100,14 @@ export class PhysicalObject implements Entity {
    *
    * This assumes that the drag coefficient is applied to the velocity by multiplication every second.
    */
-  public getDistanceTraveled(
+  private calculateDistanceTraveled(
     initialVelocity: number,
-    secondsPassed: number,
+    secondsElapsed: number,
     dragCoefficient = this.dragCoefficient
   ) {
     const integralAtStart = (1 / Math.log(dragCoefficient)) * initialVelocity;
     const integralAtEnd =
-      (Math.pow(dragCoefficient, secondsPassed) / Math.log(dragCoefficient)) *
+      (Math.pow(dragCoefficient, secondsElapsed) / Math.log(dragCoefficient)) *
       initialVelocity;
 
     return integralAtEnd - integralAtStart;
@@ -92,11 +128,11 @@ export class PhysicalObject implements Entity {
    *
    * This assumes that the drag coefficient is applied to the velocity by multiplication every second.
    */
-  public getCurrentVelocity(
+  private calculateCurrentVelocity(
     initialVelocity: number,
-    secondsPassed: number,
+    secondsElapsed: number,
     dragCoefficient = this.dragCoefficient
   ) {
-    return initialVelocity * Math.pow(dragCoefficient, secondsPassed);
+    return initialVelocity * Math.pow(dragCoefficient, secondsElapsed);
   }
 }
