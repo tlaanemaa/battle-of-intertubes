@@ -71,4 +71,46 @@ describe("PhysicalObject", () => {
       ).toBe(561.6387057634);
     });
   });
+
+  describe("getHeading", () => {
+    it("calculates the heading correctly for positive x and negative y", () => {
+      const physicalObject = new PhysicalObject();
+
+      physicalObject.velocity = { x: 10, y: -10 };
+      expect(physicalObject.getHeading()).toBe(45);
+
+      physicalObject.velocity = { x: 15, y: -10 };
+      expect(physicalObject.getHeading()).toBe(56.309932474020215);
+    });
+
+    it("calculates the heading correctly for positive x and y", () => {
+      const physicalObject = new PhysicalObject();
+
+      physicalObject.velocity = { x: 10, y: 10 };
+      expect(physicalObject.getHeading()).toBe(135);
+
+      physicalObject.velocity = { x: 15, y: 10 };
+      expect(physicalObject.getHeading()).toBe(123.69006752597979);
+    });
+
+    it("calculates the heading correctly for negative x and positive y", () => {
+      const physicalObject = new PhysicalObject();
+
+      physicalObject.velocity = { x: -10, y: 10 };
+      expect(physicalObject.getHeading()).toBe(225);
+
+      physicalObject.velocity = { x: -15, y: 10 };
+      expect(physicalObject.getHeading()).toBe(236.30993247402023);
+    });
+
+    it("calculates the heading correctly for negative x and y", () => {
+      const physicalObject = new PhysicalObject();
+
+      physicalObject.velocity = { x: -10, y: -10 };
+      expect(physicalObject.getHeading()).toBe(315);
+
+      physicalObject.velocity = { x: -15, y: -10 };
+      expect(physicalObject.getHeading()).toBe(303.69006752597977);
+    });
+  });
 });

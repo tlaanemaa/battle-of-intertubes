@@ -11,12 +11,8 @@ export class PhysicalObject {
   private _velocity: Object2D = { x: 0, y: 0 };
   private _mass = 1000;
 
-  private get positionIsStale() {
-    return Date.now() - this.lastCalculationTime > 10;
-  }
-
   public get x() {
-    if (this.positionIsStale) this.recalculatePosition();
+    this.recalculatePosition();
     return this._x;
   }
 
@@ -26,7 +22,7 @@ export class PhysicalObject {
   }
 
   public get y() {
-    if (this.positionIsStale) this.recalculatePosition();
+    this.recalculatePosition();
     return this._y;
   }
 
@@ -45,7 +41,7 @@ export class PhysicalObject {
   }
 
   public get velocity() {
-    if (this.positionIsStale) this.recalculatePosition();
+    this.recalculatePosition();
     return this._velocity;
   }
 
@@ -62,6 +58,19 @@ export class PhysicalObject {
     this._mass = mass;
   }
 
+  /**
+   * Calculates the current heading in degrees.
+   * 0 is up (x: 0, y: -1)
+   */
+  public getHeading() {
+    const addition = this.velocity.x < 0 ? 180 : 0;
+    return (
+      90 -
+      Math.atan(-this.velocity.y / this.velocity.x) * (180 / Math.PI) +
+      addition
+    );
+  }
+
   public applyForce(force: Object2D) {
     this.recalculatePosition();
     this._velocity.x += force.x / this.mass;
@@ -71,8 +80,9 @@ export class PhysicalObject {
   /**
    * Recalculates the position and velocity of the object
    */
-  public recalculatePosition() {
+  public recalculatePosition(force = false) {
     const now = Date.now();
+    if (!force && now - this.lastCalculationTime < 10) return;
     const secondsElapsed = (now - this.lastCalculationTime) / 1000;
     this.lastCalculationTime = now;
 
