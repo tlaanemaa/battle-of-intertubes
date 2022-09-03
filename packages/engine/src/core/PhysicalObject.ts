@@ -17,7 +17,7 @@ export class PhysicalObject {
   }
 
   public set x(x: number) {
-    this.recalculatePosition();
+    this.recalculatePosition(true);
     this._x = x;
   }
 
@@ -27,7 +27,7 @@ export class PhysicalObject {
   }
 
   public set y(y: number) {
-    this.recalculatePosition();
+    this.recalculatePosition(true);
     this._y = y;
   }
 
@@ -36,7 +36,7 @@ export class PhysicalObject {
   }
 
   public set dragCoefficient(value: number) {
-    this.recalculatePosition();
+    this.recalculatePosition(true);
     this._dragCoefficient = value;
   }
 
@@ -46,7 +46,7 @@ export class PhysicalObject {
   }
 
   public set velocity(velocity: Object2D) {
-    this.recalculatePosition();
+    this.recalculatePosition(true);
     this._velocity = { ...velocity };
   }
 
@@ -72,7 +72,7 @@ export class PhysicalObject {
   }
 
   public applyForce(force: Object2D) {
-    this.recalculatePosition();
+    this.recalculatePosition(true);
     this._velocity.x += force.x / this.mass;
     this._velocity.y += force.y / this.mass;
   }
