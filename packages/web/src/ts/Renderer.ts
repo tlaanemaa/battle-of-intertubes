@@ -23,6 +23,10 @@ export class Renderer {
     private readonly background: Background,
     private readonly stateStore: StateStore
   ) {
+    this.background.setPosition(
+      { x: -this.cameraX, y: -this.cameraY },
+      this.zoomModifier
+    );
     window.addEventListener("wheel", this.handleScrollEvent.bind(this));
     window.addEventListener("keydown", this.handleKeyDownEvent.bind(this));
   }
