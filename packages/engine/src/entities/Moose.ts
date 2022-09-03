@@ -8,7 +8,7 @@ export class Moose extends PhysicalRenderObject {
 
   private images = [
     //"https://img2.storyblok.com/fit-in/600x600/f/158607/800x955/dc35065d72/community-goat.png",
-    //"https://images.vexels.com/media/users/3/227446/isolated/lists/7867873566b6dda4db49b5d752009b07-cute-moose-flat.png",
+    "https://images.vexels.com/media/users/3/227446/isolated/lists/7867873566b6dda4db49b5d752009b07-cute-moose-flat.png",
     //"https://www.freeiconspng.com/thumbs/cat-png/cat-png-17.png",
     //"https://www.transparentpng.com/thumb/monkey/2gET42-primate-png-free-primate-png-transparent-images.png",
     "https://www.freeiconspng.com/thumbs/rocket-png/red-rocket-png-5.png",

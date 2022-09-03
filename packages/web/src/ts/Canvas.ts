@@ -17,9 +17,7 @@ export class Canvas {
   }
 
   public getContext() {
-    const context2d = this.canvasElement.getContext("2d");
-    if (!context2d) throw new Error("Cannot resolve canvas context!");
-    return context2d;
+    return this.canvasElement.getContext("2d")!;
   }
 
   public get height() {
