@@ -11,8 +11,12 @@ export class PhysicalObject {
   private _velocity: Object2D = { x: 0, y: 0 };
   private _mass = 1000;
 
+  private get positionIsStale() {
+    return Date.now() - this.lastCalculationTime > 10;
+  }
+
   public get x() {
-    this.recalculatePosition();
+    if (this.positionIsStale) this.recalculatePosition();
     return this._x;
   }
 
@@ -22,7 +26,7 @@ export class PhysicalObject {
   }
 
   public get y() {
-    this.recalculatePosition();
+    if (this.positionIsStale) this.recalculatePosition();
     return this._y;
   }
 
@@ -41,7 +45,7 @@ export class PhysicalObject {
   }
 
   public get velocity() {
-    this.recalculatePosition();
+    if (this.positionIsStale) this.recalculatePosition();
     return this._velocity;
   }
 
