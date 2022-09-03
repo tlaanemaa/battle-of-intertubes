@@ -1,5 +1,5 @@
 import { injectable } from "tsyringe";
-import { StateStore } from "@battle-of-intertubes/engine";
+import { StateStore, RenderObject } from "@battle-of-intertubes/engine";
 import { Canvas } from "./Canvas";
 
 @injectable()
@@ -38,7 +38,7 @@ export class Renderer {
   }
 
   public draw() {
-    const entities = this.stateStore.getStateForRendering();
+    const entities: RenderObject[] = this.stateStore.getStateForRendering();
     const ctx = this.canvas.getContext();
     const canvasWidthOffset = this.canvas.width / 2;
     const canvasHeightOffset = this.canvas.height / 2;
