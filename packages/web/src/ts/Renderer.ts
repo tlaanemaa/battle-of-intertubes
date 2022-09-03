@@ -1,5 +1,5 @@
 import { injectable } from "tsyringe";
-import { StateStore, RenderObject } from "@battle-of-intertubes/engine";
+import { StateStore, Drawable } from "@battle-of-intertubes/engine";
 import { Canvas } from "./Canvas";
 
 @injectable()
@@ -38,7 +38,7 @@ export class Renderer {
   }
 
   public draw() {
-    const entities: RenderObject[] = this.stateStore.getStateForRendering();
+    const entities: Drawable[] = this.stateStore.getStateForRendering();
     const ctx = this.canvas.getContext();
     const canvasWidthOffset = this.canvas.width / 2;
     const canvasHeightOffset = this.canvas.height / 2;
@@ -48,21 +48,22 @@ export class Renderer {
       const scaledWidth = entity.width * this.zoomModifier;
       const scaledHeight = entity.height * this.zoomModifier;
       const renderX =
-        (entity.x - this.cameraX) * this.zoomModifier -
-        scaledWidth / 2 +
-        canvasWidthOffset;
+        (entity.x - this.cameraX) * this.zoomModifier + canvasWidthOffset;
       const renderY =
-        (entity.y - this.cameraY) * this.zoomModifier -
-        scaledHeight / 2 +
-        canvasHeightOffset;
+        (entity.y - this.cameraY) * this.zoomModifier + canvasHeightOffset;
 
+      ctx.translate(renderX, renderY);
+      ctx.rotate((entity.rotation * Math.PI) / 180);
       ctx.drawImage(
         entity.texture,
-        renderX,
-        renderY,
+        -scaledWidth / 2,
+        -scaledHeight / 2,
         scaledWidth,
         scaledHeight
       );
+
+      // Reset current transformation matrix to the identity matrix
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
     });
   }
 }
