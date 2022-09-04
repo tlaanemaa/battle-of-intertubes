@@ -48,6 +48,7 @@ export class Background {
   public draw() {
     if (!this.needsRedraw) return;
     this.drawBackground();
+    this.needsRedraw = false;
   }
 
   /**
