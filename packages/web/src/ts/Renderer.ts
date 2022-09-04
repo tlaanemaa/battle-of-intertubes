@@ -72,14 +72,14 @@ export class Renderer {
       const renderY =
         (entity.y - this.cameraY) * this.zoomModifier + canvasHeightOffset;
 
-      ctx.translate(renderX, renderY);
-      ctx.rotate((entity.rotation * Math.PI) / 180);
+      ctx.translate(Math.round(renderX), Math.round(renderY));
+      ctx.rotate(Math.round((entity.rotation * Math.PI) / 180));
       ctx.drawImage(
         entity.texture,
-        -scaledWidth / 2,
-        -scaledHeight / 2,
-        scaledWidth,
-        scaledHeight
+        Math.round(-scaledWidth / 2),
+        Math.round(-scaledHeight / 2),
+        Math.round(scaledWidth),
+        Math.round(scaledHeight)
       );
 
       // Reset current transformation matrix to the identity matrix
