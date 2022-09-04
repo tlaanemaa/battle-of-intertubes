@@ -1,6 +1,6 @@
 {
   "name": "battle-of-intertubes",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "",
   "scripts": {
     "build-engine": "npm run build -w packages/engine",
