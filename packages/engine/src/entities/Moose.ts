@@ -12,6 +12,7 @@ export class Moose extends PhysicalRenderObject {
     "img/cat.png",
     "img/monkey.png",
     "img/red-rocket.png",
+    "img/herobrine.png",
   ];
 
   constructor() {
