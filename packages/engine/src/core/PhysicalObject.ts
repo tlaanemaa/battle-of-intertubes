@@ -119,6 +119,7 @@ export class PhysicalObject {
     secondsElapsed: number,
     dragCoefficient = this.dragCoefficient
   ) {
+    // A good calculator to visualize this stuff: https://www.desmos.com/calculator
     const integralAtStart = (1 / Math.log(dragCoefficient)) * initialVelocity;
     const integralAtEnd =
       (Math.pow(dragCoefficient, secondsElapsed) / Math.log(dragCoefficient)) *
