@@ -14,7 +14,8 @@ export class Background {
   private needsRedraw = false;
 
   constructor() {
-    this.image.onload = () => (this.needsRedraw = true);
+    window.addEventListener("resize", () => this.markForRedraw());
+    this.image.onload = () => this.markForRedraw();
     this.image.src = this.imageUrl;
   }
 
@@ -24,7 +25,7 @@ export class Background {
 
   public set cameraX(cameraX: number) {
     this._cameraX = cameraX;
-    this.needsRedraw = true;
+    this.markForRedraw();
   }
 
   public get cameraY() {
@@ -33,7 +34,7 @@ export class Background {
 
   public set cameraY(cameraY: number) {
     this._cameraY = cameraY;
-    this.needsRedraw = true;
+    this.markForRedraw();
   }
 
   public get zoomModifier() {
@@ -42,6 +43,10 @@ export class Background {
 
   public set zoomModifier(zoomModifier: number) {
     this._zoomModifier = zoomModifier;
+    this.markForRedraw();
+  }
+
+  private markForRedraw() {
     this.needsRedraw = true;
   }
 
