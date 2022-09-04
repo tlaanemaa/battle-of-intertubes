@@ -2,6 +2,8 @@
   margin: 0;
   padding: 0;
   border: none;
+  background-repeat: repeat;
+  background-image: url("../img/bananas.webp");
 }
 
 #game-background {
