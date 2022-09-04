@@ -8,12 +8,7 @@
   position: fixed;
   top: 0;
   left: 0;
-  right: 0;
-  bottom: 0;
   z-index: -2;
-  background-image: url("../img/repeated-square-dark.webp");
-  background-repeat: repeat;
-  transform: translate(0, 0) scale(1);
 }
 
 #game-view {
