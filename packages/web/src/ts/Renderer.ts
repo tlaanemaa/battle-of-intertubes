@@ -5,6 +5,7 @@ import { Background } from "./Background";
 
 @injectable()
 export class Renderer {
+  private readonly canvas = new Canvas("game-view");
   /**
    * Current zoom modifier. Larger number means more zoomed in.
    */
@@ -19,41 +20,38 @@ export class Renderer {
   private cameraY = 0;
 
   constructor(
-    private readonly canvas: Canvas,
     private readonly background: Background,
     private readonly stateStore: StateStore
   ) {
-    this.background.setPosition(
-      { x: -this.cameraX, y: -this.cameraY },
-      this.zoomModifier
-    );
+    this.background.cameraX = this.cameraX;
+    this.background.cameraY = this.cameraY;
+    this.background.zoomModifier = this.zoomModifier;
+
     window.addEventListener("wheel", this.handleScrollEvent.bind(this));
     window.addEventListener("keydown", this.handleKeyDownEvent.bind(this));
   }
 
   private handleScrollEvent(event: WheelEvent) {
-    if (event.deltaY > 0) this.zoomModifier *= 0.9;
-    if (event.deltaY < 0) this.zoomModifier *= 1.1;
+    const step = 0.1;
+    if (event.deltaY > 0) this.zoomModifier *= 1 - step;
+    if (event.deltaY < 0) this.zoomModifier *= 1 + step;
 
-    this.background.setPosition(
-      { x: -this.cameraX, y: -this.cameraY },
-      this.zoomModifier
-    );
+    this.background.zoomModifier = this.zoomModifier;
   }
 
   private handleKeyDownEvent(event: KeyboardEvent) {
-    if (event.key === "ArrowUp") this.cameraY -= 10;
-    if (event.key === "ArrowRight") this.cameraX += 10;
-    if (event.key === "ArrowDown") this.cameraY += 10;
-    if (event.key === "ArrowLeft") this.cameraX -= 10;
+    const step = 10;
+    if (event.key === "ArrowUp") this.cameraY -= step;
+    if (event.key === "ArrowRight") this.cameraX += step;
+    if (event.key === "ArrowDown") this.cameraY += step;
+    if (event.key === "ArrowLeft") this.cameraX -= step;
 
-    this.background.setPosition(
-      { x: -this.cameraX, y: -this.cameraY },
-      this.zoomModifier
-    );
+    this.background.cameraX = this.cameraX;
+    this.background.cameraY = this.cameraY;
   }
 
   public draw() {
+    this.background.draw();
     this.canvas.clear();
     this.drawEntities();
   }

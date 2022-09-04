@@ -1,48 +1,70 @@
 import { singleton } from "tsyringe";
-import { Object2D } from "@battle-of-intertubes/engine";
+import { Canvas } from "./Canvas";
 
-// TODO: Fix this class its too hacky
 @singleton()
 export class Background {
-  private backgroundImage = new Image();
-  private readonly imageSize = 400;
-  private readonly canvasElement = document.getElementById(
-    "game-background"
-  ) as HTMLCanvasElement;
+  private readonly imageUrl = "img/bananas.webp";
+  private readonly imageSize = 400; // The image is assumed to be a square
+  private readonly canvas = new Canvas("game-background");
+  private readonly image = new Image();
+
+  private _cameraX = 0;
+  private _cameraY = 0;
+  private _zoomModifier = 1;
+  private needsRedraw = false;
 
   constructor() {
-    this.backgroundImage.onload = () => this.setPosition({ x: 0, y: 0 }, 1);
-    this.backgroundImage.src =
-      "https://upload.wikimedia.org/wikipedia/en/2/27/Bliss_%28Windows_XP%29.png";
-    window.addEventListener("resize", this.resizeCanvas.bind(this));
-    this.resizeCanvas();
+    this.image.onload = () => (this.needsRedraw = true);
+    this.image.src = this.imageUrl;
   }
 
-  private resizeCanvas() {
-    this.canvasElement.height = window.innerHeight;
-    this.canvasElement.width = window.innerWidth;
-    this.setPosition({ x: 0, y: 0 }, 1);
+  public get cameraX() {
+    return this._cameraX;
   }
 
-  public setPosition(position: Object2D, zoomModifier: number) {
-    this.drawBackground(position, zoomModifier);
+  public set cameraX(cameraX: number) {
+    this._cameraX = cameraX;
+    this.needsRedraw = true;
+  }
+
+  public get cameraY() {
+    return this._cameraY;
+  }
+
+  public set cameraY(cameraY: number) {
+    this._cameraY = cameraY;
+    this.needsRedraw = true;
+  }
+
+  public get zoomModifier() {
+    return this._zoomModifier;
+  }
+
+  public set zoomModifier(zoomModifier: number) {
+    this._zoomModifier = zoomModifier;
+    this.needsRedraw = true;
+  }
+
+  public draw() {
+    if (!this.needsRedraw) return;
+    this.drawBackground();
   }
 
   /**
    * Draws the background to the canvas
    */
-  public drawBackground(position: Object2D, zoomModifier: number) {
-    const scaledImageSize = this.imageSize * zoomModifier;
+  private drawBackground() {
+    const scaledImageSize = this.imageSize * this._zoomModifier;
 
-    const renderX = (position.x % scaledImageSize) - scaledImageSize;
-    const renderY = (position.y % scaledImageSize) - scaledImageSize;
-    const renderWidth = this.canvasElement.width - renderX;
-    const renderHeight = this.canvasElement.height - renderY;
+    const renderX = (-this._cameraX % scaledImageSize) - scaledImageSize;
+    const renderY = (-this._cameraY % scaledImageSize) - scaledImageSize;
+    const renderWidth = this.canvas.width - renderX;
+    const renderHeight = this.canvas.height - renderY;
 
-    const ctx = this.canvasElement.getContext("2d")!;
+    const ctx = this.canvas.getContext();
     ctx.translate(
-      Math.round(renderX + this.canvasElement.width / 2),
-      Math.round(renderY + this.canvasElement.height / 2)
+      Math.round(renderX + this.canvas.width / 2),
+      Math.round(renderY + this.canvas.height / 2)
     );
 
     ctx.fillStyle = ctx.createPattern(
@@ -51,8 +73,8 @@ export class Background {
     )!;
 
     ctx.fillRect(
-      Math.round(-this.canvasElement.width / 2),
-      Math.round(-this.canvasElement.height / 2),
+      Math.round(-this.canvas.width / 2),
+      Math.round(-this.canvas.height / 2),
       Math.round(renderWidth),
       Math.round(renderHeight)
     );
@@ -60,6 +82,9 @@ export class Background {
     ctx.setTransform(1, 0, 0, 1, 0, 0);
   }
 
+  /**
+   * Creates a scaled version of the background image as a temporary canvas
+   */
   private getBackgroundImage(backgroundSize: number) {
     const imageCanvas = document.createElement("canvas");
     imageCanvas.height = backgroundSize;
@@ -67,13 +92,7 @@ export class Background {
 
     imageCanvas
       .getContext("2d")!
-      .drawImage(
-        this.backgroundImage,
-        0,
-        0,
-        imageCanvas.width,
-        imageCanvas.height
-      );
+      .drawImage(this.image, 0, 0, imageCanvas.width, imageCanvas.height);
 
     return imageCanvas;
   }

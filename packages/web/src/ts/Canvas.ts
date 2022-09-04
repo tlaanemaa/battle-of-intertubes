@@ -1,12 +1,11 @@
-import { singleton } from "tsyringe";
-
-@singleton()
 export class Canvas {
-  private readonly canvasElement = document.getElementById(
-    "game-view"
-  ) as HTMLCanvasElement;
+  private readonly canvasElement: HTMLCanvasElement;
 
-  constructor() {
+  constructor(elementId: string) {
+    this.canvasElement = document.getElementById(
+      elementId
+    ) as HTMLCanvasElement;
+
     window.addEventListener("resize", this.resizeCanvas.bind(this));
     this.resizeCanvas();
   }
