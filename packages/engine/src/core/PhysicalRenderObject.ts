@@ -1,8 +1,8 @@
 import { Drawable } from "./interfaces";
-import { PhysicalObject } from "./PhysicalObject";
+import { PhysicalEntity } from "./PhysicalEntity";
 
 export abstract class PhysicalRenderObject
-  extends PhysicalObject
+  extends PhysicalEntity
   implements Drawable
 {
   public abstract texture: CanvasImageSource;

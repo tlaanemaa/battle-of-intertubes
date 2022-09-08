@@ -1,49 +1,92 @@
 import { singleton } from "tsyringe";
 import { Entity } from "../core/Entity";
+import { Object2D } from "../core/interfaces";
 
 @singleton()
 export class EntityStore {
+  private readonly boxSize = 10;
   private readonly grid: Map<string, Entity>[][] = [];
-  private readonly entityMaps = new Map<string, Map<string, Entity>>();
+  private readonly entityBoxCoordinates = new Map<string, Object2D>();
+  private readonly entityMap = new Map<string, Entity>();
 
   public set(object: Entity) {
-    const x = Math.round(object.x);
-    const y = Math.round(object.y);
+    const x = Math.floor(object.x / this.boxSize);
+    const y = Math.floor(object.y / this.boxSize);
+
+    // No need to do anything if the object is still in the same box
+    const currentBoxCoordinates = this.entityBoxCoordinates.get(object.id);
+    if (
+      currentBoxCoordinates != null &&
+      currentBoxCoordinates.x === x &&
+      currentBoxCoordinates.y === y
+    ) {
+      return;
+    }
+
+    // Cleanup old position
+    this.delete(object.id);
+
+    // Add containers if they don't exist
     if (this.grid[x] == null) this.grid[x] = [];
     if (this.grid[x][y] == null) this.grid[x][y] = new Map();
 
-    this.entityMaps.get(object.id)?.delete(object.id);
+    // Set new position
     this.grid[x][y].set(object.id, object);
-    this.entityMaps.set(object.id, this.grid[x][y]);
+    this.entityMap.set(object.id, object);
+    this.entityBoxCoordinates.set(object.id, { x, y });
   }
 
-  public getInPoint(x: number, y: number): Entity[] {
-    if (this.grid[x] != null && this.grid[x][y] != null) {
-      return Array.from(this.grid[x][y].values());
+  public delete(id: string) {
+    const position = this.entityBoxCoordinates.get(id);
+
+    if (
+      position != null &&
+      this.grid[position.x] != null &&
+      this.grid[position.x][position.y] != null
+    ) {
+      this.grid[position.x][position.y].delete(id);
+
+      if (this.grid[position.x][position.y].size === 0) {
+        this.grid[position.x].splice(position.y, 1);
+
+        if (this.grid[position.x].length === 0) {
+          this.grid.splice(position.x, 1);
+        }
+      }
     }
-    return [];
+
+    this.entityMap.delete(id);
+    this.entityBoxCoordinates.delete(id);
   }
 
-  public getInArea(
+  public getEntitiesInAnArea(
     x: number,
     y: number,
     width: number,
     height: number
   ): Entity[] {
+    const xStart = Math.floor(x / this.boxSize);
+    const yStart = Math.floor(y / this.boxSize);
+    const xEnd = Math.ceil((x + width) / this.boxSize);
+    const yEnd = Math.ceil((y + height) / this.boxSize);
     const entities: Entity[][] = [];
-    const xBound = x + width;
-    const yBound = y + height;
 
-    for (let i = x; i < xBound; i++) {
-      for (let j = y; j < yBound; j++) {
-        entities.push(this.getInPoint(i, j));
+    for (let i = xStart; i < xEnd; i++) {
+      if (this.grid[i] == null) continue;
+      for (let j = yStart; j < yEnd; j++) {
+        if (this.grid[i][j] == null) continue;
+        entities.push(Array.from(this.grid[i][j].values()));
       }
     }
 
     return entities.flat(1);
   }
 
+  public getEntitiesAtAPoint(x: number, y: number): Entity[] {
+    return this.getEntitiesInAnArea(x, y, 1, 1);
+  }
+
   public getById(id: string): Entity | undefined {
-    return this.entityMaps.get(id)?.get(id);
+    return this.entityMap.get(id);
   }
 }
