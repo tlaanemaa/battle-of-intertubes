@@ -4,9 +4,12 @@ import { Canvas } from "./Canvas";
 @singleton()
 export class Background {
   private readonly imageUrl = "img/bananas.webp";
-  private readonly imageSize = 400; // The image is assumed to be a square
+  private readonly imageHeight = 400;
+  private readonly imageWidth = 400;
+
   private readonly canvas = new Canvas("game-background");
-  private readonly image = new Image();
+  private readonly rawImage = new Image();
+  private image: CanvasImageSource;
 
   private _cameraX = 0;
   private _cameraY = 0;
@@ -15,8 +18,14 @@ export class Background {
 
   constructor() {
     window.addEventListener("resize", () => this.markForRedraw());
-    this.image.onload = () => this.markForRedraw();
-    this.image.src = this.imageUrl;
+    this.rawImage.onload = () => this.imageOnLoad();
+    this.rawImage.src = this.imageUrl;
+    this.image = this.createBackgroundImage();
+  }
+
+  private imageOnLoad() {
+    this.image = this.createBackgroundImage();
+    this.markForRedraw();
   }
 
   public get cameraX() {
@@ -43,6 +52,7 @@ export class Background {
 
   public set zoomModifier(zoomModifier: number) {
     this._zoomModifier = zoomModifier;
+    this.image = this.createBackgroundImage();
     this.markForRedraw();
   }
 
@@ -60,31 +70,31 @@ export class Background {
    * Draws the background to the canvas
    */
   private drawBackground() {
-    const scaledImageSize = this.imageSize * this._zoomModifier;
+    const canvasHalfWidth = this.canvas.width / 2;
+    const canvasHalfHeight = this.canvas.height / 2;
+    const scaledImageWidth = this.imageWidth * this._zoomModifier;
+    const scaledImageHeight = this.imageHeight * this._zoomModifier;
 
     const renderX =
-      ((-this._cameraX * this._zoomModifier) % scaledImageSize) -
-      scaledImageSize;
+      ((-this._cameraX * this._zoomModifier) % scaledImageWidth) -
+      scaledImageWidth;
     const renderY =
-      ((-this._cameraY * this._zoomModifier) % scaledImageSize) -
-      scaledImageSize;
+      ((-this._cameraY * this._zoomModifier) % scaledImageHeight) -
+      scaledImageHeight;
     const renderWidth = this.canvas.width - renderX;
     const renderHeight = this.canvas.height - renderY;
 
     const ctx = this.canvas.getContext();
     ctx.translate(
-      Math.round(renderX + this.canvas.width / 2),
-      Math.round(renderY + this.canvas.height / 2)
+      Math.round(renderX + canvasHalfWidth),
+      Math.round(renderY + canvasHalfHeight)
     );
 
-    ctx.fillStyle = ctx.createPattern(
-      this.getBackgroundImage(scaledImageSize),
-      "repeat"
-    )!;
+    ctx.fillStyle = ctx.createPattern(this.image, "repeat")!;
 
     ctx.fillRect(
-      Math.round(-this.canvas.width / 2),
-      Math.round(-this.canvas.height / 2),
+      Math.round(-canvasHalfWidth),
+      Math.round(-canvasHalfHeight),
       Math.round(renderWidth),
       Math.round(renderHeight)
     );
@@ -95,14 +105,14 @@ export class Background {
   /**
    * Creates a scaled version of the background image as a temporary canvas
    */
-  private getBackgroundImage(backgroundSize: number) {
+  private createBackgroundImage() {
     const imageCanvas = document.createElement("canvas");
-    imageCanvas.height = backgroundSize;
-    imageCanvas.width = backgroundSize;
+    imageCanvas.width = this.imageWidth * this._zoomModifier;
+    imageCanvas.height = this.imageHeight * this._zoomModifier;
 
     imageCanvas
       .getContext("2d")!
-      .drawImage(this.image, 0, 0, imageCanvas.width, imageCanvas.height);
+      .drawImage(this.rawImage, 0, 0, imageCanvas.width, imageCanvas.height);
 
     return imageCanvas;
   }

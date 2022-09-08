@@ -9,7 +9,7 @@ export class Renderer {
   /**
    * Current zoom modifier. Larger number means more zoomed in.
    */
-  private zoomModifier = 0.8;
+  private zoomModifier = 1;
   /**
    * Camera X center point
    */
@@ -59,16 +59,16 @@ export class Renderer {
   private drawEntities() {
     const entities: Drawable[] = this.stateStore.getStateForRendering();
     const ctx = this.canvas.getContext();
-    const canvasWidthOffset = this.canvas.width / 2;
-    const canvasHeightOffset = this.canvas.height / 2;
+    const canvasHalfWidth = this.canvas.width / 2;
+    const canvasHalfHeight = this.canvas.height / 2;
 
     entities.forEach((entity) => {
       const scaledWidth = entity.width * this.zoomModifier;
       const scaledHeight = entity.height * this.zoomModifier;
       const renderX =
-        (entity.x - this.cameraX) * this.zoomModifier + canvasWidthOffset;
+        (entity.x - this.cameraX) * this.zoomModifier + canvasHalfWidth;
       const renderY =
-        (entity.y - this.cameraY) * this.zoomModifier + canvasHeightOffset;
+        (entity.y - this.cameraY) * this.zoomModifier + canvasHalfHeight;
 
       ctx.translate(Math.round(renderX), Math.round(renderY));
       ctx.rotate((entity.rotation * Math.PI) / 180);
