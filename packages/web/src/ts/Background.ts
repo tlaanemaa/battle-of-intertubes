@@ -62,8 +62,12 @@ export class Background {
   private drawBackground() {
     const scaledImageSize = this.imageSize * this._zoomModifier;
 
-    const renderX = (-this._cameraX % scaledImageSize) - scaledImageSize;
-    const renderY = (-this._cameraY % scaledImageSize) - scaledImageSize;
+    const renderX =
+      ((-this._cameraX * this._zoomModifier) % scaledImageSize) -
+      scaledImageSize;
+    const renderY =
+      ((-this._cameraY * this._zoomModifier) % scaledImageSize) -
+      scaledImageSize;
     const renderWidth = this.canvas.width - renderX;
     const renderHeight = this.canvas.height - renderY;
 
