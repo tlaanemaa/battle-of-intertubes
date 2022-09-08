@@ -71,7 +71,7 @@ export class Renderer {
         (entity.y - this.cameraY) * this.zoomModifier + canvasHeightOffset;
 
       ctx.translate(Math.round(renderX), Math.round(renderY));
-      ctx.rotate(Math.round((entity.rotation * Math.PI) / 180));
+      ctx.rotate((entity.rotation * Math.PI) / 180);
       ctx.drawImage(
         entity.texture,
         Math.round(-scaledWidth / 2),
