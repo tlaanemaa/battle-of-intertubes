@@ -17,7 +17,7 @@ export class Moose extends PhysicalRenderObject {
 
   constructor() {
     super();
-    this.dragCoefficient = 0.95;
+    this.dragCoefficient = 0.05;
     this.mass = 100;
 
     this.texture.src =
