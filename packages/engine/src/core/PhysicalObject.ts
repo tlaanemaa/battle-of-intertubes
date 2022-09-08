@@ -7,7 +7,7 @@ export class PhysicalObject {
   private lastCalculationTime = Date.now();
   private _x = 0;
   private _y = 0;
-  private _dragCoefficient = 0.95; // in a second (FIXME: This makes no sense, fix this)
+  private _dragCoefficient = 0.05;
   private _velocity: Object2D = { x: 0, y: 0 };
   private _mass = 1000;
 
@@ -117,12 +117,13 @@ export class PhysicalObject {
   private calculateDistanceTraveled(
     initialVelocity: number,
     secondsElapsed: number,
-    dragCoefficient = this.dragCoefficient
+    dragCoefficient = this._dragCoefficient
   ) {
     // A good calculator to visualize this stuff: https://www.desmos.com/calculator
-    const integralAtStart = (1 / Math.log(dragCoefficient)) * initialVelocity;
+    const dragMultiplier = 1 - dragCoefficient;
+    const integralAtStart = (1 / Math.log(dragMultiplier)) * initialVelocity;
     const integralAtEnd =
-      (Math.pow(dragCoefficient, secondsElapsed) / Math.log(dragCoefficient)) *
+      (Math.pow(dragMultiplier, secondsElapsed) / Math.log(dragMultiplier)) *
       initialVelocity;
 
     return integralAtEnd - integralAtStart;
@@ -146,8 +147,9 @@ export class PhysicalObject {
   private calculateCurrentVelocity(
     initialVelocity: number,
     secondsElapsed: number,
-    dragCoefficient = this.dragCoefficient
+    dragCoefficient = this._dragCoefficient
   ) {
-    return initialVelocity * Math.pow(dragCoefficient, secondsElapsed);
+    const dragMultiplier = 1 - dragCoefficient;
+    return initialVelocity * Math.pow(dragMultiplier, secondsElapsed);
   }
 }

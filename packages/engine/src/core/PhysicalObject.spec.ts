@@ -12,7 +12,7 @@ describe("PhysicalObject", () => {
       const physicalObject = new PhysicalObject();
 
       expect(
-        round(physicalObject["calculateDistanceTraveled"](50, 5.4, 0.95), 9)
+        round(physicalObject["calculateDistanceTraveled"](50, 5.4, 0.05), 9)
       ).toBe(235.833179933);
 
       expect(
@@ -20,7 +20,7 @@ describe("PhysicalObject", () => {
           physicalObject["calculateDistanceTraveled"](
             75.07543,
             7.80643,
-            0.982098
+            0.017902
           ),
           9
         )
@@ -31,7 +31,7 @@ describe("PhysicalObject", () => {
           physicalObject["calculateDistanceTraveled"](
             662.0949877,
             0.069823,
-            0.0947345
+            0.9052655
           ),
           9
         )
@@ -45,7 +45,7 @@ describe("PhysicalObject", () => {
       const physicalObject = new PhysicalObject();
 
       expect(
-        round(physicalObject["calculateCurrentVelocity"](50, 5.4, 0.95), 3)
+        round(physicalObject["calculateCurrentVelocity"](50, 5.4, 0.05), 3)
       ).toBe(37.903);
 
       expect(
@@ -53,7 +53,7 @@ describe("PhysicalObject", () => {
           physicalObject["calculateCurrentVelocity"](
             75.07543,
             7.80643,
-            0.982098
+            0.017902
           ),
           10
         )
@@ -64,7 +64,7 @@ describe("PhysicalObject", () => {
           physicalObject["calculateCurrentVelocity"](
             662.0949877,
             0.069823,
-            0.0947345
+            0.9052655
           ),
           10
         )
