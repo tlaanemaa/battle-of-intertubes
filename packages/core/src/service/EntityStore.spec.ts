@@ -1,5 +1,5 @@
 import "reflect-metadata";
-import { Entity } from "../core/Entity";
+import { Entity } from "../model/Entity";
 import { EntityStore } from "./EntityStore";
 
 class MockEntity extends Entity {

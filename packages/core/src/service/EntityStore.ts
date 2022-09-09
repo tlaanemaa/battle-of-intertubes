@@ -1,6 +1,6 @@
 import { singleton } from "tsyringe";
-import { Entity } from "../core/Entity";
-import { Object2D } from "../core/interfaces";
+import { Entity } from "../model/Entity";
+import { Object2D } from "../types/interfaces";
 
 @singleton()
 export class EntityStore {

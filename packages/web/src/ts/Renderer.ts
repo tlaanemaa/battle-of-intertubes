@@ -1,5 +1,6 @@
 import { injectable } from "tsyringe";
-import { StateStore, Drawable } from "@battle-of-intertubes/engine";
+import { StateStore } from "@battle-of-intertubes/game";
+import { Drawable } from "@battle-of-intertubes/core";
 import { Canvas } from "./Canvas";
 import { Background } from "./Background";
 

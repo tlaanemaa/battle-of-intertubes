@@ -1,5 +1,5 @@
 import { Entity } from "./Entity";
-import { Object2D } from "./interfaces";
+import { Object2D } from "../types/interfaces";
 
 export class PhysicalEntity extends Entity {
   public height: number = 50;

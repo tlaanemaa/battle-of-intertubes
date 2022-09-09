@@ -8,6 +8,7 @@
     "build-web": "npm run build -w packages/web",
     "start-api": "npm run start -w packages/api",
     "build-api": "npm run build -w packages/api",
+    "build-core": "npm run build -w packages/core",
     "build-all": "npm run build -w packages"
   },
   "repository": {

@@ -1,5 +1,5 @@
 {
-  "name": "@battle-of-intertubes/engine",
+  "name": "@battle-of-intertubes/core",
   "version": "0.0.0",
   "private": true,
   "main": "dist/index.js",

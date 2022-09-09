@@ -1,6 +1,6 @@
-import { PhysicalRenderObject } from "../core/PhysicalRenderObject";
+import { Drawable, PhysicalEntity } from "@battle-of-intertubes/core";
 
-export class Moose extends PhysicalRenderObject {
+export class Moose extends PhysicalEntity implements Drawable {
   public readonly texture = new Image();
   public readonly height = 100;
   public readonly width = 100;
