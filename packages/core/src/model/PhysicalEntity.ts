@@ -1,7 +1,7 @@
 import { Entity } from "./Entity";
 import { Object2D } from "../types/interfaces";
 
-export class PhysicalEntity extends Entity {
+export abstract class PhysicalEntity extends Entity {
   public height: number = 50;
   public width: number = 50;
 

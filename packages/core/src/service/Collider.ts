@@ -11,6 +11,7 @@ export class Collider {
   constructor(private readonly store: EntityStore) {}
 
   public calculate() {
+    console.log("CollisionCalc")
     this.store.getAll().forEach((entity) => {
       if (!(entity instanceof PhysicalEntity)) return;
 

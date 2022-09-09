@@ -5,11 +5,16 @@ const round = (number: number, digits = 2) => {
   return Math.round(number * multiplier) / multiplier;
 };
 
+class MockEntity extends PhysicalEntity {
+  public rotation = 0;
+  public texture = null!;
+}
+
 describe("PhysicalEntity", () => {
   describe("calculateDistanceTraveled", () => {
     it("calculates the distance traveled correctly", () => {
       // A bit of a hack here to test private methods but it'd be way too difficult to test the calculations otherwise
-      const physicalEntity = new PhysicalEntity();
+      const physicalEntity = new MockEntity();
 
       expect(
         round(physicalEntity["calculateDistanceTraveled"](50, 5.4, 0.05), 9)
@@ -42,7 +47,7 @@ describe("PhysicalEntity", () => {
   describe("calculateCurrentVelocity", () => {
     it("calculates the velocity correctly", () => {
       // A bit of a hack here to test private methods but it'd be way too difficult to test the calculations otherwise
-      const physicalEntity = new PhysicalEntity();
+      const physicalEntity = new MockEntity();
 
       expect(
         round(physicalEntity["calculateCurrentVelocity"](50, 5.4, 0.05), 3)
@@ -74,7 +79,7 @@ describe("PhysicalEntity", () => {
 
   describe("getHeading", () => {
     it("calculates the heading correctly for positive x and negative y", () => {
-      const physicalEntity = new PhysicalEntity();
+      const physicalEntity = new MockEntity();
 
       physicalEntity.velocity = { x: 10, y: -10 };
       expect(physicalEntity.getHeading()).toBe(45);
@@ -84,7 +89,7 @@ describe("PhysicalEntity", () => {
     });
 
     it("calculates the heading correctly for positive x and y", () => {
-      const physicalEntity = new PhysicalEntity();
+      const physicalEntity = new MockEntity();
 
       physicalEntity.velocity = { x: 10, y: 10 };
       expect(physicalEntity.getHeading()).toBe(135);
@@ -94,7 +99,7 @@ describe("PhysicalEntity", () => {
     });
 
     it("calculates the heading correctly for negative x and positive y", () => {
-      const physicalEntity = new PhysicalEntity();
+      const physicalEntity = new MockEntity();
 
       physicalEntity.velocity = { x: -10, y: 10 };
       expect(physicalEntity.getHeading()).toBe(225);
@@ -104,7 +109,7 @@ describe("PhysicalEntity", () => {
     });
 
     it("calculates the heading correctly for negative x and y", () => {
-      const physicalEntity = new PhysicalEntity();
+      const physicalEntity = new MockEntity();
 
       physicalEntity.velocity = { x: -10, y: -10 };
       expect(physicalEntity.getHeading()).toBe(315);

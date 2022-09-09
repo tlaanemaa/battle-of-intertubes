@@ -3,11 +3,11 @@
   "version": "0.1.0",
   "description": "",
   "scripts": {
-    "build-engine": "npm run build -w packages/engine",
-    "test-engine": "npm run test -w packages/engine",
+    "build-game": "npm run build -w packages/game",
     "build-web": "npm run build -w packages/web",
     "start-api": "npm run start -w packages/api",
     "build-api": "npm run build -w packages/api",
+    "test-core": "npm run test -w packages/core",
     "build-core": "npm run build -w packages/core",
     "build-all": "npm run build -w packages"
   },

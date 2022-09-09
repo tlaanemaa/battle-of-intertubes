@@ -4,10 +4,14 @@ type OnMoveCallback = () => void;
 
 export abstract class Entity {
   public readonly id = uuidV4();
+
+  public abstract texture: CanvasImageSource;
+  public abstract rotation: number;
   public abstract x: number;
   public abstract y: number;
   public abstract height: number;
   public abstract width: number;
+  public children?: Entity[];
 
   private onMoveCallback: null | OnMoveCallback = null;
 

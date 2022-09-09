@@ -3,6 +3,8 @@ import { Entity } from "../model/Entity";
 import { EntityStore } from "./EntityStore";
 
 class MockEntity extends Entity {
+  public texture = null!;
+  public rotation = 0;
   public height = 1;
   public width = 1;
 
@@ -48,8 +50,8 @@ describe("EntityStore", () => {
     store.set(entity2);
     const entities = store.getEntitiesInAnArea(2, 4, 32, 40);
     expect(entities.length).toBe(2);
-    expect(entities[0]).toBe(entity1)
-    expect(entities[1]).toBe(entity2)
+    expect(entities[0]).toBe(entity1);
+    expect(entities[1]).toBe(entity2);
   });
 
   it("should not get entities in upper borders", () => {

@@ -1,6 +1,6 @@
 import { injectable } from "tsyringe";
-import { StateStore } from "@battle-of-intertubes/game";
-import { Drawable } from "@battle-of-intertubes/core";
+import { Game } from "@battle-of-intertubes/game";
+import { Entity } from "@battle-of-intertubes/core";
 import { Canvas } from "./Canvas";
 import { Background } from "./Background";
 
@@ -22,8 +22,9 @@ export class Renderer {
 
   constructor(
     private readonly background: Background,
-    private readonly stateStore: StateStore
+    private readonly game: Game
   ) {
+    game.start();
     this.background.cameraX = this.cameraX;
     this.background.cameraY = this.cameraY;
     this.background.zoomModifier = this.zoomModifier;
@@ -58,10 +59,15 @@ export class Renderer {
   }
 
   private drawEntities() {
-    const entities: Drawable[] = this.stateStore.getStateForRendering();
     const ctx = this.canvas.getContext();
     const canvasHalfWidth = this.canvas.width / 2;
     const canvasHalfHeight = this.canvas.height / 2;
+    const entities: Entity[] = this.game.getEntitiesForRendering(
+      this.cameraX - canvasHalfWidth,
+      this.cameraY - canvasHalfHeight,
+      this.canvas.width,
+      this.canvas.height
+    );
 
     entities.forEach((entity) => {
       const scaledWidth = entity.width * this.zoomModifier;

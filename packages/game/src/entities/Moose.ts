@@ -1,10 +1,11 @@
-import { Drawable, PhysicalEntity } from "@battle-of-intertubes/core";
+import { PhysicalEntity } from "@battle-of-intertubes/core";
 
-export class Moose extends PhysicalEntity implements Drawable {
+export class Moose extends PhysicalEntity {
   public readonly texture = new Image();
   public readonly height = 100;
   public readonly width = 100;
   public rotation = 0;
+  public children = undefined;
 
   private images = [
     "img/goat.png",

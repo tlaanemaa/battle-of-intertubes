@@ -1,1 +1,1 @@
-export { StateStore } from "./store/StateStore";
+export { Game } from "./services/Game";
