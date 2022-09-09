@@ -91,6 +91,10 @@ export class EntityStore {
     return this.entityMap.get(id);
   }
 
+  public getAll(): Entity[] {
+    return Array.from(this.entityMap.values());
+  }
+
   public register(entity: Entity) {
     entity.onMove(() => this.set(entity));
     this.set(entity);
@@ -98,6 +102,6 @@ export class EntityStore {
 
   public deregister(entity: Entity) {
     entity.onMove(null);
-    this.delete(entity.id)
+    this.delete(entity.id);
   }
 }
