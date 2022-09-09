@@ -5,6 +5,7 @@ import { Object2D } from "../core/interfaces";
 @singleton()
 export class EntityStore {
   private readonly boxSize = 10;
+
   private readonly grid: Map<string, Entity>[][] = [];
   private readonly entityBoxCoordinates = new Map<string, Object2D>();
   private readonly entityMap = new Map<string, Entity>();
@@ -88,5 +89,15 @@ export class EntityStore {
 
   public getById(id: string): Entity | undefined {
     return this.entityMap.get(id);
+  }
+
+  public register(entity: Entity) {
+    entity.onMove(() => this.set(entity));
+    this.set(entity);
+  }
+
+  public deregister(entity: Entity) {
+    entity.onMove(null);
+    this.delete(entity.id)
   }
 }

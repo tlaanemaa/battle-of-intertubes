@@ -97,6 +97,8 @@ export class PhysicalEntity extends Entity {
       this._velocity.y,
       secondsElapsed
     );
+
+    this.triggerOnMove();
   }
 
   /**
