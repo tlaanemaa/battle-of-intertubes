@@ -61,7 +61,14 @@ export class Background {
   }
 
   public draw() {
-    if (!this.needsRedraw) return;
+    if (
+      !this.needsRedraw ||
+      this.image.width === 0 ||
+      this.image.height === 0
+    ) {
+      return;
+    }
+
     this.canvas.clear();
     this.drawBackground();
     this.needsRedraw = false;
@@ -108,8 +115,8 @@ export class Background {
    */
   private createBackgroundImage() {
     const imageCanvas = document.createElement("canvas");
-    imageCanvas.width = this.imageWidth * this._zoomModifier;
-    imageCanvas.height = this.imageHeight * this._zoomModifier;
+    imageCanvas.width = Math.round(this.imageWidth * this._zoomModifier);
+    imageCanvas.height = Math.round(this.imageHeight * this._zoomModifier);
 
     imageCanvas
       .getContext("2d")!
