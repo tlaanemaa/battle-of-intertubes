@@ -82,7 +82,7 @@ export class Renderer {
       ctx.translate(Math.round(renderX), Math.round(renderY));
       ctx.rotate((entity.rotation * Math.PI) / 180);
       ctx.drawImage(
-        entity.texture,
+        entity.texture.render(),
         Math.round(-scaledWidth / 2),
         Math.round(-scaledHeight / 2),
         Math.round(scaledWidth),

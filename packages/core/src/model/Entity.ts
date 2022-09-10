@@ -1,8 +1,9 @@
 import { v4 as uuidV4 } from "uuid";
 import { Object2D } from "../types/interfaces";
+import { Texture } from "./Texture";
 
 export abstract class Entity {
-  public abstract texture: CanvasImageSource;
+  public abstract texture: Texture;
 
   public readonly id = uuidV4();
   public x = 0;
