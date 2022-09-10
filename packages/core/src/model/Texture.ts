@@ -1,22 +1,42 @@
 import { FastMap } from "./FastMap";
 
-export class Texture {
-  private static readonly images = new FastMap<HTMLImageElement>();
-  
-  private readonly image: HTMLImageElement;
+class TextureCache {
+  private static instance?: TextureCache;
+  private readonly images = new FastMap<Promise<HTMLImageElement>>();
 
-  private static createImage(src: string) {
-    const img = this.images.get(src);
-    if (img) return img;
+  private constructor() {}
 
-    const newImage = new Image();
-    newImage.src = src;
-    this.images.set(src, newImage);
-    return newImage;
+  public getImage(src: string) {
+    const existingImage = this.images.get(src);
+    if (existingImage != null) return existingImage;
+
+    const imagePromise = new Promise<HTMLImageElement>((resolve) => {
+      const image = new Image();
+      image.onload = () => resolve(image);
+      image.src = src;
+    });
+
+    this.images.set(src, imagePromise);
+    return imagePromise;
   }
 
+  public static get() {
+    if (!this.instance) this.instance = new this();
+    return this.instance;
+  }
+}
+
+export class Texture {
+  private image: HTMLImageElement = new Image();
+
   constructor(src: string) {
-    this.image = Texture.createImage(src);
+    this.setImage(src);
+  }
+
+  public async setImage(src: string) {
+    if (src !== this.image.src) {
+      this.image = await TextureCache.get().getImage(src);
+    }
   }
 
   public render(): CanvasImageSource {
