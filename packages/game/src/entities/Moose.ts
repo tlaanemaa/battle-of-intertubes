@@ -18,7 +18,7 @@ export class Moose extends Entity {
 
   constructor(public x: number = 0, public y: number = 0) {
     super();
-    this.dragCoefficient = 0.01;
+    this.dragCoefficient = 0.0001;
     this.mass = 100;
 
     this.texture = new Texture(
@@ -26,14 +26,13 @@ export class Moose extends Entity {
     );
 
     this.tick(10000);
-    setInterval(() => this.tick(1000), 100);
+    setInterval(() => this.tick(5000), 1000);
   }
 
-  tick(forceBound = 100) {
+  tick(forceBound: number) {
     this.applyForce({
       x: Math.random() * 2 * forceBound - forceBound,
       y: Math.random() * 2 * forceBound - forceBound,
     });
-    // this.rotation = this.getHeading();
   }
 }

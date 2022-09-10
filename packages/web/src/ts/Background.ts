@@ -3,9 +3,9 @@ import { Canvas } from "./Canvas";
 
 @singleton()
 export class Background {
-  private readonly imageUrl = "img/bananas.webp";
-  private readonly imageHeight = 400;
-  private readonly imageWidth = 400;
+  private readonly imageUrl = "img/grid-me.png";
+  private readonly imageHeight = 50;
+  private readonly imageWidth = 50;
 
   private readonly canvas = new Canvas("game-background");
   private readonly rawImage = new Image();
@@ -62,6 +62,7 @@ export class Background {
 
   public draw() {
     if (!this.needsRedraw) return;
+    this.canvas.clear();
     this.drawBackground();
     this.needsRedraw = false;
   }

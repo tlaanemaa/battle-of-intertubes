@@ -2,7 +2,7 @@
   margin: 0;
   padding: 0;
   border: none;
-  background: #bfe8e3;
+  background: black;
 }
 
 #game-background {
@@ -17,4 +17,13 @@
   top: 0;
   left: 0;
   z-index: -1;
+}
+
+#fog {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  box-shadow: inset 0 0 40px 50px black;
 }

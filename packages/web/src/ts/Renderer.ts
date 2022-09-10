@@ -90,7 +90,7 @@ export class Renderer {
           Math.round(scaledWidth),
           Math.round(scaledHeight)
         );
-        ctx.strokeStyle = entity.isColliding ? "red" : "black";
+        ctx.strokeStyle = entity.isColliding ? "#FF0000" : "#00FF00";
         ctx.stroke();
       }
 

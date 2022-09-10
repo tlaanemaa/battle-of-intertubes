@@ -4,8 +4,8 @@ import { Moose } from "../entities/Moose";
 
 @singleton()
 export class Game {
-  private spaceFactor = 5;
-  private count = 1000;
+  private spaceFactor = 3;
+  private count = 2000;
 
   private entities = new Array(this.count)
     .fill(1)
@@ -40,8 +40,8 @@ export class Game {
   ) {
     const entities = this.store.getEntitiesInAnArea(x0, y0, x1, y1).map((e) => {
       e.recalculatePosition();
-      e.rotation = e.getHeading();
       this.store.set(e);
+      e.rotation = e.getHeading();
       return e;
     });
 
