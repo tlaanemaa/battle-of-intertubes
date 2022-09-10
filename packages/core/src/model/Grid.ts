@@ -8,7 +8,7 @@ interface GridItem {
 }
 
 export class Grid<T extends GridItem> {
-  private readonly grid: FastMap<T>[][] = [];
+  private readonly grid: FastMap<FastMap<FastMap<T>>> = new FastMap();
   private readonly entityBoxCoordinates = new FastMap<Object2D>();
 
   constructor(private readonly boxSize = 10) {}
@@ -31,11 +31,15 @@ export class Grid<T extends GridItem> {
     this.delete(value);
 
     // Add containers if they don't exist
-    if (this.grid[boxX] == null) this.grid[boxX] = [];
-    if (this.grid[boxX][boxY] == null) this.grid[boxX][boxY] = new FastMap();
+    if (!this.grid.has(boxX)) {
+      this.grid.set(boxX, new FastMap());
+    }
+    if (!this.grid.get(boxX)!.has(boxY)) {
+      this.grid.get(boxX)!.set(boxY, new FastMap());
+    }
 
     // Set new position
-    this.grid[boxX][boxY].set(value.id, value);
+    this.grid.get(boxX)?.get(boxY)?.set(value.id, value);
     this.entityBoxCoordinates.set(value.id, { x: boxX, y: boxY });
   }
 
@@ -44,16 +48,16 @@ export class Grid<T extends GridItem> {
 
     if (
       position != null &&
-      this.grid[position.x] != null &&
-      this.grid[position.x][position.y] != null
+      this.grid.has(position.x) &&
+      this.grid.get(position.x)!.has(position.y)
     ) {
-      this.grid[position.x][position.y].delete(value.id);
+      this.grid.get(position.x)!.get(position.y)!.delete(value.id);
 
-      if (this.grid[position.x][position.y].size === 0) {
-        this.grid[position.x].splice(position.y, 1);
+      if (this.grid.get(position.x)!.get(position.y)!.isEmpty()) {
+        this.grid.get(position.x)!.delete(position.y);
 
-        if (this.grid[position.x].length === 0) {
-          this.grid.splice(position.x, 1);
+        if (this.grid.get(position.x)!.isEmpty()) {
+          this.grid.delete(position.x);
         }
       }
     }
@@ -68,16 +72,18 @@ export class Grid<T extends GridItem> {
   public getArea(x0: number, y0: number, x1: number, y1: number): T[] {
     const xStart = Math.floor(x0 / this.boxSize);
     const yStart = Math.floor(y0 / this.boxSize);
-    const xEnd = Math.ceil(x1 / this.boxSize);
-    const yEnd = Math.ceil(y1 / this.boxSize);
+    const xEnd = Math.floor(x1 / this.boxSize);
+    const yEnd = Math.floor(y1 / this.boxSize);
     const entities: T[] = [];
 
-    for (let i = xStart; i < xEnd; i++) {
-      if (this.grid[i] == null) continue;
-      for (let j = yStart; j < yEnd; j++) {
-        if (this.grid[i][j] == null) continue;
-        const entitiesInTheBox = this.grid[i][j].values();
-        const entitiesCount = entitiesInTheBox.length;
+    for (let i = xStart; i <= xEnd; i++) {
+      const row = this.grid.get(i);
+      if (!row) continue;
+      for (let j = yStart; j <= yEnd; j++) {
+        const column = row.get(j);
+        if (!column) continue;
+        const entitiesCount = column.size;
+        const entitiesInTheBox = column.values();
         for (let e = 0; e < entitiesCount; e++) {
           entities.push(entitiesInTheBox[e]);
         }

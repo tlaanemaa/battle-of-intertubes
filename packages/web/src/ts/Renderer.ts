@@ -62,11 +62,13 @@ export class Renderer {
     const ctx = this.canvas.getContext();
     const canvasHalfWidth = this.canvas.width / 2;
     const canvasHalfHeight = this.canvas.height / 2;
+    const renderRadiusX = Math.round(this.canvas.width / this.zoomModifier);
+    const renderRadiusY = Math.round(this.canvas.height / this.zoomModifier);
     const entities: Entity[] = this.game.getEntitiesForRendering(
-      this.cameraX - this.canvas.width,
-      this.cameraY - this.canvas.height,
-      this.canvas.width * 2,
-      this.canvas.height * 2
+      this.cameraX - renderRadiusX,
+      this.cameraY - renderRadiusY,
+      this.cameraX + renderRadiusX,
+      this.cameraY + renderRadiusY
     );
 
     entities.forEach((entity) => {

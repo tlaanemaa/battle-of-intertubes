@@ -1,11 +1,11 @@
-import { singleton } from "tsyringe";
+import { injectable } from "tsyringe";
 import { Entity } from "../model/Entity";
 import { FastMap } from "../model/FastMap";
 import { Grid } from "../model/Grid";
 
-@singleton()
+@injectable()
 export class EntityStore {
-  private readonly grid = new Grid<Entity>();
+  private readonly grid = new Grid<Entity>(1000);
   private readonly entityMap = new FastMap<Entity>();
 
   public set(entity: Entity) {

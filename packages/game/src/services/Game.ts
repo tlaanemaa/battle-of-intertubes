@@ -4,7 +4,15 @@ import { Moose } from "../entities/Moose";
 
 @singleton()
 export class Game {
-  private entities = new Array(10).fill(1).map(() => new Moose());
+  private entities = new Array(1000)
+    .fill(1)
+    .map(
+      () =>
+        new Moose(
+          Math.round(Math.random() * 2000 - 1000),
+          Math.round(Math.random() * 2000 - 1000)
+        )
+    );
 
   constructor(
     private readonly store: EntityStore,
@@ -13,24 +21,21 @@ export class Game {
 
   public start() {
     this.entities.map((entity) => this.store.set(entity));
-    //setInterval(() => this.collider.calculate(), 100);
   }
 
   public getEntitiesForRendering(
-    x: number,
-    y: number,
-    width: number,
-    height: number
+    x0: number,
+    y0: number,
+    x1: number,
+    y1: number
   ) {
-    this.store.getEntitiesInAnArea(x, y, width, height).forEach((e) => {
+    const entities = this.store.getEntitiesInAnArea(x0, y0, x1, y1).map((e) => {
       e.recalculatePosition();
       this.store.set(e);
+      return e;
     });
 
-    //return this.entities;
-    // return this.store.getAll();
-    const entities = this.store.getEntitiesInAnArea(x, y, width, height);
-    console.log("To render", entities);
+    this.collider.calculate(entities);
     return entities;
   }
 }

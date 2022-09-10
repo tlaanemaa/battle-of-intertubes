@@ -1,22 +1,23 @@
-import { singleton } from "tsyringe";
+import { injectable } from "tsyringe";
 import { Entity } from "../model/Entity";
-import { EntityStore } from "./EntityStore";
+import { Grid } from "../model/Grid";
 
-@singleton()
+@injectable()
 export class Collider {
-  private collisionSearchRadius = 10;
+  private collisionSearchRadius = 100;
   private collisionElasticity = 1;
 
-  constructor(private readonly store: EntityStore) {}
+  public calculate(entities: Entity[]) {
+    const grid = new Grid<Entity>(this.collisionSearchRadius);
+    entities.forEach((entity) => grid.set(entity));
 
-  public calculate() {
-    this.store.getAll().forEach((entity) => {
-      this.store
-        .getEntitiesInAnArea(
+    entities.forEach((entity) => {
+      grid
+        .getArea(
           entity.x - this.collisionSearchRadius,
           entity.y - this.collisionSearchRadius,
-          2 * this.collisionSearchRadius,
-          2 * this.collisionSearchRadius
+          entity.x + this.collisionSearchRadius,
+          entity.y + this.collisionSearchRadius
         )
         .forEach((neighbor) => {
           if (this.areColliding(entity, neighbor)) {

@@ -8,15 +8,16 @@ export class Moose extends Entity {
   public children = undefined;
 
   private images = [
-    "img/goat.png",
-    "img/moose.png",
-    "img/cat.png",
-    "img/monkey.png",
-    "img/red-rocket.png",
-    "img/herobrine.png",
+    //"img/goat.png",
+    //"img/moose.png",
+    //"img/cat.png",
+    //"img/monkey.png",
+    //"img/red-rocket.png",
+    //"img/herobrine.png",
+    "img/blue_square.png"
   ];
 
-  constructor() {
+  constructor(public x: number = 0, public y: number = 0) {
     super();
     this.dragCoefficient = 0.05;
     this.mass = 100;
@@ -24,8 +25,8 @@ export class Moose extends Entity {
     this.texture.src =
       this.images[Math.floor(Math.random() * this.images.length)];
 
-    this.tick(7000);
-    setInterval(() => this.tick(3000), 100);
+    this.tick(10000);
+    setInterval(() => this.tick(5000), 1000);
   }
 
   tick(forceBound = 100) {

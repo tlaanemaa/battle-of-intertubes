@@ -1,7 +1,15 @@
-type K = string;
+type K = string | number;
 
 export class FastMap<V> {
   private readonly map: { [key: K]: V } = {};
+
+  public isEmpty(): boolean {
+    return this.size === 0;
+  }
+
+  public has(key: K): boolean {
+    return this.map[key] != null;
+  }
 
   public get(key: K): V | undefined {
     return this.map[key];
