@@ -21,7 +21,7 @@ export class Collider {
           entity.y + this.collisionSearchRadius
         )
         .forEach((neighbor) => {
-          if (this.areColliding(entity, neighbor)) {
+          if (entity !== neighbor && this.areColliding(entity, neighbor)) {
             const { newVelocityA: newVelocityAx, newVelocityB: newVelocityBx } =
               this.calculateNewVelocities(
                 entity.velocity.x,
