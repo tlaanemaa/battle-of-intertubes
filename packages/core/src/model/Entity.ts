@@ -15,6 +15,7 @@ export abstract class Entity {
   public velocity: Object2D = { x: 0, y: 0 };
   public mass = 1000;
   public children?: Entity[];
+  public isColliding?: boolean;
 
   private lastCalculationTime = Date.now();
 

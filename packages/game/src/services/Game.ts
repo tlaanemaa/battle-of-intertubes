@@ -4,13 +4,22 @@ import { Moose } from "../entities/Moose";
 
 @singleton()
 export class Game {
-  private entities = new Array(1000)
+  private spaceFactor = 5;
+  private count = 1000;
+
+  private entities = new Array(this.count)
     .fill(1)
     .map(
       () =>
         new Moose(
-          Math.round(Math.random() * 2000 - 1000),
-          Math.round(Math.random() * 2000 - 1000)
+          Math.round(
+            Math.random() * this.count * this.spaceFactor * 2 -
+              this.count * this.spaceFactor
+          ),
+          Math.round(
+            Math.random() * this.count * this.spaceFactor * 2 -
+              this.count * this.spaceFactor
+          )
         )
     );
 
@@ -31,6 +40,7 @@ export class Game {
   ) {
     const entities = this.store.getEntitiesInAnArea(x0, y0, x1, y1).map((e) => {
       e.recalculatePosition();
+      e.rotation = e.getHeading();
       this.store.set(e);
       return e;
     });

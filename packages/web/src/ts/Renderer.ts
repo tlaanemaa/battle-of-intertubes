@@ -6,6 +6,7 @@ import { Background } from "./Background";
 
 @injectable()
 export class Renderer {
+  private readonly drawEntityBoxes = true;
   private readonly canvas = new Canvas("game-view");
   /**
    * Current zoom modifier. Larger number means more zoomed in.
@@ -80,6 +81,19 @@ export class Renderer {
         (entity.y - this.cameraY) * this.zoomModifier + canvasHalfHeight;
 
       ctx.translate(Math.round(renderX), Math.round(renderY));
+
+      if (this.drawEntityBoxes) {
+        ctx.beginPath();
+        ctx.rect(
+          Math.round(-scaledWidth / 2),
+          Math.round(-scaledHeight / 2),
+          Math.round(scaledWidth),
+          Math.round(scaledHeight)
+        );
+        ctx.strokeStyle = entity.isColliding ? "red" : "black";
+        ctx.stroke();
+      }
+
       ctx.rotate((entity.rotation * Math.PI) / 180);
       ctx.drawImage(
         entity.texture.render(),

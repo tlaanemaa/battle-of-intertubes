@@ -4,7 +4,7 @@ import { Grid } from "../model/Grid";
 
 @injectable()
 export class Collider {
-  private collisionSearchRadius = 100;
+  private collisionSearchRadius = 500;
   private collisionElasticity = 1;
 
   public calculate(entities: Entity[]) {
@@ -12,6 +12,7 @@ export class Collider {
     entities.forEach((entity) => grid.set(entity));
 
     entities.forEach((entity) => {
+      let hasCollisions = false;
       grid
         .getArea(
           entity.x - this.collisionSearchRadius,
@@ -39,8 +40,11 @@ export class Collider {
 
             entity.velocity = { x: newVelocityAx, y: newVelocityAy };
             neighbor.velocity = { x: newVelocityBx, y: newVelocityBy };
+            hasCollisions = true;
           }
         });
+
+      entity.isColliding = hasCollisions;
     });
   }
 
