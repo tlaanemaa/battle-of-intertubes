@@ -31,8 +31,8 @@ export class Moose extends Entity {
 
   tick(forceBound: number) {
     this.applyForce({
-      x: Math.random() * 2 * forceBound - forceBound,
-      y: Math.random() * 2 * forceBound - forceBound,
+      x: Math.random() * 2 * forceBound - forceBound - this.x / 10,
+      y: Math.random() * 2 * forceBound - forceBound - this.y / 10,
     });
   }
 }
