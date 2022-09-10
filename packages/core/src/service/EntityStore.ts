@@ -1,14 +1,15 @@
 import { singleton } from "tsyringe";
 import { Entity } from "../model/Entity";
+import { FastMap } from "../model/FastMap";
 import { Object2D } from "../types/interfaces";
 
 @singleton()
 export class EntityStore {
   private readonly boxSize = 10;
 
-  private readonly grid: Map<string, Entity>[][] = [];
-  private readonly entityBoxCoordinates = new Map<string, Object2D>();
-  private readonly entityMap = new Map<string, Entity>();
+  private readonly grid: FastMap<Entity>[][] = [];
+  private readonly entityBoxCoordinates = new FastMap<Object2D>();
+  private readonly entityMap = new FastMap<Entity>();
 
   public set(object: Entity) {
     const x = Math.floor(object.x / this.boxSize);
@@ -29,7 +30,7 @@ export class EntityStore {
 
     // Add containers if they don't exist
     if (this.grid[x] == null) this.grid[x] = [];
-    if (this.grid[x][y] == null) this.grid[x][y] = new Map();
+    if (this.grid[x][y] == null) this.grid[x][y] = new FastMap();
 
     // Set new position
     this.grid[x][y].set(object.id, object);
