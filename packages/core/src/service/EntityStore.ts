@@ -71,17 +71,21 @@ export class EntityStore {
     const yStart = Math.floor(y / this.boxSize);
     const xEnd = Math.ceil((x + width) / this.boxSize);
     const yEnd = Math.ceil((y + height) / this.boxSize);
-    const entities: Entity[][] = [];
+    const entities: Entity[] = [];
 
     for (let i = xStart; i < xEnd; i++) {
       if (this.grid[i] == null) continue;
       for (let j = yStart; j < yEnd; j++) {
         if (this.grid[i][j] == null) continue;
-        entities.push(Array.from(this.grid[i][j].values()));
+        const entitiesInTheBox = this.grid[i][j].values();
+        const entitiesCount = entitiesInTheBox.length;
+        for (let e = 0; e < entitiesCount; e++) {
+          entities.push(entitiesInTheBox[e]);
+        }
       }
     }
 
-    return entities.flat(1);
+    return entities;
   }
 
   public getEntitiesAtAPoint(x: number, y: number): Entity[] {
