@@ -1,6 +1,6 @@
-import { PhysicalEntity } from "@battle-of-intertubes/core";
+import { Entity } from "@battle-of-intertubes/core";
 
-export class Moose extends PhysicalEntity {
+export class Moose extends Entity {
   public readonly texture = new Image();
   public readonly height = 100;
   public readonly width = 100;

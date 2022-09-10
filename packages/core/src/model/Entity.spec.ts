@@ -1,12 +1,11 @@
-import { PhysicalEntity } from "./PhysicalEntity";
+import { Entity } from "./Entity";
 
 const round = (number: number, digits = 2) => {
   const multiplier = 10 ** digits;
   return Math.round(number * multiplier) / multiplier;
 };
 
-class MockEntity extends PhysicalEntity {
-  public rotation = 0;
+class MockEntity extends Entity {
   public texture = null!;
 }
 

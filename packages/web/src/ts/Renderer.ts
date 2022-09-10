@@ -63,10 +63,10 @@ export class Renderer {
     const canvasHalfWidth = this.canvas.width / 2;
     const canvasHalfHeight = this.canvas.height / 2;
     const entities: Entity[] = this.game.getEntitiesForRendering(
-      this.cameraX - canvasHalfWidth,
-      this.cameraY - canvasHalfHeight,
-      this.canvas.width,
-      this.canvas.height
+      this.cameraX - this.canvas.width,
+      this.cameraY - this.canvas.height,
+      this.canvas.width * 2,
+      this.canvas.height * 2
     );
 
     entities.forEach((entity) => {

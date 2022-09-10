@@ -1,6 +1,5 @@
 import { singleton } from "tsyringe";
 import { Entity } from "../model/Entity";
-import { PhysicalEntity } from "../model/PhysicalEntity";
 import { EntityStore } from "./EntityStore";
 
 @singleton()
@@ -11,10 +10,7 @@ export class Collider {
   constructor(private readonly store: EntityStore) {}
 
   public calculate() {
-    console.log("CollisionCalc")
     this.store.getAll().forEach((entity) => {
-      if (!(entity instanceof PhysicalEntity)) return;
-
       this.store
         .getEntitiesInAnArea(
           entity.x - this.collisionSearchRadius,
@@ -23,10 +19,7 @@ export class Collider {
           2 * this.collisionSearchRadius
         )
         .forEach((neighbor) => {
-          if (
-            neighbor instanceof PhysicalEntity &&
-            this.areColliding(entity, neighbor)
-          ) {
+          if (this.areColliding(entity, neighbor)) {
             const { newVelocityA: newVelocityAx, newVelocityB: newVelocityBx } =
               this.calculateNewVelocities(
                 entity.velocity.x,
