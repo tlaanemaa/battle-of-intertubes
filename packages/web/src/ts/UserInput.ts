@@ -1,5 +1,4 @@
 import { EventSource, Object2D } from "@battle-of-intertubes/core";
-import { DebugConsole } from "./DebugConsole";
 
 export enum INTENT {
   MOVE_UP,
@@ -10,8 +9,6 @@ export enum INTENT {
   ZOOM_OUT,
   RESIZE_WINDOW,
 }
-
-const debug = new DebugConsole();
 
 export class UserInput extends EventSource<INTENT, number> {
   private pinchStartCoordinatesA?: Object2D;
@@ -50,7 +47,6 @@ export class UserInput extends EventSource<INTENT, number> {
       (event: TouchEvent) => {
         event.preventDefault();
         if (event.touches.length > 1) {
-          debug.write("START - pinch", event);
           this.pinchStartCoordinatesA = {
             x: event.touches[0].pageX,
             y: event.touches[0].pageY,
@@ -60,7 +56,6 @@ export class UserInput extends EventSource<INTENT, number> {
             y: event.touches[1].pageY,
           };
         } else {
-          debug.write("START - touch", event);
           this.touchStartCoordinates = {
             x: event.touches[0].pageX,
             y: event.touches[0].pageY,
@@ -74,7 +69,6 @@ export class UserInput extends EventSource<INTENT, number> {
       (event: TouchEvent) => {
         event.preventDefault();
         if (this.pinchStartCoordinatesA) {
-          debug.write("MOVE - pinch", event);
           this.pinchCurrentCoordinatesA = {
             x: event.touches[0].pageX,
             y: event.touches[0].pageY,
@@ -84,7 +78,6 @@ export class UserInput extends EventSource<INTENT, number> {
             y: event.touches[1].pageY,
           };
         } else {
-          debug.write("MOVE - touch", event);
           this.touchCurrentCoordinates = {
             x: event.touches[0].pageX,
             y: event.touches[0].pageY,
@@ -96,7 +89,6 @@ export class UserInput extends EventSource<INTENT, number> {
     window.addEventListener(
       "touchend",
       (event) => {
-        debug.write("END", event);
         event.preventDefault();
         this.pinchStartCoordinatesA = undefined;
         this.pinchStartCoordinatesB = undefined;
