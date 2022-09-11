@@ -43,6 +43,7 @@ export class UserInput extends EventSource<INTENT, number> {
       this.pressedKeys.delete(event.key);
     });
     window.addEventListener("touchstart", (event: TouchEvent) => {
+      event.preventDefault();
       if (event.touches.length > 1) {
         this.pinchStartCoordinatesA = {
           x: event.touches[0].pageX,
@@ -60,6 +61,7 @@ export class UserInput extends EventSource<INTENT, number> {
       }
     });
     window.addEventListener("touchmove", (event: TouchEvent) => {
+      event.preventDefault();
       if (this.pinchCurrentCoordinatesA) {
         this.pinchCurrentCoordinatesA = {
           x: event.touches[0].pageX,
@@ -77,6 +79,7 @@ export class UserInput extends EventSource<INTENT, number> {
       }
     });
     window.addEventListener("touchend", () => {
+      event.preventDefault();
       this.pinchStartCoordinatesA = undefined;
       this.pinchStartCoordinatesB = undefined;
       this.pinchCurrentCoordinatesA = undefined;
