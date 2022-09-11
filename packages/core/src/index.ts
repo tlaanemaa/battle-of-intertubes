@@ -4,3 +4,4 @@ export { Collider } from "./service/Collider";
 export { Object2D } from "./model/Object2D";
 export { Texture } from "./model/Texture";
 export { FastMap } from "./model/FastMap";
+export { EventSource } from "./model/EventSource";

@@ -5,37 +5,36 @@ import { BackgroundRenderer } from "./BackgroundRenderer";
 import { Canvas } from "./Canvas";
 import { EntityRenderer } from "./EntityRenderer";
 import { Camera } from "./Camera";
+import { UserInput, INTENT } from "./UserInput";
 
 const game = container.resolve(Game);
 const camera = new Camera();
+const userInput = new UserInput();
 const entityCanvas = new Canvas("game-view");
 const entityRenderer = new EntityRenderer(entityCanvas, camera);
 const backgroundCanvas = new Canvas("game-background");
 const backgroundRenderer = new BackgroundRenderer(backgroundCanvas, camera);
 game.start();
 
-const onResize = () => {
-  entityCanvas.resize(window.innerWidth, window.innerHeight);
-  backgroundCanvas.resize(window.innerWidth, window.innerHeight);
-  backgroundRenderer.createBackgroundImage();
-};
-
-onResize();
-window.addEventListener("resize", onResize);
-
-window.addEventListener("wheel", (event: WheelEvent) => {
-  const step = 0.1;
-  if (event.deltaY > 0) camera.zoom *= 1 - step;
-  if (event.deltaY < 0) camera.zoom *= 1 + step;
-});
-
-window.addEventListener("keydown", (event: KeyboardEvent) => {
-  const step = 10;
-  if (event.key === "ArrowUp") camera.position.y -= step;
-  if (event.key === "ArrowRight") camera.position.x += step;
-  if (event.key === "ArrowDown") camera.position.y += step;
-  if (event.key === "ArrowLeft") camera.position.x -= step;
-});
+userInput.on(INTENT.ZOOM_IN, () => (camera.zoom *= 1.1));
+userInput.on(INTENT.ZOOM_OUT, () => (camera.zoom *= 0.9));
+userInput.on(INTENT.MOVE_UP, () => (camera.position.y -= 10 / camera.zoom));
+userInput.on(INTENT.MOVE_RIGHT, () => (camera.position.x += 10 / camera.zoom));
+userInput.on(INTENT.MOVE_DOWN, () => (camera.position.y += 10 / camera.zoom));
+userInput.on(INTENT.MOVE_LEFT, () => (camera.position.x -= 10 / camera.zoom));
+userInput.on(
+  INTENT.RESIZE_WINDOW,
+  () => entityCanvas.resize(window.innerWidth, window.innerHeight),
+  true
+);
+userInput.on(
+  INTENT.RESIZE_WINDOW,
+  () => backgroundCanvas.resize(window.innerWidth, window.innerHeight),
+  true
+);
+userInput.on(INTENT.RESIZE_WINDOW, () =>
+  backgroundRenderer.createBackgroundImage()
+);
 
 const scheduleFrame = () => {
   window.requestAnimationFrame(() => {
