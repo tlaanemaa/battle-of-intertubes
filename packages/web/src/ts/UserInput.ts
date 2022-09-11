@@ -42,51 +42,63 @@ export class UserInput extends EventSource<INTENT, number> {
     window.addEventListener("keyup", (event: KeyboardEvent) => {
       this.pressedKeys.delete(event.key);
     });
-    window.addEventListener("touchstart", (event: TouchEvent) => {
-      event.preventDefault();
-      if (event.touches.length > 1) {
-        this.pinchStartCoordinatesA = {
-          x: event.touches[0].pageX,
-          y: event.touches[0].pageY,
-        };
-        this.pinchStartCoordinatesB = {
-          x: event.touches[1].pageX,
-          y: event.touches[1].pageY,
-        };
-      } else {
-        this.touchStartCoordinates = {
-          x: event.touches[0].pageX,
-          y: event.touches[0].pageY,
-        };
-      }
-    });
-    window.addEventListener("touchmove", (event: TouchEvent) => {
-      event.preventDefault();
-      if (this.pinchCurrentCoordinatesA) {
-        this.pinchCurrentCoordinatesA = {
-          x: event.touches[0].pageX,
-          y: event.touches[0].pageY,
-        };
-        this.pinchCurrentCoordinatesB = {
-          x: event.touches[1].pageX,
-          y: event.touches[1].pageY,
-        };
-      } else {
-        this.touchCurrentCoordinates = {
-          x: event.touches[0].pageX,
-          y: event.touches[0].pageY,
-        };
-      }
-    });
-    window.addEventListener("touchend", (event) => {
-      event.preventDefault();
-      this.pinchStartCoordinatesA = undefined;
-      this.pinchStartCoordinatesB = undefined;
-      this.pinchCurrentCoordinatesA = undefined;
-      this.pinchCurrentCoordinatesB = undefined;
-      this.touchStartCoordinates = undefined;
-      this.touchCurrentCoordinates = undefined;
-    });
+    window.addEventListener(
+      "touchstart",
+      (event: TouchEvent) => {
+        event.preventDefault();
+        if (event.touches.length > 1) {
+          this.pinchStartCoordinatesA = {
+            x: event.touches[0].pageX,
+            y: event.touches[0].pageY,
+          };
+          this.pinchStartCoordinatesB = {
+            x: event.touches[1].pageX,
+            y: event.touches[1].pageY,
+          };
+        } else {
+          this.touchStartCoordinates = {
+            x: event.touches[0].pageX,
+            y: event.touches[0].pageY,
+          };
+        }
+      },
+      { passive: false }
+    );
+    window.addEventListener(
+      "touchmove",
+      (event: TouchEvent) => {
+        event.preventDefault();
+        if (this.pinchCurrentCoordinatesA) {
+          this.pinchCurrentCoordinatesA = {
+            x: event.touches[0].pageX,
+            y: event.touches[0].pageY,
+          };
+          this.pinchCurrentCoordinatesB = {
+            x: event.touches[1].pageX,
+            y: event.touches[1].pageY,
+          };
+        } else {
+          this.touchCurrentCoordinates = {
+            x: event.touches[0].pageX,
+            y: event.touches[0].pageY,
+          };
+        }
+      },
+      { passive: false }
+    );
+    window.addEventListener(
+      "touchend",
+      (event) => {
+        event.preventDefault();
+        this.pinchStartCoordinatesA = undefined;
+        this.pinchStartCoordinatesB = undefined;
+        this.pinchCurrentCoordinatesA = undefined;
+        this.pinchCurrentCoordinatesB = undefined;
+        this.touchStartCoordinates = undefined;
+        this.touchCurrentCoordinates = undefined;
+      },
+      { passive: false }
+    );
     window.addEventListener("resize", () => {
       this.trigger(INTENT.RESIZE_WINDOW, 0);
     });
