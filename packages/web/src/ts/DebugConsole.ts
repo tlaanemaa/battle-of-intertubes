@@ -11,7 +11,7 @@ export class DebugConsole {
     const date = new Date();
     const datePrefix = [
       date.toTimeString().slice(0, 8),
-      date.getMilliseconds().toFixed(3),
+      date.getMilliseconds(),
     ].join(".");
     line.innerText = [">", datePrefix, JSON.stringify(data)].join(" ");
     this.element.prepend(line);
