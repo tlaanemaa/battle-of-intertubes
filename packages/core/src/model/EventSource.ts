@@ -1,18 +1,17 @@
 import { FastMap } from "./FastMap";
 
-type Handler = () => void;
+type Handler<V> = (x: V) => void;
 
-export class EventSource<K extends string | number> {
-  private readonly store = new FastMap<Set<Handler>>();
+export class EventSource<K extends string | number, V> {
+  private readonly store = new FastMap<Set<Handler<V>>>();
 
-  public on(eventName: K, handler: Handler, triggerImmediately = false) {
+  public on(eventName: K, handler: Handler<V>) {
     if (!this.store.has(eventName)) this.store.set(eventName, new Set());
     this.store.get(eventName)!.add(handler);
-    if (triggerImmediately) handler();
     return this;
   }
 
-  public off(eventName: K, handler: Handler) {
+  public off(eventName: K, handler: Handler<V>) {
     const handlers = this.store.get(eventName);
     if (handlers) {
       handlers.delete(handler);
@@ -20,10 +19,10 @@ export class EventSource<K extends string | number> {
     return this;
   }
 
-  protected trigger(eventName: K) {
+  protected trigger(eventName: K, value: V) {
     const handlers = this.store.get(eventName);
     if (handlers) {
-      handlers.forEach((handler) => handler());
+      handlers.forEach((handler) => handler(value));
     }
   }
 }

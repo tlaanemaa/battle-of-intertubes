@@ -16,27 +16,22 @@ const backgroundCanvas = new Canvas("game-background");
 const backgroundRenderer = new BackgroundRenderer(backgroundCanvas, camera);
 game.start();
 
-userInput.on(INTENT.ZOOM_IN, () => (camera.zoom *= 1.1));
-userInput.on(INTENT.ZOOM_OUT, () => (camera.zoom *= 0.9));
-userInput.on(INTENT.MOVE_UP, () => (camera.position.y -= 10 / camera.zoom));
-userInput.on(INTENT.MOVE_RIGHT, () => (camera.position.x += 10 / camera.zoom));
-userInput.on(INTENT.MOVE_DOWN, () => (camera.position.y += 10 / camera.zoom));
-userInput.on(INTENT.MOVE_LEFT, () => (camera.position.x -= 10 / camera.zoom));
-userInput.on(
-  INTENT.RESIZE_WINDOW,
-  () => entityCanvas.resize(window.innerWidth, window.innerHeight),
-  true
-);
-userInput.on(
-  INTENT.RESIZE_WINDOW,
-  () => backgroundCanvas.resize(window.innerWidth, window.innerHeight),
-  true
-);
-userInput.on(INTENT.RESIZE_WINDOW, () =>
-  backgroundRenderer.createBackgroundImage()
-);
+userInput.on(INTENT.ZOOM_IN, (x) => (camera.zoom *= 1 + x));
+userInput.on(INTENT.ZOOM_OUT, (x) => (camera.zoom *= 1 - x));
+userInput.on(INTENT.MOVE_UP, (x) => (camera.position.y -= x / camera.zoom));
+userInput.on(INTENT.MOVE_RIGHT, (x) => (camera.position.x += x / camera.zoom));
+userInput.on(INTENT.MOVE_DOWN, (x) => (camera.position.y += x / camera.zoom));
+userInput.on(INTENT.MOVE_LEFT, (x) => (camera.position.x -= x / camera.zoom));
 
-const scheduleFrame = () => {
+const onResize = () => {
+  entityCanvas.resize(window.innerWidth, window.innerHeight);
+  backgroundCanvas.resize(window.innerWidth, window.innerHeight);
+  backgroundRenderer.createBackgroundImage();
+};
+userInput.on(INTENT.RESIZE_WINDOW, onResize);
+onResize();
+
+const scheduleFrame = () =>
   window.requestAnimationFrame(() => {
     try {
       const renderRadiusX = Math.round(entityCanvas.width / camera.zoom);
@@ -56,5 +51,5 @@ const scheduleFrame = () => {
       scheduleFrame();
     }
   });
-};
+
 scheduleFrame();
