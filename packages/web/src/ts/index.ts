@@ -14,6 +14,29 @@ const backgroundCanvas = new Canvas("game-background");
 const backgroundRenderer = new BackgroundRenderer(backgroundCanvas, camera);
 game.start();
 
+const onResize = () => {
+  entityCanvas.resize(window.innerWidth, window.innerHeight);
+  backgroundCanvas.resize(window.innerWidth, window.innerHeight);
+  backgroundRenderer.createBackgroundImage();
+};
+
+onResize();
+window.addEventListener("resize", onResize);
+
+window.addEventListener("wheel", (event: WheelEvent) => {
+  const step = 0.1;
+  if (event.deltaY > 0) camera.zoom *= 1 - step;
+  if (event.deltaY < 0) camera.zoom *= 1 + step;
+});
+
+window.addEventListener("keydown", (event: KeyboardEvent) => {
+  const step = 10;
+  if (event.key === "ArrowUp") camera.position.y -= step;
+  if (event.key === "ArrowRight") camera.position.x += step;
+  if (event.key === "ArrowDown") camera.position.y += step;
+  if (event.key === "ArrowLeft") camera.position.x -= step;
+});
+
 const scheduleFrame = () => {
   window.requestAnimationFrame(() => {
     try {

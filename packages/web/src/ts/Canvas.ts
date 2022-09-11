@@ -1,35 +1,32 @@
 export class Canvas {
-  private readonly canvasElement: HTMLCanvasElement;
+  public readonly element: HTMLCanvasElement;
 
-  constructor(elementId: string) {
-    this.canvasElement = document.getElementById(
-      elementId
-    ) as HTMLCanvasElement;
-
-    window.addEventListener("resize", this.resizeCanvas.bind(this));
-    this.resizeCanvas();
+  constructor(elementId?: string) {
+    this.element = elementId
+      ? (document.getElementById(elementId) as HTMLCanvasElement)
+      : document.createElement("canvas");
   }
 
-  private resizeCanvas() {
-    this.canvasElement.height = window.innerHeight;
-    this.canvasElement.width = window.innerWidth;
+  public resize(width: number, height: number) {
+    this.element.width = width;
+    this.element.height = height;
   }
 
   public getContext() {
-    return this.canvasElement.getContext("2d")!;
+    return this.element.getContext("2d")!;
   }
 
   public get height() {
-    return this.canvasElement.height;
+    return this.element.height;
   }
 
   public get width() {
-    return this.canvasElement.width;
+    return this.element.width;
   }
 
   public clear() {
     const ctx = this.getContext();
-    ctx.clearRect(0, 0, this.canvasElement.width, this.canvasElement.height);
+    ctx.clearRect(0, 0, this.element.width, this.element.height);
     ctx.beginPath();
   }
 }

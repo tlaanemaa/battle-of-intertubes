@@ -8,15 +8,13 @@ export class BackgroundRenderer extends Renderer {
   private readonly imageWidth = 50;
 
   private readonly rawImage = new Image();
-  private image: CanvasImageSource = new Image();
+  private image = new Canvas();
   private imageHasChanged = false;
 
-  constructor(private readonly canvas: Canvas, camera: Camera) {
-    super(camera);
-    window.addEventListener("resize", () => this.createBackgroundImage());
+  constructor(canvas: Canvas, camera: Camera) {
+    super(canvas, camera);
     this.rawImage.onload = () => this.createBackgroundImage();
     this.rawImage.src = this.imageUrl;
-    this.createBackgroundImage();
   }
 
   public draw() {
@@ -61,7 +59,7 @@ export class BackgroundRenderer extends Renderer {
       Math.round(renderY + canvasHalfHeight)
     );
 
-    ctx.fillStyle = ctx.createPattern(this.image, "repeat")!;
+    ctx.fillStyle = ctx.createPattern(this.image.element, "repeat")!;
 
     ctx.fillRect(
       Math.round(-canvasHalfWidth),
@@ -76,13 +74,14 @@ export class BackgroundRenderer extends Renderer {
   /**
    * Creates a scaled version of the background image as a temporary canvas
    */
-  private createBackgroundImage() {
-    this.image = document.createElement("canvas");
-    this.image.width = Math.round(this.imageWidth * this.camera.zoom);
-    this.image.height = Math.round(this.imageHeight * this.camera.zoom);
+  public createBackgroundImage() {
+    this.image.resize(
+      Math.round(this.imageWidth * this.camera.zoom),
+      Math.round(this.imageHeight * this.camera.zoom)
+    );
 
     this.image
-      .getContext("2d")!
+      .getContext()
       .drawImage(this.rawImage, 0, 0, this.image.width, this.image.height);
 
     this.imageHasChanged = true;
