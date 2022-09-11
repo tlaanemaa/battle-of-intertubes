@@ -73,7 +73,7 @@ export class UserInput extends EventSource<INTENT, number> {
       "touchmove",
       (event: TouchEvent) => {
         event.preventDefault();
-        if (this.pinchCurrentCoordinatesA) {
+        if (this.pinchStartCoordinatesA) {
           debug.write("MOVE - pinch", event);
           this.pinchCurrentCoordinatesA = {
             x: event.touches[0].pageX,
