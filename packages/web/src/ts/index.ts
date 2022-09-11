@@ -16,8 +16,8 @@ const backgroundCanvas = new Canvas("game-background");
 const backgroundRenderer = new BackgroundRenderer(backgroundCanvas, camera);
 game.start();
 
-userInput.on(INTENT.ZOOM_IN, (x) => (camera.zoom *= 1 + x));
-userInput.on(INTENT.ZOOM_OUT, (x) => (camera.zoom *= 1 - x));
+userInput.on(INTENT.ZOOM_IN, (x) => (camera.zoom *= 1 + x / 1000));
+userInput.on(INTENT.ZOOM_OUT, (x) => (camera.zoom *= 1 - x / 1000));
 userInput.on(INTENT.MOVE_UP, (x) => (camera.position.y -= x / camera.zoom));
 userInput.on(INTENT.MOVE_RIGHT, (x) => (camera.position.x += x / camera.zoom));
 userInput.on(INTENT.MOVE_DOWN, (x) => (camera.position.y += x / camera.zoom));

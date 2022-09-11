@@ -11,8 +11,14 @@ export enum INTENT {
 }
 
 export class UserInput extends EventSource<INTENT, number> {
+  private pinchStartCoordinatesA?: Object2D;
+  private pinchStartCoordinatesB?: Object2D;
+  private pinchCurrentCoordinatesA?: Object2D;
+  private pinchCurrentCoordinatesB?: Object2D;
+
   private touchStartCoordinates?: Object2D;
   private touchCurrentCoordinates?: Object2D;
+
   private readonly pressedKeys = new Set<string>();
 
   constructor() {
@@ -25,10 +31,11 @@ export class UserInput extends EventSource<INTENT, number> {
 
   private attachListeners() {
     window.addEventListener("wheel", (event: WheelEvent) => {
-      if (event.deltaY > 0) this.trigger(INTENT.ZOOM_OUT, 0.1);
-      if (event.deltaY < 0) this.trigger(INTENT.ZOOM_IN, 0.1);
+      if (event.deltaY > 0)
+        this.trigger(INTENT.ZOOM_OUT, Math.abs(event.deltaY));
+      if (event.deltaY < 0)
+        this.trigger(INTENT.ZOOM_IN, Math.abs(event.deltaY));
     });
-
     window.addEventListener("keydown", (event: KeyboardEvent) => {
       this.pressedKeys.add(event.key);
     });
@@ -36,18 +43,44 @@ export class UserInput extends EventSource<INTENT, number> {
       this.pressedKeys.delete(event.key);
     });
     window.addEventListener("touchstart", (event: TouchEvent) => {
-      this.touchStartCoordinates = {
-        x: event.touches[0].pageX,
-        y: event.touches[0].pageY,
-      };
+      if (event.touches.length > 1) {
+        this.pinchStartCoordinatesA = {
+          x: event.touches[0].pageX,
+          y: event.touches[0].pageY,
+        };
+        this.pinchStartCoordinatesB = {
+          x: event.touches[1].pageX,
+          y: event.touches[1].pageY,
+        };
+      } else {
+        this.touchStartCoordinates = {
+          x: event.touches[0].pageX,
+          y: event.touches[0].pageY,
+        };
+      }
     });
     window.addEventListener("touchmove", (event: TouchEvent) => {
-      this.touchCurrentCoordinates = {
-        x: event.touches[0].pageX,
-        y: event.touches[0].pageY,
-      };
+      if (this.pinchCurrentCoordinatesA) {
+        this.pinchCurrentCoordinatesA = {
+          x: event.touches[0].pageX,
+          y: event.touches[0].pageY,
+        };
+        this.pinchCurrentCoordinatesB = {
+          x: event.touches[1].pageX,
+          y: event.touches[1].pageY,
+        };
+      } else {
+        this.touchCurrentCoordinates = {
+          x: event.touches[0].pageX,
+          y: event.touches[0].pageY,
+        };
+      }
     });
     window.addEventListener("touchend", () => {
+      this.pinchStartCoordinatesA = undefined;
+      this.pinchStartCoordinatesB = undefined;
+      this.pinchCurrentCoordinatesA = undefined;
+      this.pinchCurrentCoordinatesB = undefined;
       this.touchStartCoordinates = undefined;
       this.touchCurrentCoordinates = undefined;
     });
@@ -62,6 +95,32 @@ export class UserInput extends EventSource<INTENT, number> {
   }
 
   private handleTouch() {
+    if (
+      this.pinchStartCoordinatesA &&
+      this.pinchStartCoordinatesB &&
+      this.pinchCurrentCoordinatesA &&
+      this.pinchCurrentCoordinatesB
+    ) {
+      const startDistance = this.distance(
+        this.pinchStartCoordinatesA.x,
+        this.pinchStartCoordinatesA.y,
+        this.pinchStartCoordinatesB.x,
+        this.pinchStartCoordinatesB.y
+      );
+      const currentDistance = this.distance(
+        this.pinchCurrentCoordinatesA.x,
+        this.pinchCurrentCoordinatesA.y,
+        this.pinchCurrentCoordinatesB.x,
+        this.pinchCurrentCoordinatesB.y
+      );
+
+      if (currentDistance > startDistance) {
+        this.trigger(INTENT.ZOOM_IN, 100);
+      } else if (currentDistance < startDistance) {
+        this.trigger(INTENT.ZOOM_OUT, 100);
+      }
+    }
+
     if (this.touchStartCoordinates && this.touchCurrentCoordinates) {
       const diffX =
         this.touchCurrentCoordinates.x - this.touchStartCoordinates.x;
@@ -99,5 +158,9 @@ export class UserInput extends EventSource<INTENT, number> {
           return this.trigger(INTENT.MOVE_LEFT, 10);
       }
     });
+  }
+
+  private distance(x0: number, y0: number, x1: number, y1: number) {
+    return Math.sqrt(Math.pow(x0 - x1, 2) + Math.pow(y0 - y1, 2));
   }
 }
