@@ -78,7 +78,7 @@ export class UserInput extends EventSource<INTENT, number> {
         };
       }
     });
-    window.addEventListener("touchend", () => {
+    window.addEventListener("touchend", (event) => {
       event.preventDefault();
       this.pinchStartCoordinatesA = undefined;
       this.pinchStartCoordinatesB = undefined;
