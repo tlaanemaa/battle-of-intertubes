@@ -1,29 +1,29 @@
-type K = string | number;
+type Key = string | number;
 
-export class FastMap<V> {
-  private readonly map: { [key: K]: V } = {};
+export class FastMap<Value> {
+  private readonly map: { [key: Key]: Value } = {};
 
   public isEmpty(): boolean {
     return this.size === 0;
   }
 
-  public has(key: K): boolean {
+  public has(key: Key): boolean {
     return this.map[key] != null;
   }
 
-  public get(key: K): V | undefined {
+  public get(key: Key): Value | undefined {
     return this.map[key];
   }
 
-  public set(key: K, value: V): void {
+  public set(key: Key, value: Value): void {
     this.map[key] = value;
   }
 
-  public delete(key: K): boolean {
+  public delete(key: Key): boolean {
     return delete this.map[key];
   }
 
-  public values(): V[] {
+  public values(): Value[] {
     return Object.values(this.map);
   }
 
