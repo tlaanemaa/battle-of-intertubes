@@ -20,7 +20,7 @@ export class UserInput extends EventSource<INTENT, number> {
     this.attachListeners();
 
     // Run it about once every frame, but it doesn't have to be exact
-    setInterval(() => this.triggerPressedKeys(), 17);
+    setInterval(() => this.handleHeldInput(), 17);
   }
 
   private attachListeners() {
@@ -56,7 +56,12 @@ export class UserInput extends EventSource<INTENT, number> {
     });
   }
 
-  private triggerPressedKeys() {
+  private handleHeldInput() {
+    this.handleTouch();
+    this.handlePressedKeys();
+  }
+
+  private handleTouch() {
     if (this.touchStartCoordinates && this.touchCurrentCoordinates) {
       const diffX =
         this.touchCurrentCoordinates.x - this.touchStartCoordinates.x;
@@ -79,7 +84,9 @@ export class UserInput extends EventSource<INTENT, number> {
         this.trigger(INTENT.MOVE_DOWN, Math.abs(10 * scaledY));
       }
     }
+  }
 
+  private handlePressedKeys() {
     this.pressedKeys.forEach((keyName) => {
       switch (keyName) {
         case "ArrowUp":
