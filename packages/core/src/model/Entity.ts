@@ -1,5 +1,5 @@
 import { v4 as uuidV4 } from "uuid";
-import { Object2D } from "../types/interfaces";
+import { Object2D } from "./Object2D";
 import { Texture } from "./Texture";
 
 export abstract class Entity {

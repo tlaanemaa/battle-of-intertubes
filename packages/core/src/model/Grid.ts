@@ -1,4 +1,4 @@
-import { Object2D } from "../types/interfaces";
+import { Object2D } from "./Object2D";
 import { FastMap } from "./FastMap";
 
 interface GridItem {
