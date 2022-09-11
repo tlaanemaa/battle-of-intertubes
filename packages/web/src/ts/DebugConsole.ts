@@ -3,7 +3,7 @@ export class DebugConsole {
 
   constructor() {
     this.element.className = "debug-console";
-    window.document.body.append(this.element);
+    document.body.appendChild(this.element);
   }
 
   public write(...data: unknown[]) {
@@ -11,9 +11,9 @@ export class DebugConsole {
     const date = new Date();
     const datePrefix = [
       date.toTimeString().slice(0, 8),
-      date.getMilliseconds(),
+      date.getMilliseconds().toFixed(3),
     ].join(".");
-    line.innerText = [datePrefix, JSON.stringify(data)].join(" ");
+    line.innerText = [">", datePrefix, JSON.stringify(data)].join(" ");
     this.element.prepend(line);
   }
 }
