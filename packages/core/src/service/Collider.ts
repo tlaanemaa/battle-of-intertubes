@@ -7,6 +7,9 @@ export class Collider {
   private collisionSearchRadius = 500;
   private collisionElasticity = 1;
 
+  /**
+   * Calculates collisions between all provided entities and assigns new velocities based on that.
+   */
   public calculate(entities: Entity[]) {
     const grid = new Grid<Entity>(this.collisionSearchRadius);
     entities.forEach((entity) => grid.set(entity));
@@ -58,7 +61,7 @@ export class Collider {
     if (objectA.x + objectA.width / 2 < objectB.x - objectB.width / 2) {
       return false;
     }
-    if (objectA.y - objectA.width / 2 > objectB.y + objectB.width / 2) {
+    if (objectA.x - objectA.width / 2 > objectB.x + objectB.width / 2) {
       return false;
     }
     return true;
