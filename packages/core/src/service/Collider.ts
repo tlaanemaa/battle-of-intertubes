@@ -4,19 +4,23 @@ import { Grid } from "../model/Grid";
 
 @injectable()
 export class Collider {
-  private collisionSearchRadius = 500;
-  private collisionElasticity = 1;
+  private readonly collisionSearchRadius = 200;
+  private readonly collisionElasticity = 1;
+  private readonly grid = new Grid<Entity>(this.collisionSearchRadius);
+
+  constructor(private readonly entities: Entity[]) {
+    this.entities.forEach((entity) => this.grid.set(entity));
+  }
 
   /**
    * Calculates collisions between all provided entities and assigns new velocities based on that.
    */
-  public calculate(entities: Entity[]) {
-    const grid = new Grid<Entity>(this.collisionSearchRadius);
-    entities.forEach((entity) => grid.set(entity));
+  public calculate() {
+    const calculated = new Set();
 
-    entities.forEach((entity) => {
+    this.entities.forEach((entity) => {
       let hasCollisions = false;
-      grid
+      this.grid
         .getArea(
           entity.x - this.collisionSearchRadius,
           entity.y - this.collisionSearchRadius,
@@ -24,27 +28,37 @@ export class Collider {
           entity.y + this.collisionSearchRadius
         )
         .forEach((neighbor) => {
-          if (entity !== neighbor && this.areColliding(entity, neighbor)) {
-            const { newVelocityA: newVelocityAx, newVelocityB: newVelocityBx } =
-              this.calculateNewVelocities(
-                entity.velocity.x,
-                entity.mass,
-                neighbor.velocity.x,
-                neighbor.mass
-              );
+          // TODO: Optimize this
+          const pairId = [entity.id, neighbor.id].sort().join();
 
-            const { newVelocityA: newVelocityAy, newVelocityB: newVelocityBy } =
-              this.calculateNewVelocities(
-                entity.velocity.y,
-                entity.mass,
-                neighbor.velocity.y,
-                neighbor.mass
-              );
-
-            entity.velocity = { x: newVelocityAx, y: newVelocityAy };
-            neighbor.velocity = { x: newVelocityBx, y: newVelocityBy };
-            hasCollisions = true;
+          if (
+            entity === neighbor ||
+            calculated.has(pairId) ||
+            !this.areColliding(entity, neighbor)
+          ) {
+            return;
           }
+
+          const { newVelocityA: newVelocityAx, newVelocityB: newVelocityBx } =
+            this.calculateNewVelocities(
+              entity.velocity.x,
+              entity.mass,
+              neighbor.velocity.x,
+              neighbor.mass
+            );
+
+          const { newVelocityA: newVelocityAy, newVelocityB: newVelocityBy } =
+            this.calculateNewVelocities(
+              entity.velocity.y,
+              entity.mass,
+              neighbor.velocity.y,
+              neighbor.mass
+            );
+
+          entity.velocity = { x: newVelocityAx, y: newVelocityAy };
+          neighbor.velocity = { x: newVelocityBx, y: newVelocityBy };
+          calculated.add(pairId);
+          hasCollisions = true;
         });
 
       entity.isColliding = hasCollisions;

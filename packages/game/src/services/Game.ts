@@ -4,8 +4,8 @@ import { Moose } from "../entities/Moose";
 
 @singleton()
 export class Game {
-  private spaceFactor = 3;
-  private count = 2000;
+  private spaceFactor = 30;
+  private count = 10;
 
   private entities = new Array(this.count)
     .fill(1)
@@ -23,10 +23,7 @@ export class Game {
         )
     );
 
-  constructor(
-    private readonly store: EntityStore,
-    private readonly collider: Collider
-  ) {}
+  constructor(private readonly store: EntityStore) {}
 
   public start() {
     this.entities.map((entity) => this.store.set(entity));
@@ -39,7 +36,10 @@ export class Game {
     y1: number
   ) {
     const entities = this.store.getEntitiesInAnArea(x0, y0, x1, y1);
-    this.collider.calculate(entities);
+
+    const collider = new Collider(entities);
+    collider.calculate();
+
     entities.map((e) => {
       e.setRotation(e.getHeading());
       e.recalculatePosition();
