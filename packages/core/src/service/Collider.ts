@@ -34,7 +34,8 @@ export class Collider {
           if (
             entity === neighbor ||
             calculated.has(pairId) ||
-            !this.areColliding(entity, neighbor)
+            !this.areColliding(entity, neighbor) ||
+            this.areMovingApart(entity, neighbor)
           ) {
             return;
           }
@@ -100,5 +101,29 @@ export class Collider {
       totalMass;
 
     return { newVelocityA, newVelocityB };
+  }
+
+  // TODO: This is really wonky
+  private areMovingApart(entityA: Entity, entityB: Entity): boolean {
+    const distanceNow = Math.sqrt(
+      Math.pow(entityA.x - entityB.x, 2) + Math.pow(entityA.y - entityB.y, 2)
+    );
+
+    const distanceNext = Math.sqrt(
+      Math.pow(
+        entityA.x +
+          entityA.velocity.x / 1000000000 -
+          (entityB.x + entityB.velocity.x / 1000000000),
+        2
+      ) +
+        Math.pow(
+          entityA.y +
+            entityA.velocity.y / 1000000000 -
+            (entityB.y + entityB.velocity.y / 1000000000),
+          2
+        )
+    );
+
+    return distanceNext > distanceNow;
   }
 }

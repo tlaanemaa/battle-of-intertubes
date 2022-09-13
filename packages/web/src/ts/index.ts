@@ -34,8 +34,8 @@ onResize();
 const scheduleFrame = () =>
   window.requestAnimationFrame(() => {
     try {
-      const renderRadiusX = Math.round(entityCanvas.width / camera.zoom);
-      const renderRadiusY = Math.round(entityCanvas.height / camera.zoom);
+      const renderRadiusX = Math.round((entityCanvas.width / camera.zoom) * 2);
+      const renderRadiusY = Math.round((entityCanvas.height / camera.zoom) * 2);
       const entities = game.getEntitiesForRendering(
         camera.position.x - renderRadiusX,
         camera.position.y - renderRadiusY,

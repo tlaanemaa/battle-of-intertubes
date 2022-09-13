@@ -26,13 +26,13 @@ export class Moose extends Entity {
     );
 
     this.tick(10000);
-    setInterval(() => this.tick(5000), 1000);
+    setInterval(() => this.tick(4000), 1000);
   }
 
   tick(forceBound: number) {
     this.applyForce({
-      x: Math.random() * 2 * forceBound - forceBound - this.x / 10,
-      y: Math.random() * 2 * forceBound - forceBound - this.y / 10,
+      x: Math.random() * 2 * forceBound - forceBound - this.x / 5,
+      y: Math.random() * 2 * forceBound - forceBound - this.y / 5,
     });
   }
 }

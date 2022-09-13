@@ -4,8 +4,8 @@ import { Moose } from "../entities/Moose";
 
 @singleton()
 export class Game {
-  private spaceFactor = 30;
-  private count = 10;
+  private spaceFactor = 3;
+  private count = 1000;
 
   private entities = new Array(this.count)
     .fill(1)
