@@ -18,6 +18,8 @@ export abstract class Entity {
   public isColliding?: boolean;
 
   private lastCalculationTime = Date.now();
+  private targetRotation = this.rotation;
+  private readonly rotationDegreesPerSec = 360;
 
   /**
    * Calculates the current heading in degrees.
@@ -39,6 +41,13 @@ export abstract class Entity {
   }
 
   /**
+   * Applies rotation in a smooth fashion
+   */
+  public setRotation(angle: number) {
+    this.targetRotation = angle;
+  }
+
+  /**
    * Recalculates the position and velocity of the object
    */
   public recalculatePosition() {
@@ -56,6 +65,7 @@ export abstract class Entity {
       this.velocity.y,
       secondsElapsed
     );
+    this.rotation += this.calculateRotationChange(secondsElapsed);
   }
 
   /**
@@ -111,5 +121,26 @@ export abstract class Entity {
   ) {
     const dragMultiplier = 1 - dragCoefficient;
     return initialVelocity * Math.pow(dragMultiplier, secondsElapsed);
+  }
+
+  private calculateRotationChange(secondsElapsed: number): number {
+    if (this.targetRotation === this.rotation) return 0;
+
+    const rotationRemaining =
+      ((this.targetRotation - this.rotation + 540) % 360) - 180;
+
+    if (rotationRemaining > 0) {
+      return Math.min(
+        this.rotationDegreesPerSec * secondsElapsed,
+        rotationRemaining
+      );
+    } else if (rotationRemaining < 0) {
+      return Math.max(
+        -this.rotationDegreesPerSec * secondsElapsed,
+        rotationRemaining
+      );
+    } else {
+      return 0;
+    }
   }
 }

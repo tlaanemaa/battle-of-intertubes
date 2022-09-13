@@ -38,14 +38,15 @@ export class Game {
     x1: number,
     y1: number
   ) {
-    const entities = this.store.getEntitiesInAnArea(x0, y0, x1, y1).map((e) => {
+    const entities = this.store.getEntitiesInAnArea(x0, y0, x1, y1);
+    this.collider.calculate(entities);
+    entities.map((e) => {
+      e.setRotation(e.getHeading());
       e.recalculatePosition();
       this.store.set(e);
-      e.rotation = e.getHeading();
       return e;
     });
 
-    this.collider.calculate(entities);
     return entities;
   }
 }
