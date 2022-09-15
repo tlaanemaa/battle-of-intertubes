@@ -1,6 +1,7 @@
 import { singleton } from "tsyringe";
 import { Collider, EntityStore } from "@battle-of-intertubes/core";
 import { Moose } from "../entities/Moose";
+import { Player } from "../entities/Player";
 
 @singleton()
 export class Game {
@@ -27,6 +28,7 @@ export class Game {
 
   public start() {
     this.entities.map((entity) => this.store.set(entity));
+    this.store.set(new Player());
   }
 
   public getEntitiesForRendering(
@@ -35,7 +37,7 @@ export class Game {
     x1: number,
     y1: number
   ) {
-    const entities = this.store.getEntitiesInAnArea(x0, y0, x1, y1);
+    const entities = this.store.getArea(x0, y0, x1, y1);
 
     const collider = new Collider(entities);
     collider.calculate();
