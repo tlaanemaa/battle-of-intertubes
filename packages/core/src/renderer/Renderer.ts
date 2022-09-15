@@ -1,6 +1,6 @@
-import { Object2D } from "@battle-of-intertubes/core";
-import { Camera } from "./Camera";
-import { Canvas } from "./Canvas";
+import { Object2D } from "../primitives/Object2D";
+import { Camera } from "../model/Camera";
+import { Canvas } from "../web/Canvas";
 
 export class Renderer {
   private previousCameraPosition: Object2D = { x: 0, y: 0 };

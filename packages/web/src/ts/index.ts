@@ -1,11 +1,14 @@
 import "reflect-metadata";
 import { container } from "tsyringe";
 import { Game } from "@battle-of-intertubes/game";
-import { BackgroundRenderer } from "./BackgroundRenderer";
-import { Canvas } from "./Canvas";
-import { EntityRenderer } from "./EntityRenderer";
-import { Camera } from "./Camera";
-import { UserInput, INTENT } from "./UserInput";
+import {
+  BackgroundRenderer,
+  EntityRenderer,
+  Canvas,
+  Camera,
+  UserInput,
+  INTENT,
+} from "@battle-of-intertubes/core";
 
 const game = container.resolve(Game);
 const camera = new Camera();

@@ -1,4 +1,4 @@
-import { Object2D } from "@battle-of-intertubes/core";
+import { Object2D } from "../primitives/Object2D";
 
 export class Camera {
   public position: Object2D = { x: 0, y: 0 };

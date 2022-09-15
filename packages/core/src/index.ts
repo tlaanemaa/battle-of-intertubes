@@ -1,7 +1,12 @@
-export { EntityStore } from "./service/EntityStore";
+export { Object2D } from "./primitives/Object2D";
+export { FastMap } from "./primitives/FastMap";
+export { Grid } from "./primitives/Grid";
+export { EventSource } from "./primitives/EventSource";
 export { Entity } from "./model/Entity";
-export { Collider } from "./service/Collider";
-export { Object2D } from "./model/Object2D";
-export { Texture } from "./model/Texture";
-export { FastMap } from "./model/FastMap";
-export { EventSource } from "./model/EventSource";
+export { Camera } from "./model/Camera";
+export { Collider } from "./tools/Collider";
+export { BackgroundRenderer } from "./renderer/BackgroundRenderer";
+export { EntityRenderer } from "./renderer/EntityRenderer";
+export { Texture } from "./web/Texture";
+export { Canvas } from "./web/Canvas";
+export { UserInput, INTENT } from "./web/UserInput";

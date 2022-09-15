@@ -1,8 +1,6 @@
-import { injectable } from "tsyringe";
 import { Entity } from "../model/Entity";
-import { Grid } from "../model/Grid";
+import { Grid } from "../primitives/Grid";
 
-@injectable()
 export class Collider {
   private readonly collisionSearchRadius = 200;
   private readonly collisionElasticity = 1;

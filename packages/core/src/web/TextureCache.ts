@@ -1,6 +1,6 @@
-import { FastMap } from "./FastMap";
+import { FastMap } from "../primitives/FastMap";
 
-class TextureCache {
+export class TextureCache {
   private static instance?: TextureCache;
   private readonly images = new FastMap<Promise<HTMLImageElement>>();
 
@@ -20,26 +20,8 @@ class TextureCache {
     return imagePromise;
   }
 
-  public static get() {
+  public static getInstance() {
     if (!this.instance) this.instance = new this();
     return this.instance;
-  }
-}
-
-export class Texture {
-  private image: HTMLImageElement = new Image();
-
-  constructor(src: string) {
-    this.setImage(src);
-  }
-
-  public async setImage(src: string) {
-    if (src !== this.image.src) {
-      this.image = await TextureCache.get().getImage(src);
-    }
-  }
-
-  public render(): CanvasImageSource {
-    return this.image;
   }
 }

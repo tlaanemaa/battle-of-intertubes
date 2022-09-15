@@ -1,4 +1,4 @@
-import { Entity } from "@battle-of-intertubes/core";
+import { Entity } from "../model/Entity";
 import { Renderer } from "./Renderer";
 
 export class EntityRenderer extends Renderer {

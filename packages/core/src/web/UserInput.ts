@@ -1,4 +1,5 @@
-import { EventSource, Object2D } from "@battle-of-intertubes/core";
+import { EventSource } from "../primitives/EventSource";
+import { Object2D } from "../primitives/Object2D";
 
 export enum INTENT {
   MOVE_UP,

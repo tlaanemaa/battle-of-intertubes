@@ -1,6 +1,6 @@
 import { v4 as uuidV4 } from "uuid";
-import { Object2D } from "./Object2D";
-import { Texture } from "./Texture";
+import { Object2D } from "../primitives/Object2D";
+import { Texture } from "../web/Texture";
 
 export abstract class Entity {
   public abstract texture: Texture;

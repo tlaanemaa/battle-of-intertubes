@@ -1,5 +1,5 @@
-import { Camera } from "./Camera";
-import { Canvas } from "./Canvas";
+import { Camera } from "../model/Camera";
+import { Canvas } from "../web/Canvas";
 import { Renderer } from "./Renderer";
 
 export class BackgroundRenderer extends Renderer {
