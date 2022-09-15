@@ -9,16 +9,17 @@ interface GridItem {
 
 export class Grid<T extends GridItem> {
   private readonly grid: FastMap<FastMap<FastMap<T>>> = new FastMap();
-  private readonly entityBoxCoordinates = new FastMap<Object2D>();
+  private readonly itemBoxCoordinates = new FastMap<Object2D>();
+  private readonly allItems = new FastMap<Object2D>();
 
   constructor(private readonly boxSize = 10) {}
 
-  public set(value: T): void {
-    const boxX = Math.floor(value.x / this.boxSize);
-    const boxY = Math.floor(value.y / this.boxSize);
+  public set(item: T): void {
+    const boxX = Math.floor(item.x / this.boxSize);
+    const boxY = Math.floor(item.y / this.boxSize);
 
     // No need to do anything if the object is still in the same box
-    const currentBoxCoordinates = this.entityBoxCoordinates.get(value.id);
+    const currentBoxCoordinates = this.itemBoxCoordinates.get(item.id);
     if (
       currentBoxCoordinates != null &&
       currentBoxCoordinates.x === boxX &&
@@ -28,7 +29,7 @@ export class Grid<T extends GridItem> {
     }
 
     // Cleanup old position
-    this.delete(value);
+    this.delete(item);
 
     // Add containers if they don't exist
     if (!this.grid.has(boxX)) {
@@ -39,19 +40,20 @@ export class Grid<T extends GridItem> {
     }
 
     // Set new position
-    this.grid.get(boxX)?.get(boxY)?.set(value.id, value);
-    this.entityBoxCoordinates.set(value.id, { x: boxX, y: boxY });
+    this.grid.get(boxX)?.get(boxY)?.set(item.id, item);
+    this.itemBoxCoordinates.set(item.id, { x: boxX, y: boxY });
+    this.allItems.set(item.id, item);
   }
 
-  public delete(value: T): void {
-    const position = this.entityBoxCoordinates.get(value.id);
+  public delete(item: T): void {
+    const position = this.itemBoxCoordinates.get(item.id);
 
     if (
       position != null &&
       this.grid.has(position.x) &&
       this.grid.get(position.x)!.has(position.y)
     ) {
-      this.grid.get(position.x)!.get(position.y)!.delete(value.id);
+      this.grid.get(position.x)!.get(position.y)!.delete(item.id);
 
       if (this.grid.get(position.x)!.get(position.y)!.isEmpty()) {
         this.grid.get(position.x)!.delete(position.y);
@@ -62,7 +64,8 @@ export class Grid<T extends GridItem> {
       }
     }
 
-    this.entityBoxCoordinates.delete(value.id);
+    this.itemBoxCoordinates.delete(item.id);
+    this.allItems.delete(item.id);
   }
 
   public getPoint(x: number, y: number): T[] {
@@ -74,7 +77,7 @@ export class Grid<T extends GridItem> {
     const yStart = Math.floor(y0 / this.boxSize);
     const xEnd = Math.floor(x1 / this.boxSize);
     const yEnd = Math.floor(y1 / this.boxSize);
-    const entities: T[] = [];
+    const items: T[] = [];
 
     for (let i = xStart; i <= xEnd; i++) {
       const row = this.grid.get(i);
@@ -82,14 +85,14 @@ export class Grid<T extends GridItem> {
       for (let j = yStart; j <= yEnd; j++) {
         const column = row.get(j);
         if (!column) continue;
-        const entitiesCount = column.size;
-        const entitiesInTheBox = column.values();
-        for (let e = 0; e < entitiesCount; e++) {
-          entities.push(entitiesInTheBox[e]);
+        const itemCount = column.size;
+        const itemsInTheBox = column.values();
+        for (let e = 0; e < itemCount; e++) {
+          items.push(itemsInTheBox[e]);
         }
       }
     }
 
-    return entities;
+    return items;
   }
 }
