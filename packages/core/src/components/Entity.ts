@@ -72,7 +72,7 @@ export abstract class Entity {
    */
   public recalculatePosition(force = false) {
     const now = Date.now();
-    if (!force && now - this.lastCalculationTime < 6) return;
+    if (!force && now - this.lastCalculationTime < 8) return;
     const secondsElapsed = (now - this.lastCalculationTime) / 1000;
     this.lastCalculationTime = now;
 
