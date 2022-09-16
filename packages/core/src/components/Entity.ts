@@ -88,6 +88,10 @@ export abstract class Entity {
     );
     if (this.keepHeading) this.setRotation(this.getHeading());
     this.rotation += this.calculateRotationChange(secondsElapsed);
+    this.triggerOnChange();
+  }
+
+  protected triggerOnChange() {
     if (this.onChange) this.onChange();
   }
 
