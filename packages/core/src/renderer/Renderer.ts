@@ -1,5 +1,5 @@
 import { Object2D } from "../primitives/Object2D";
-import { Camera } from "../model/Camera";
+import { Camera } from "../components/Camera";
 import { Canvas } from "../web/Canvas";
 
 export class Renderer {

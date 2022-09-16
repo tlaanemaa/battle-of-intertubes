@@ -1,4 +1,4 @@
-import { Entity } from "../model/Entity";
+import { Entity } from "../components/Entity";
 import { Grid } from "../primitives/Grid";
 
 export class Collider {

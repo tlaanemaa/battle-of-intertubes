@@ -6,20 +6,40 @@ export abstract class Entity {
   public abstract texture: Texture;
 
   public readonly id = uuidV4();
-  public x = 0;
-  public y = 0;
+  private _x = 0;
+  private _y = 0;
   public height = 50;
   public width = 50;
   public dragCoefficient = 0.05;
   public rotation = 0;
   public velocity: Object2D = { x: 0, y: 0 };
   public mass = 1000;
+  public keepHeading = false;
   public children?: Entity[];
   public isColliding?: boolean;
+  public onChange?: () => void;
 
   private lastCalculationTime = Date.now();
   private targetRotation = this.rotation;
   private readonly rotationDegreesPerSec = 360;
+
+  public get x() {
+    this.recalculatePosition();
+    return this._x;
+  }
+
+  public set x(value: number) {
+    this._x = value;
+  }
+
+  public get y() {
+    this.recalculatePosition();
+    return this._y;
+  }
+
+  public set y(value: number) {
+    this._y = value;
+  }
 
   /**
    * Calculates the current heading in degrees.
@@ -50,8 +70,9 @@ export abstract class Entity {
   /**
    * Recalculates the position and velocity of the object
    */
-  public recalculatePosition() {
+  public recalculatePosition(force = false) {
     const now = Date.now();
+    if (!force && now - this.lastCalculationTime < 6) return;
     const secondsElapsed = (now - this.lastCalculationTime) / 1000;
     this.lastCalculationTime = now;
 
@@ -65,7 +86,9 @@ export abstract class Entity {
       this.velocity.y,
       secondsElapsed
     );
+    if (this.keepHeading) this.setRotation(this.getHeading());
     this.rotation += this.calculateRotationChange(secondsElapsed);
+    if (this.onChange) this.onChange();
   }
 
   /**

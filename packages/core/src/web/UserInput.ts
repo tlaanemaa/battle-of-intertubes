@@ -8,7 +8,6 @@ export enum INTENT {
   MOVE_LEFT,
   ZOOM_IN,
   ZOOM_OUT,
-  RESIZE_WINDOW,
 }
 
 export class UserInput extends EventSource<INTENT, number> {
@@ -100,9 +99,6 @@ export class UserInput extends EventSource<INTENT, number> {
       },
       { passive: false }
     );
-    window.addEventListener("resize", () => {
-      this.trigger(INTENT.RESIZE_WINDOW, 0);
-    });
   }
 
   private handleHeldInput() {

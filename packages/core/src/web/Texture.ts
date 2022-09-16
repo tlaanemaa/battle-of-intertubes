@@ -4,8 +4,8 @@ export class Texture {
   private image: HTMLImageElement = new Image();
   private onload?: () => void;
 
-  constructor(src: string) {
-    this.setImage(src);
+  constructor(src?: string) {
+    if (src) this.setImage(src);
   }
 
   public async setImage(src: string) {

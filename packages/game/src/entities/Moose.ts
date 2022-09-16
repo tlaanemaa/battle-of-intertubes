@@ -6,6 +6,7 @@ export class Moose extends Entity {
   public readonly width = 100;
   public rotation = 0;
   public children = undefined;
+  public keepHeading = true;
 
   private images = [
     "img/goat.png",
@@ -16,8 +17,10 @@ export class Moose extends Entity {
     "img/herobrine.png",
   ];
 
-  constructor(public x: number = 0, public y: number = 0) {
+  constructor(x: number = 0, y: number = 0) {
     super();
+    this.x = x;
+    this.y = y;
     this.dragCoefficient = 0.0001;
     this.mass = 100;
 

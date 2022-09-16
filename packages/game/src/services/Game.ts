@@ -1,53 +1,71 @@
-import { Collider, Entity, Grid } from "@battle-of-intertubes/core";
+import {
+  Camera,
+  Canvas,
+  GameRunner,
+  UserInput,
+  INTENT,
+} from "@battle-of-intertubes/core";
+import { EntityStore } from "@battle-of-intertubes/core/src/store/EntityStore";
 import { Moose } from "../entities/Moose";
 import { Player } from "../entities/Player";
 
 export class Game {
-  private spaceFactor = 3;
-  private count = 1000;
-  private store = new Grid<Entity>(1000);
+  private readonly entityCanvas = new Canvas("game-view");
+  private readonly backgroundCanvas = new Canvas("game-background");
+  private readonly camera = Camera.getInstance();
+  private readonly store = new EntityStore();
+  private readonly userInput = new UserInput();
+  private readonly gameRunner = new GameRunner(
+    this.backgroundCanvas,
+    this.entityCanvas,
+    this.camera,
+    this.store
+  );
 
-  private entities = new Array(this.count)
-    .fill(1)
-    .map(
-      () =>
-        new Moose(
-          Math.round(
-            Math.random() * this.count * this.spaceFactor * 2 -
-              this.count * this.spaceFactor
-          ),
-          Math.round(
-            Math.random() * this.count * this.spaceFactor * 2 -
-              this.count * this.spaceFactor
-          )
+  init() {
+    const spaceFactor = 3;
+    const count = 1000;
+    const entities = new Array(count).fill(1).map(() => {
+      const entity = new Moose(
+        Math.round(
+          Math.random() * count * spaceFactor * 2 - count * spaceFactor
+        ),
+        Math.round(
+          Math.random() * count * spaceFactor * 2 - count * spaceFactor
         )
-    );
+      );
 
-  constructor() {}
-
-  public start() {
-    this.entities.map((entity) => this.store.set(entity));
-    this.store.set(new Player());
-  }
-
-  public getEntitiesForRendering(
-    x0: number,
-    y0: number,
-    x1: number,
-    y1: number
-  ) {
-    const entities = this.store.getArea(x0, y0, x1, y1);
-
-    const collider = new Collider(entities);
-    collider.calculate();
-
-    entities.map((e) => {
-      e.setRotation(e.getHeading());
-      e.recalculatePosition();
-      this.store.set(e);
-      return e;
+      this.store.add(entity);
+      return entity;
     });
 
-    return entities;
+    this.store.add(new Player());
+
+    this.userInput.on(
+      INTENT.ZOOM_IN,
+      (x) => (this.camera.zoom *= 1 + x / 1000)
+    );
+    this.userInput.on(
+      INTENT.ZOOM_OUT,
+      (x) => (this.camera.zoom *= 1 - x / 1000)
+    );
+    this.userInput.on(
+      INTENT.MOVE_UP,
+      (x) => (this.camera.position.y -= x / this.camera.zoom)
+    );
+    this.userInput.on(
+      INTENT.MOVE_RIGHT,
+      (x) => (this.camera.position.x += x / this.camera.zoom)
+    );
+    this.userInput.on(
+      INTENT.MOVE_DOWN,
+      (x) => (this.camera.position.y += x / this.camera.zoom)
+    );
+    this.userInput.on(
+      INTENT.MOVE_LEFT,
+      (x) => (this.camera.position.x -= x / this.camera.zoom)
+    );
+
+    this.gameRunner.start();
   }
 }

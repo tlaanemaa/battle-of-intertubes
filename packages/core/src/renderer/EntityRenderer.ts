@@ -1,4 +1,4 @@
-import { Entity } from "../model/Entity";
+import { Entity } from "../components/Entity";
 import { Renderer } from "./Renderer";
 
 export class EntityRenderer extends Renderer {
