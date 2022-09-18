@@ -1,4 +1,4 @@
-import { Camera, Entity, Texture } from "@battle-of-intertubes/core";
+import { Camera, Entity, Sound, Texture } from "@battle-of-intertubes/core";
 
 export class Player extends Entity {
   public readonly texture = new Texture("img/hero1.png");
@@ -8,10 +8,15 @@ export class Player extends Entity {
   public dragCoefficient = 0.999;
   public keepHeading = true;
 
+  private collisionSound = new Sound("audio/big-pipe-hit.mp3");
+  private shootingSound = new Sound("audio/shotgun-firing.mp3");
+
   constructor(private readonly camera: Camera) {
     super();
     this.x = 0;
     this.y = 0;
+
+    //this.onCollision = () => this.collisionSound.play();
   }
 
   protected triggerOnChange(): void {
@@ -37,6 +42,7 @@ export class Player extends Entity {
   }
 
   public shoot() {
+    this.shootingSound.play();
     console.log("PEW");
   }
 }
