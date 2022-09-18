@@ -10,5 +10,6 @@ export { EntityRenderer } from "./renderer/EntityRenderer";
 export { Texture } from "./web/Texture";
 export { Canvas } from "./web/Canvas";
 export { UserInput, INTENT } from "./web/UserInput";
-export { GameRunner } from "./service/GameRunner";
 export { Sound } from "./web/Sound";
+export { GameRunner } from "./service/GameRunner";
+export { EntityStore } from "./store/EntityStore";

@@ -1,11 +1,11 @@
 import {
+  EntityStore,
   Camera,
   Canvas,
   GameRunner,
   UserInput,
   INTENT,
 } from "@battle-of-intertubes/core";
-import { EntityStore } from "@battle-of-intertubes/core/src/store/EntityStore";
 import { Moose } from "../entities/Moose";
 import { Player } from "../entities/Player";
 
@@ -15,7 +15,7 @@ export class Game {
   private readonly camera = Camera.getInstance();
   private readonly store = new EntityStore();
   private readonly userInput = new UserInput();
-  private readonly player = new Player(this.camera);
+  private readonly player = new Player(this.camera, this.store);
   private readonly gameRunner = new GameRunner(
     this.backgroundCanvas,
     this.entityCanvas,

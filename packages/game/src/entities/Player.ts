@@ -1,4 +1,6 @@
 import { Camera, Entity, Sound, Texture } from "@battle-of-intertubes/core";
+import { EntityStore } from "@battle-of-intertubes/core/src/store/EntityStore";
+import { Bullet } from "./Bullet";
 
 export class Player extends Entity {
   public readonly texture = new Texture("img/hero1.png");
@@ -10,8 +12,12 @@ export class Player extends Entity {
 
   private collisionSound = new Sound("audio/big-pipe-hit.mp3");
   private shootingSound = new Sound("audio/shotgun-firing.mp3");
+  private lastShot = Date.now();
 
-  constructor(private readonly camera: Camera) {
+  constructor(
+    private readonly camera: Camera,
+    private readonly store: EntityStore
+  ) {
     super();
     this.x = 0;
     this.y = 0;
@@ -42,7 +48,17 @@ export class Player extends Entity {
   }
 
   public shoot() {
+    const now = Date.now();
+    if (now - this.lastShot < 100) return;
+    this.lastShot = now;
+
+    const rotationRad = (this.rotation * Math.PI) / 180;
+    const spawnX = this.x + (this.width / 2 + 30) * Math.sin(rotationRad);
+    const spawnY = this.y - (this.height / 2 + 30) * Math.cos(rotationRad);
+    const bullet = new Bullet(spawnX, spawnY, this.rotation);
+    bullet.onCollision = () => this.store.remove(bullet);
+    setTimeout(() => this.store.remove(bullet), 1000);
+    this.store.add(bullet);
     this.shootingSound.play();
-    console.log("PEW");
   }
 }
