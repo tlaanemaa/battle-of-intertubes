@@ -3,9 +3,9 @@ import { Object2D } from "../primitives/Object2D";
 import { Texture } from "../web/Texture";
 
 export abstract class Entity {
-  public abstract texture: Texture;
-
+  // Properties
   public readonly id = uuidV4();
+  public abstract texture: Texture;
   private _x = 0;
   private _y = 0;
   public height = 50;
@@ -14,14 +14,21 @@ export abstract class Entity {
   public rotation = 0;
   public velocity: Object2D = { x: 0, y: 0 };
   public mass = 1000;
-  public keepHeading = false;
   public children?: Entity[];
-  public isColliding?: boolean;
-  public onChange?: () => void;
 
+  // Flags
+  public keepHeading = false;
+  public collisionsEnabled = true;
+  public isColliding?: boolean;
+
+  // Event handler callbacks
+  public onChange?: () => void;
+  public onCollision?: () => void;
+
+  // Internal data
   private lastCalculationTime = Date.now();
   private targetRotation = this.rotation;
-  private readonly rotationDegreesPerSec = 360;
+  private readonly rotationDegreesPerSec = 720;
 
   public get x() {
     this.recalculatePosition();
@@ -93,6 +100,10 @@ export abstract class Entity {
 
   protected triggerOnChange() {
     if (this.onChange) this.onChange();
+  }
+
+  public triggerCollision() {
+    if (this.onCollision) this.onCollision();
   }
 
   /**

@@ -31,6 +31,8 @@ export class Collider {
 
           if (
             entity === neighbor ||
+            !entity.collisionsEnabled ||
+            !neighbor.collisionsEnabled ||
             calculated.has(pairId) ||
             !this.areColliding(entity, neighbor) ||
             this.areMovingApart(entity, neighbor)
@@ -56,11 +58,17 @@ export class Collider {
 
           entity.velocity = { x: newVelocityAx, y: newVelocityAy };
           neighbor.velocity = { x: newVelocityBx, y: newVelocityBy };
+          entity.isColliding = true;
+          neighbor.isColliding = true;
+          entity.triggerCollision();
+          neighbor.triggerCollision();
           calculated.add(pairId);
           hasCollisions = true;
         });
 
-      entity.isColliding = hasCollisions;
+      if (!hasCollisions) {
+        entity.isColliding = false;
+      }
     });
   }
 

@@ -27,7 +27,7 @@ export class Game {
     this.store.add(this.player);
     const spaceFactor = 3;
     const count = 1000;
-    const entities = new Array(count).fill(1).map(() => {
+    new Array(count).fill(1).map(() => {
       const entity = new Moose(
         Math.round(
           Math.random() * count * spaceFactor * 2 - count * spaceFactor
