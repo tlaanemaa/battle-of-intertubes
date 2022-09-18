@@ -60,8 +60,8 @@ export class Collider {
           neighbor.velocity = { x: newVelocityBx, y: newVelocityBy };
           entity.isColliding = true;
           neighbor.isColliding = true;
-          entity.triggerCollision();
-          neighbor.triggerCollision();
+          entity.triggerCollision(neighbor);
+          neighbor.triggerCollision(entity);
           calculated.add(pairId);
           hasCollisions = true;
         });

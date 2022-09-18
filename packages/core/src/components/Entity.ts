@@ -23,7 +23,7 @@ export abstract class Entity {
 
   // Event handler callbacks
   public onChange?: () => void;
-  public onCollision?: () => void;
+  public onCollision?: (target: Entity) => void;
 
   // Internal data
   private lastCalculationTime = Date.now();
@@ -102,8 +102,8 @@ export abstract class Entity {
     if (this.onChange) this.onChange();
   }
 
-  public triggerCollision() {
-    if (this.onCollision) this.onCollision();
+  public triggerCollision(target: Entity) {
+    if (this.onCollision) this.onCollision(target);
   }
 
   /**

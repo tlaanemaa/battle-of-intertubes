@@ -6,7 +6,7 @@ export class Player extends Entity {
   public readonly texture = new Texture("img/hero1.png");
   public height = 100;
   public width = 100;
-  public mass = 100;
+  public mass = 50;
   public dragCoefficient = 0.999;
   public keepHeading = true;
 
@@ -49,15 +49,19 @@ export class Player extends Entity {
 
   public shoot() {
     const now = Date.now();
-    if (now - this.lastShot < 100) return;
+    if (now - this.lastShot < 50) return;
     this.lastShot = now;
 
     const rotationRad = (this.rotation * Math.PI) / 180;
     const spawnX = this.x + (this.width / 2 + 30) * Math.sin(rotationRad);
     const spawnY = this.y - (this.height / 2 + 30) * Math.cos(rotationRad);
     const bullet = new Bullet(spawnX, spawnY, this.rotation);
-    bullet.onCollision = () => this.store.remove(bullet);
-    setTimeout(() => this.store.remove(bullet), 1000);
+    // bullet.onCollision = (target) => {
+    //  if (!(target instanceof Bullet) && target !== this) {
+    //    this.store.remove(bullet);
+    //  }
+    // };
+    setTimeout(() => this.store.remove(bullet), 2000);
     this.store.add(bullet);
     this.shootingSound.play();
   }

@@ -6,6 +6,7 @@ import {
   UserInput,
   INTENT,
 } from "@battle-of-intertubes/core";
+import { FrameTimer } from "@battle-of-intertubes/core/src/web/FrameTimer";
 import { Moose } from "../entities/Moose";
 import { Player } from "../entities/Player";
 
@@ -14,13 +15,15 @@ export class Game {
   private readonly backgroundCanvas = new Canvas("game-background");
   private readonly camera = Camera.getInstance();
   private readonly store = new EntityStore();
-  private readonly userInput = new UserInput();
+  private readonly timer = new FrameTimer();
+  private readonly userInput = new UserInput(this.timer);
   private readonly player = new Player(this.camera, this.store);
   private readonly gameRunner = new GameRunner(
     this.backgroundCanvas,
     this.entityCanvas,
     this.camera,
-    this.store
+    this.store,
+    this.timer
   );
 
   init() {

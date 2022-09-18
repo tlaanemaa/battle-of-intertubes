@@ -1,5 +1,6 @@
 import { EventSource } from "../primitives/EventSource";
 import { Object2D } from "../primitives/Object2D";
+import { FrameTimer } from "./FrameTimer";
 
 export enum INTENT {
   MOVE_UP,
@@ -22,12 +23,11 @@ export class UserInput extends EventSource<INTENT, number> {
 
   private readonly pressedKeys = new Set<string>();
 
-  constructor() {
+  constructor(private readonly timer: FrameTimer) {
     super();
     this.attachListeners();
 
-    // Run it about once every frame, but it doesn't have to be exact
-    setInterval(() => this.handleHeldInput(), 17);
+    this.timer.schedule(() => this.handleHeldInput());
   }
 
   private attachListeners() {

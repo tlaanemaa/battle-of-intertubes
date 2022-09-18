@@ -9,7 +9,6 @@ import { Collider } from "../tools/Collider";
 
 @injectable()
 export class GameRunner {
-  private readonly timer = new FrameTimer();
   private readonly backgroundRenderer: BackgroundRenderer;
   private readonly entityRenderer: EntityRenderer;
 
@@ -17,7 +16,8 @@ export class GameRunner {
     private readonly backgroundCanvas: Canvas,
     private readonly entityCanvas: Canvas,
     private readonly camera: Camera,
-    private readonly store: EntityStore
+    private readonly store: EntityStore,
+    private readonly timer: FrameTimer
   ) {
     this.backgroundRenderer = new BackgroundRenderer(
       this.backgroundCanvas,
