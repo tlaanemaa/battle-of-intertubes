@@ -60,6 +60,9 @@ export class Game {
     this.userInput.on(INTENT.MOVE_LEFT, (x) => {
       this.player.applyForce({ x: -x * this.player.mass * 10, y: 0 });
     });
+    this.userInput.on(INTENT.SHOOT, () => {
+      this.player.shoot();
+    });
 
     this.gameRunner.start();
   }

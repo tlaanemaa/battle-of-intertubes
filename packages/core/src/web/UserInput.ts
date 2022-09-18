@@ -8,6 +8,7 @@ export enum INTENT {
   MOVE_LEFT,
   ZOOM_IN,
   ZOOM_OUT,
+  SHOOT,
 }
 
 export class UserInput extends EventSource<INTENT, number> {
@@ -37,10 +38,10 @@ export class UserInput extends EventSource<INTENT, number> {
         this.trigger(INTENT.ZOOM_IN, Math.abs(event.deltaY));
     });
     window.addEventListener("keydown", (event: KeyboardEvent) => {
-      this.pressedKeys.add(event.key);
+      this.pressedKeys.add(event.code);
     });
     window.addEventListener("keyup", (event: KeyboardEvent) => {
-      this.pressedKeys.delete(event.key);
+      this.pressedKeys.delete(event.code);
     });
     window.addEventListener(
       "touchstart",
@@ -168,6 +169,8 @@ export class UserInput extends EventSource<INTENT, number> {
           return this.trigger(INTENT.MOVE_DOWN, 10);
         case "ArrowLeft":
           return this.trigger(INTENT.MOVE_LEFT, 10);
+        case "Space":
+          return this.trigger(INTENT.SHOOT, 1);
       }
     });
   }

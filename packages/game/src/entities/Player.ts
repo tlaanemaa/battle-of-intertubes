@@ -35,4 +35,8 @@ export class Player extends Entity {
       this.y - verticalSpace
     );
   }
+
+  public shoot() {
+    console.log("PEW");
+  }
 }
