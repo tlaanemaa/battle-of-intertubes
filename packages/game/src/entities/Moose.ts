@@ -3,8 +3,8 @@ import { Player } from "./Player";
 
 export class Moose extends Entity {
   public readonly texture: Texture;
-  public readonly width = 100;
-  public readonly height = 100;
+  public readonly width = 70;
+  public readonly height = 70;
   public rotation = 0;
   public children = undefined;
   public keepHeading = true;

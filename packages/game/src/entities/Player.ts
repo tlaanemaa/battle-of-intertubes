@@ -3,12 +3,16 @@ import { EntityStore } from "@battle-of-intertubes/core/src/store/EntityStore";
 import { Bullet } from "./Bullet";
 
 export class Player extends Entity {
-  public readonly texture = new Texture(200, 200, "img/hero1.png");
   public width = 100;
   public height = 100;
   public mass = 50;
   public dragCoefficient = 0.999;
   public keepHeading = true;
+  public readonly texture = new Texture(
+    this.width,
+    this.height,
+    "img/hero1.png"
+  );
 
   private collisionSound = new Sound("audio/big-pipe-hit.mp3");
   private shootingSound = new Sound("audio/shotgun-firing.mp3");
