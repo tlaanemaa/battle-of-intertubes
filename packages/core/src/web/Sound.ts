@@ -1,7 +1,19 @@
+import { AssetCache } from "./AssetCache";
+
 export class Sound {
-  constructor(private readonly src: string) {}
+  private audioBlob?: string;
+
+  constructor(src?: string) {
+    if (src) this.setAudio(src);
+  }
 
   public play() {
-    new Audio(this.src).play();
+    if (this.audioBlob) {
+      new Audio(this.audioBlob).play();
+    }
+  }
+
+  private async setAudio(src: string) {
+    this.audioBlob = await AssetCache.getInstance().get(src);
   }
 }
