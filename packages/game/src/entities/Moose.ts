@@ -3,8 +3,8 @@ import { Player } from "./Player";
 
 export class Moose extends Entity {
   public readonly texture: Texture;
-  public readonly height = 100;
   public readonly width = 100;
+  public readonly height = 100;
   public rotation = 0;
   public children = undefined;
   public keepHeading = true;
@@ -26,6 +26,8 @@ export class Moose extends Entity {
     this.mass = 100;
 
     this.texture = new Texture(
+      100,
+      100,
       this.images[Math.floor(Math.random() * this.images.length)]
     );
 

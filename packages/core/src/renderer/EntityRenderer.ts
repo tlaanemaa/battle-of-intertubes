@@ -15,8 +15,9 @@ export class EntityRenderer extends Renderer {
     const canvasHalfHeight = this.canvas.height / 2;
 
     entities.forEach((entity) => {
-      const scaledWidth = entity.width * this.camera.zoom;
-      const scaledHeight = entity.height * this.camera.zoom;
+      const scaledTextureWidth = entity.texture.width * this.camera.zoom;
+      const scaledTextureHeight = entity.texture.height * this.camera.zoom;
+
       const renderX =
         (entity.x - this.camera.position.x) * this.camera.zoom +
         canvasHalfWidth;
@@ -27,12 +28,14 @@ export class EntityRenderer extends Renderer {
       ctx.translate(Math.round(renderX), Math.round(renderY));
 
       if (this.drawEntityBoxes) {
+        const scaledEntityWidth = entity.width * this.camera.zoom;
+        const scaledEntityHeight = entity.height * this.camera.zoom;
         ctx.beginPath();
         ctx.rect(
-          Math.round(-scaledWidth / 2),
-          Math.round(-scaledHeight / 2),
-          Math.round(scaledWidth),
-          Math.round(scaledHeight)
+          Math.round(-scaledEntityWidth / 2),
+          Math.round(-scaledEntityHeight / 2),
+          Math.round(scaledEntityWidth),
+          Math.round(scaledEntityHeight)
         );
         ctx.strokeStyle = entity.isColliding ? "#FF0000" : "#00FF00";
         ctx.stroke();
@@ -41,10 +44,10 @@ export class EntityRenderer extends Renderer {
       ctx.rotate((entity.rotation * Math.PI) / 180);
       ctx.drawImage(
         entity.texture.render(),
-        Math.round(-scaledWidth / 2),
-        Math.round(-scaledHeight / 2),
-        Math.round(scaledWidth),
-        Math.round(scaledHeight)
+        Math.round(-scaledTextureWidth / 2),
+        Math.round(-scaledTextureHeight / 2),
+        Math.round(scaledTextureWidth),
+        Math.round(scaledTextureHeight)
       );
 
       // Reset current transformation matrix to the identity matrix

@@ -1,9 +1,9 @@
 import { Entity, Texture } from "@battle-of-intertubes/core";
 
 export class Bullet extends Entity {
-  public readonly texture = new Texture("img/red-rocket.png");
-  public height = 50;
+  public readonly texture = new Texture(this.width, this.height, "img/red-rocket.png");
   public width = 50;
+  public height = 50;
   public mass = 500;
   public dragCoefficient = 0.00001;
   public keepHeading = true;

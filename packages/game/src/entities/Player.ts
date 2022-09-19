@@ -3,9 +3,9 @@ import { EntityStore } from "@battle-of-intertubes/core/src/store/EntityStore";
 import { Bullet } from "./Bullet";
 
 export class Player extends Entity {
-  public readonly texture = new Texture("img/hero1.png");
-  public height = 100;
+  public readonly texture = new Texture(200, 200, "img/hero1.png");
   public width = 100;
+  public height = 100;
   public mass = 50;
   public dragCoefficient = 0.999;
   public keepHeading = true;

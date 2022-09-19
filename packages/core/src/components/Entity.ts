@@ -8,8 +8,8 @@ export abstract class Entity {
   public abstract texture: Texture;
   private _x = 0;
   private _y = 0;
-  public height = 50;
   public width = 50;
+  public height = 50;
   public dragCoefficient = 0.05;
   public rotation = 0;
   public velocity: Object2D = { x: 0, y: 0 };
