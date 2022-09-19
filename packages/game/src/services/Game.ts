@@ -37,7 +37,8 @@ export class Game {
         ),
         Math.round(
           Math.random() * count * spaceFactor * 2 - count * spaceFactor
-        )
+        ),
+        this.player
       );
 
       this.store.add(entity);

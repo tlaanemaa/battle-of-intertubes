@@ -1,4 +1,5 @@
 import { Entity, Texture } from "@battle-of-intertubes/core";
+import { Player } from "./Player";
 
 export class Moose extends Entity {
   public readonly texture: Texture;
@@ -17,7 +18,7 @@ export class Moose extends Entity {
     "img/herobrine.png",
   ];
 
-  constructor(x: number = 0, y: number = 0) {
+  constructor(x: number = 0, y: number = 0, private readonly player: Player) {
     super();
     this.x = x;
     this.y = y;
@@ -34,8 +35,14 @@ export class Moose extends Entity {
 
   tick(forceBound: number) {
     this.applyForce({
-      x: Math.random() * 2 * forceBound - forceBound - this.x / 2,
-      y: Math.random() * 2 * forceBound - forceBound - this.y / 2,
+      x:
+        Math.random() * 2 * forceBound -
+        forceBound -
+        (this.x - this.player.x) / 2,
+      y:
+        Math.random() * 2 * forceBound -
+        forceBound -
+        (this.y - this.player.y) / 2,
     });
   }
 }
