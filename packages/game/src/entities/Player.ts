@@ -22,7 +22,7 @@ export class Player extends Entity {
     this.x = 0;
     this.y = 0;
 
-    //this.onCollision = () => this.collisionSound.play();
+    this.onCollision = () => this.collisionSound.play();
   }
 
   protected triggerOnChange(): void {
