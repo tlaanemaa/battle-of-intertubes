@@ -5,7 +5,14 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
-    "start": "ts-node src/index.ts",
+    "start": "node .",
+    "start-dev": "ts-node src/index.ts",
     "build": "tsc --build"
+  },
+  "dependencies": {
+    "ws": "^8.8.1"
+  },
+  "devDependencies": {
+    "@types/ws": "^8.5.3"
   }
 }

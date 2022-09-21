@@ -5,8 +5,8 @@ import {
   GameRunner,
   UserInput,
   INTENT,
+  FrameTimer,
 } from "@battle-of-intertubes/core";
-import { FrameTimer } from "@battle-of-intertubes/core/src/web/FrameTimer";
 import { Moose } from "../entities/Moose";
 import { Player } from "../entities/Player";
 

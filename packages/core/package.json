@@ -8,11 +8,5 @@
     "start": "ts-node src/index.ts",
     "build": "tsc --build",
     "test": "jest"
-  },
-  "dependencies": {
-    "uuid": "^9.0.0"
-  },
-  "devDependencies": {
-    "@types/uuid": "^8.3.4"
   }
 }

@@ -7,9 +7,10 @@
     "build-web": "npm run build -w packages/web",
     "start-api": "npm run start -w packages/api",
     "build-api": "npm run build -w packages/api",
+    "build-api-image": "docker build -t battle_of_intertubes_api -f packages/api/Dockerfile .",
     "test-core": "npm run test -w packages/core",
     "build-core": "npm run build -w packages/core",
-    "build-all": "npm run build -w packages"
+    "build": "npm run build -w packages"
   },
   "repository": {
     "type": "git",
@@ -27,11 +28,13 @@
   "dependencies": {
     "reflect-metadata": "^0.1.13",
     "runtypes": "^6.6.0",
-    "tsyringe": "^4.7.0"
+    "tsyringe": "^4.7.0",
+    "uuid": "^9.0.0"
   },
   "devDependencies": {
     "@types/jest": "^29.0.0",
     "@types/node": "^18.7.14",
+    "@types/uuid": "^8.3.4",
     "jest": "^28.1.3",
     "ts-jest": "^28.0.8",
     "ts-node": "^10.9.1",
