@@ -1,6 +1,6 @@
 import "reflect-metadata";
 import { WebSocketServer } from "ws";
-import { Message } from "@battle-of-intertubes/core";
+import { Parser } from "@battle-of-intertubes/core";
 
 const PORT = parseInt(process.env.PORT!) || 8080;
 const wss = new WebSocketServer({ port: PORT }, () =>
@@ -9,7 +9,7 @@ const wss = new WebSocketServer({ port: PORT }, () =>
 
 wss.on("connection", (ws) => {
   ws.on("message", (data) => {
-    const message = Message.from(data.toString());
+    const message = Parser.parse(data.toString());
     console.log(message);
   });
 });

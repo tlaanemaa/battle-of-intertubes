@@ -13,5 +13,5 @@ export { UserInput, INTENT } from "./web/UserInput";
 export { Sound } from "./web/Sound";
 export { GameRunner } from "./service/GameRunner";
 export { EntityStore } from "./store/EntityStore";
-export { Message } from "./network/Message";
 export { FrameTimer } from "./web/FrameTimer";
+export { Parser } from "./network/Parser";
