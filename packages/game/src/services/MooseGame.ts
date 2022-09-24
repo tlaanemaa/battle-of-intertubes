@@ -5,12 +5,13 @@ import {
   GameRunner,
   UserInput,
   INTENT,
+  Game,
 } from "@battle-of-intertubes/core";
 import { Moose } from "../entities/Moose";
 import { Player } from "../entities/Player";
 
 @singleton()
-export class Game {
+export class MooseGame implements Game {
   constructor(
     @inject("UserInput")
     private readonly userInput: UserInput,

@@ -6,3 +6,4 @@ export { Texture } from "./Texture";
 export { TextureLoader } from "./TextureLoader";
 export { Timer } from "./Timer";
 export { UserInput, INTENT } from "./UserInput";
+export { Game } from "./Game";

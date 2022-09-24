@@ -1,6 +1,7 @@
 import "reflect-metadata";
 import { container, Lifecycle } from "tsyringe";
-import { Game } from "@battle-of-intertubes/game";
+import "@battle-of-intertubes/game";
+import { Game } from "@battle-of-intertubes/core";
 import { FrameTimer } from "./components";
 import { EntityRenderer, BackgroundRenderer } from "./renderer";
 import { WebUserInput, WebTextureLoader, WebAudioLoader } from "./services";
@@ -36,4 +37,4 @@ container.register(
   { lifecycle: Lifecycle.Singleton }
 );
 
-container.resolve(Game).init();
+container.resolve<Game>("Game").init();
