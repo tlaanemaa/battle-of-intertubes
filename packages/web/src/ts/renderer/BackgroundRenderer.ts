@@ -1,7 +1,10 @@
-import { Camera } from "../components/Camera";
-import { Canvas } from "../web/Canvas";
+import { singleton } from "tsyringe";
+import { Camera } from "@battle-of-intertubes/core/src/components/Camera";
 import { Renderer } from "./Renderer";
+import { BackgroundCanvas } from "./BackgroundCanvas";
+import { Canvas } from "../components/Canvas";
 
+@singleton()
 export class BackgroundRenderer extends Renderer {
   private readonly imageUrl = "img/grid-me.png";
   private readonly imageHeight = 50;
@@ -11,10 +14,17 @@ export class BackgroundRenderer extends Renderer {
   private image = new Canvas();
   private imageHasChanged = false;
 
-  constructor(canvas: Canvas, camera: Camera) {
+  constructor(canvas: BackgroundCanvas, camera: Camera) {
     super(canvas, camera);
     this.rawImage.onload = () => this.createBackgroundImage();
     this.rawImage.src = this.imageUrl;
+
+    const onResize = () => {
+      this.canvas.resize(window.innerWidth, window.innerHeight);
+      this.createBackgroundImage();
+    };
+    window.addEventListener("resize", onResize);
+    onResize();
   }
 
   public draw() {

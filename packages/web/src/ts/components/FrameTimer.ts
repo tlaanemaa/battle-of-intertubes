@@ -1,19 +1,23 @@
+import { Timer } from "@battle-of-intertubes/core/src/types/Timer";
+import { injectable } from "tsyringe";
+
 type Task = () => void;
 
-export class FrameTimer {
+@injectable()
+export class FrameTimer implements Timer {
   private shouldStop = false;
   private tasks: Task[] = [];
 
-  start() {
+  public start() {
     this.shouldStop = false;
     window.requestAnimationFrame(() => this.handleFrame());
   }
 
-  stop() {
+  public stop() {
     this.shouldStop = true;
   }
 
-  public schedule(task: Task) {
+  public schedulePrimary(task: Task) {
     this.tasks.push(task);
   }
 

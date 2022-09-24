@@ -1,3 +1,6 @@
+import { injectable } from "tsyringe";
+
+@injectable()
 export class DebugConsole {
   private element = document.createElement("div");
 

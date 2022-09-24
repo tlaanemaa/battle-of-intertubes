@@ -1,8 +1,7 @@
-import { Entity, Texture } from "@battle-of-intertubes/core";
+import { Entity } from "@battle-of-intertubes/core";
 import { Player } from "./Player";
 
 export class Moose extends Entity {
-  public readonly texture: Texture;
   public readonly width = 70;
   public readonly height = 70;
   public rotation = 0;
@@ -25,10 +24,10 @@ export class Moose extends Entity {
     this.dragCoefficient = 0.0001;
     this.mass = 100;
 
-    this.texture = new Texture(
+    this.texture = this.textureLoader.load(
+      this.images[Math.floor(Math.random() * this.images.length)],
       100,
-      100,
-      this.images[Math.floor(Math.random() * this.images.length)]
+      100
     );
 
     this.tick(10000);

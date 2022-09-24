@@ -1,10 +1,9 @@
-import { FastMap } from "../primitives/FastMap";
+import { FastMap } from "@battle-of-intertubes/core/src/primitives/FastMap";
+import { singleton } from "tsyringe";
 
+@singleton()
 export class AssetCache {
-  private static instance?: AssetCache;
   private readonly assets = new FastMap<Promise<string>>();
-
-  private constructor() {}
 
   public get(src: string) {
     const cachedAsset = this.assets.get(src);
@@ -20,10 +19,5 @@ export class AssetCache {
       response.blob()
     );
     return URL.createObjectURL(blob);
-  }
-
-  public static getInstance() {
-    if (!this.instance) this.instance = new this();
-    return this.instance;
   }
 }

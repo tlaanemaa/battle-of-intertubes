@@ -1,39 +1,24 @@
-import { injectable } from "tsyringe";
+import { inject, singleton } from "tsyringe";
 import { Camera } from "../components/Camera";
-import { BackgroundRenderer } from "../renderer/BackgroundRenderer";
-import { EntityRenderer } from "../renderer/EntityRenderer";
-import { Canvas } from "../web/Canvas";
 import { EntityStore } from "../store/EntityStore";
-import { FrameTimer } from "../web/FrameTimer";
 import { Collider } from "../tools/Collider";
+import { Timer } from "../types/Timer";
+import { EntityRenderer } from "../types/EntityRenderer";
+import { BackgroundRenderer } from "../types/BackgroundRenderer";
 
-@injectable()
+@singleton()
 export class GameRunner {
-  private readonly backgroundRenderer: BackgroundRenderer;
-  private readonly entityRenderer: EntityRenderer;
-
   constructor(
-    private readonly backgroundCanvas: Canvas,
-    private readonly entityCanvas: Canvas,
+    @inject("BackgroundRenderer")
+    private readonly backgroundRenderer: BackgroundRenderer,
+    @inject("EntityRenderer")
+    private readonly entityRenderer: EntityRenderer,
+    @inject("Timer")
+    private readonly timer: Timer,
     private readonly camera: Camera,
-    private readonly store: EntityStore,
-    private readonly timer: FrameTimer
+    private readonly store: EntityStore
   ) {
-    this.backgroundRenderer = new BackgroundRenderer(
-      this.backgroundCanvas,
-      this.camera
-    );
-    this.timer.schedule(() => this.tick());
-    this.entityRenderer = new EntityRenderer(this.entityCanvas, this.camera);
-
-    // TODO: This should probably be somewhere else
-    const onResize = () => {
-      entityCanvas.resize(window.innerWidth, window.innerHeight);
-      backgroundCanvas.resize(window.innerWidth, window.innerHeight);
-      this.backgroundRenderer.createBackgroundImage();
-    };
-    window.addEventListener("resize", onResize);
-    onResize();
+    this.timer.schedulePrimary(() => this.tick());
   }
 
   public start() {
@@ -46,10 +31,10 @@ export class GameRunner {
 
   private tick() {
     const renderRadiusX = Math.round(
-      this.entityCanvas.width / this.camera.zoom
+      this.entityRenderer.windowWidth / this.camera.zoom
     );
     const renderRadiusY = Math.round(
-      this.entityCanvas.height / this.camera.zoom
+      this.entityRenderer.windowHeight / this.camera.zoom
     );
 
     const entities = this.store.getArea(

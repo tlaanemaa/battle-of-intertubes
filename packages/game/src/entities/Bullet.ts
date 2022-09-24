@@ -1,4 +1,4 @@
-import { Entity, Texture } from "@battle-of-intertubes/core";
+import { Entity } from "@battle-of-intertubes/core";
 
 export class Bullet extends Entity {
   public width = 25;
@@ -6,7 +6,11 @@ export class Bullet extends Entity {
   public mass = 500;
   public dragCoefficient = 0.00001;
   public keepHeading = true;
-  public readonly texture = new Texture(50, 50, "img/red-rocket.png");
+  public readonly texture = this.textureLoader.load(
+    "img/red-rocket.png",
+    50,
+    50
+  );
 
   constructor(x: number, y: number, rotation: number) {
     super();

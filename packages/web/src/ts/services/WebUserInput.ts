@@ -1,18 +1,17 @@
-import { EventSource } from "../primitives/EventSource";
-import { Object2D } from "../primitives/Object2D";
-import { FrameTimer } from "./FrameTimer";
+import { EventSource } from "@battle-of-intertubes/core/src/primitives/EventSource";
+import { Object2D } from "@battle-of-intertubes/core/src/primitives/Object2D";
+import {
+  UserInput,
+  INTENT,
+} from "@battle-of-intertubes/core/src/types/UserInput";
+import { inject, singleton } from "tsyringe";
+import { Timer } from "@battle-of-intertubes/core/src/types/Timer";
 
-export enum INTENT {
-  MOVE_UP,
-  MOVE_DOWN,
-  MOVE_RIGHT,
-  MOVE_LEFT,
-  ZOOM_IN,
-  ZOOM_OUT,
-  SHOOT,
-}
-
-export class UserInput extends EventSource<INTENT, number> {
+@singleton()
+export class WebUserInput
+  extends EventSource<INTENT, number>
+  implements UserInput
+{
   private pinchStartCoordinatesA?: Object2D;
   private pinchStartCoordinatesB?: Object2D;
   private pinchCurrentCoordinatesA?: Object2D;
@@ -23,11 +22,11 @@ export class UserInput extends EventSource<INTENT, number> {
 
   private readonly pressedKeys = new Set<string>();
 
-  constructor(private readonly timer: FrameTimer) {
+  constructor(@inject("Timer") private readonly timer: Timer) {
     super();
     this.attachListeners();
 
-    this.timer.schedule(() => this.handleHeldInput());
+    this.timer.schedulePrimary(() => this.handleHeldInput());
   }
 
   private attachListeners() {

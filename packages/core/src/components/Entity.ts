@@ -1,11 +1,14 @@
+import { container } from "tsyringe";
 import { v4 as uuidV4 } from "uuid";
+import { AudioLoader } from "../types/AudioLoader";
+import { TextureLoader } from "../types/TextureLoader";
 import { Object2D } from "../primitives/Object2D";
-import { Texture } from "../web/Texture";
+import { Texture } from "../types/Texture";
 
-export abstract class Entity {
+export class Entity {
   // Properties
   public readonly id = uuidV4();
-  public abstract texture: Texture;
+  public texture?: Texture;
   private _x = 0;
   private _y = 0;
   public width = 50;
@@ -29,6 +32,12 @@ export abstract class Entity {
   private lastCalculationTime = Date.now();
   private targetRotation = this.rotation;
   private readonly rotationDegreesPerSec = 720;
+
+  // Hooks into services
+  protected readonly textureLoader: TextureLoader =
+    container.resolve("TextureLoader");
+  protected readonly audioLoader: AudioLoader =
+    container.resolve("AudioLoader");
 
   public get x() {
     this.recalculatePosition();

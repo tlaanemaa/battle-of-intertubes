@@ -1,8 +1,29 @@
-import { Entity } from "../components/Entity";
+import { singleton } from "tsyringe";
+import { Entity, Camera } from "@battle-of-intertubes/core";
 import { Renderer } from "./Renderer";
+import { EntityCanvas } from "./EntityCanvas";
 
+@singleton()
 export class EntityRenderer extends Renderer {
   public drawEntityBoxes = true;
+
+  constructor(canvas: EntityCanvas, camera: Camera) {
+    super(canvas, camera);
+
+    const onResize = () => {
+      this.canvas.resize(window.innerWidth, window.innerHeight);
+    };
+    window.addEventListener("resize", onResize);
+    onResize();
+  }
+
+  get windowWidth() {
+    return this.canvas.width;
+  }
+
+  get windowHeight() {
+    return this.canvas.width;
+  }
 
   public draw(entities: Entity[]) {
     this.canvas.clear();
@@ -15,9 +36,6 @@ export class EntityRenderer extends Renderer {
     const canvasHalfHeight = this.canvas.height / 2;
 
     entities.forEach((entity) => {
-      const scaledTextureWidth = entity.texture.width * this.camera.zoom;
-      const scaledTextureHeight = entity.texture.height * this.camera.zoom;
-
       const renderX =
         (entity.x - this.camera.position.x) * this.camera.zoom +
         canvasHalfWidth;
@@ -41,14 +59,18 @@ export class EntityRenderer extends Renderer {
         ctx.stroke();
       }
 
-      ctx.rotate((entity.rotation * Math.PI) / 180);
-      ctx.drawImage(
-        entity.texture.render(),
-        Math.round(-scaledTextureWidth / 2),
-        Math.round(-scaledTextureHeight / 2),
-        Math.round(scaledTextureWidth),
-        Math.round(scaledTextureHeight)
-      );
+      if (entity.texture) {
+        const scaledTextureWidth = entity.texture.width * this.camera.zoom;
+        const scaledTextureHeight = entity.texture.height * this.camera.zoom;
+        ctx.rotate((entity.rotation * Math.PI) / 180);
+        ctx.drawImage(
+          entity.texture.render(),
+          Math.round(-scaledTextureWidth / 2),
+          Math.round(-scaledTextureHeight / 2),
+          Math.round(scaledTextureWidth),
+          Math.round(scaledTextureHeight)
+        );
+      }
 
       // Reset current transformation matrix to the identity matrix
       ctx.setTransform(1, 0, 0, 1, 0, 0);

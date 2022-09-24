@@ -1,8 +1,8 @@
-import { BaseMessage } from "../network/messages/BaseMessage";
-import { ConnectionApprovedMessage } from "../network/messages/ConnectionApprovedMessage";
-import { ConnectionRequestMessage } from "../network/messages/ConnectionRequestMessage";
-import { StateUpdateMessage } from "../network/messages/StateUpdateMessage";
-import { Parser } from "../network/Parser";
+import { BaseMessage } from "@battle-of-intertubes/core/src/network/messages/BaseMessage";
+import { ConnectionApprovedMessage } from "@battle-of-intertubes/core/src/network/messages/ConnectionApprovedMessage";
+import { ConnectionRequestMessage } from "@battle-of-intertubes/core/src/network/messages/ConnectionRequestMessage";
+import { StateUpdateMessage } from "@battle-of-intertubes/core/src/network/messages/StateUpdateMessage";
+import { Parser } from "@battle-of-intertubes/core/src/network/Parser";
 
 export class ServerConnection {
   private ready = false;

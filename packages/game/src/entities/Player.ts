@@ -1,21 +1,22 @@
-import { Camera, Entity, Sound, Texture } from "@battle-of-intertubes/core";
-import { EntityStore } from "@battle-of-intertubes/core/src/store/EntityStore";
+import { singleton } from "tsyringe";
+import { Camera, Entity, EntityStore } from "@battle-of-intertubes/core";
 import { Bullet } from "./Bullet";
 
+@singleton()
 export class Player extends Entity {
   public width = 100;
   public height = 100;
   public mass = 50;
   public dragCoefficient = 0.999;
   public keepHeading = true;
-  public readonly texture = new Texture(
+  public readonly texture = this.textureLoader.load(
+    "img/hero1.png",
     this.width,
-    this.height,
-    "img/hero1.png"
+    this.height
   );
 
-  private collisionSound = new Sound("audio/big-pipe-hit.mp3");
-  private shootingSound = new Sound("audio/shotgun-firing.mp3");
+  private collisionSound = this.audioLoader.load("audio/big-pipe-hit.mp3");
+  private shootingSound = this.audioLoader.load("audio/shotgun-firing.mp3");
   private lastShot = Date.now();
 
   constructor(
@@ -26,7 +27,7 @@ export class Player extends Entity {
     this.x = 0;
     this.y = 0;
 
-    this.onCollision = () => this.collisionSound.play();
+    //this.onCollision = () => this.collisionSound.play();
   }
 
   protected triggerOnChange(): void {

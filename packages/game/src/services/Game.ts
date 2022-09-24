@@ -1,30 +1,24 @@
+import { inject, singleton } from "tsyringe";
 import {
   EntityStore,
   Camera,
-  Canvas,
   GameRunner,
   UserInput,
   INTENT,
-  FrameTimer,
 } from "@battle-of-intertubes/core";
 import { Moose } from "../entities/Moose";
 import { Player } from "../entities/Player";
 
+@singleton()
 export class Game {
-  private readonly entityCanvas = new Canvas("game-view");
-  private readonly backgroundCanvas = new Canvas("game-background");
-  private readonly camera = Camera.getInstance();
-  private readonly store = new EntityStore();
-  private readonly timer = new FrameTimer();
-  private readonly userInput = new UserInput(this.timer);
-  private readonly player = new Player(this.camera, this.store);
-  private readonly gameRunner = new GameRunner(
-    this.backgroundCanvas,
-    this.entityCanvas,
-    this.camera,
-    this.store,
-    this.timer
-  );
+  constructor(
+    @inject("UserInput")
+    private readonly userInput: UserInput,
+    private readonly camera: Camera,
+    private readonly gameRunner: GameRunner,
+    private readonly store: EntityStore,
+    private readonly player: Player
+  ) {}
 
   init() {
     this.store.add(this.player);
