@@ -10,6 +10,7 @@
     "build-api-image": "docker build -t battle_of_intertubes_api -f packages/api/Dockerfile .",
     "test-core": "npm run test -w packages/core",
     "build-core": "npm run build -w packages/core",
+    "build-logger": "npm run build -w packages/logger",
     "build": "npm run build -w packages"
   },
   "repository": {

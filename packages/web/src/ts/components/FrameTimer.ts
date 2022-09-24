@@ -1,5 +1,6 @@
 import { injectable } from "tsyringe";
 import { Timer } from "@battle-of-intertubes/core";
+import { Logger } from "@battle-of-intertubes/logger";
 
 type Task = () => void;
 
@@ -7,6 +8,8 @@ type Task = () => void;
 export class FrameTimer implements Timer {
   private shouldStop = false;
   private tasks: Task[] = [];
+
+  constructor(private readonly logger: Logger) {}
 
   public start() {
     this.shouldStop = false;
@@ -25,7 +28,7 @@ export class FrameTimer implements Timer {
     try {
       this.tasks.forEach((task) => task());
     } catch (e) {
-      console.error(e);
+      this.logger.error(e);
     } finally {
       if (!this.shouldStop) {
         window.requestAnimationFrame(() => this.handleFrame());

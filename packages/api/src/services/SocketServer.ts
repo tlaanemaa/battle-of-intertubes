@@ -5,7 +5,9 @@ import {
   KeyHandler,
   Parser,
 } from "@battle-of-intertubes/core";
+import { Logger } from "@battle-of-intertubes/logger";
 import { RoomStore } from "./RoomStore";
+import { IncomingMessage } from "http";
 
 @singleton()
 export class SocketServer {
@@ -13,23 +15,40 @@ export class SocketServer {
   private readonly port = parseInt(process.env.PORT!) || 8080;
   private readonly server?: WebSocketServer;
 
-  constructor(private readonly roomStore: RoomStore) {
+  constructor(
+    private readonly logger: Logger,
+    private readonly roomStore: RoomStore
+  ) {
     this.server = new WebSocketServer({ port: this.port }, () =>
-      console.log(`Websocket server listening at ws://localhost:${this.port}`)
+      this.logger.info(
+        `Websocket server listening at ws://localhost:${this.port}`
+      )
     );
     this.server.on("connection", this.handleConnection.bind(this));
   }
 
-  private handleConnection(socket: WebSocket) {
-    socket.once("message", (data) => {
-      const message = Parser.parse(data.toString());
+  private handleConnection(socket: WebSocket, req: IncomingMessage) {
+    const socketMeta = {
+      url: req.url,
+      ip: req.headers["x-forwarded-for"] || req.socket.remoteAddress,
+    };
 
-      if (
-        message instanceof ConnectionRequestMessage &&
-        this.keyHandler.keyIsValid(message.key)
-      ) {
-        this.roomStore.get(message.room).join(socket);
-      } else {
+    this.logger.info("Client connected", socketMeta);
+
+    socket.once("message", (data) => {
+      try {
+        const message = Parser.parse(data.toString());
+
+        if (
+          message instanceof ConnectionRequestMessage &&
+          this.keyHandler.keyIsValid(message.key)
+        ) {
+          this.roomStore.get(message.room).join(socket);
+        } else {
+          socket.close();
+        }
+      } catch (e) {
+        this.logger.error("Client error", { ...socketMeta, error: e });
         socket.close();
       }
     });
