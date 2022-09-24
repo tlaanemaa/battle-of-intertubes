@@ -1,4 +1,3 @@
-import { ActionPerformedMessage } from "../network/messages/ActionPerformedMessage";
 import { BaseMessage } from "../network/messages/BaseMessage";
 import { ConnectionApprovedMessage } from "../network/messages/ConnectionApprovedMessage";
 import { ConnectionRequestMessage } from "../network/messages/ConnectionRequestMessage";
@@ -7,9 +6,11 @@ import { Parser } from "../network/Parser";
 
 export class SocketConnection {
   private ready = false;
-  private readonly socket = new WebSocket("ws://localhost:8080");
+  private readonly messageQueue: BaseMessage[] = [];
+  private readonly socket: WebSocket;
 
-  constructor() {
+  constructor(url: string) {
+    this.socket = new WebSocket(url);
     this.socket.addEventListener("open", this.handleOpen.bind(this));
     this.socket.addEventListener("message", this.handleMessage.bind(this));
     this.socket.addEventListener("close", this.handleClose.bind(this));
@@ -17,7 +18,23 @@ export class SocketConnection {
   }
 
   public send(message: BaseMessage) {
-    this.socket.send(message.serialize());
+    if (!this.ready) {
+      this.messageQueue.push(message);
+    } else {
+      this.socket.send(message.serialize());
+    }
+  }
+
+  private flushQueue() {
+    let message: BaseMessage | undefined;
+    while ((message = this.messageQueue.shift())) {
+      this.send(message);
+    }
+  }
+
+  private setReady(ready: boolean) {
+    this.ready = ready;
+    if (ready) this.flushQueue();
   }
 
   private handleOpen() {
@@ -27,13 +44,9 @@ export class SocketConnection {
   private handleMessage(event: MessageEvent) {
     const message = Parser.parse(event.data.toString());
     switch (message.constructor) {
-      case ConnectionRequestMessage:
-
       case ConnectionApprovedMessage:
-        this.ready = true;
+        this.setReady(true);
         break;
-
-      case ActionPerformedMessage:
 
       case StateUpdateMessage:
     }
