@@ -1,5 +1,5 @@
-import { Entity } from "../components/Entity";
-import { Grid } from "../primitives/Grid";
+import { Entity } from "../components";
+import { Grid } from "../primitives";
 
 export class Collider {
   private readonly collisionSearchRadius = 200;

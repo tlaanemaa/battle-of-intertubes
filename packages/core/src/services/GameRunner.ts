@@ -1,10 +1,9 @@
 import { inject, singleton } from "tsyringe";
-import { Camera } from "../components/Camera";
-import { EntityStore } from "../store/EntityStore";
-import { Collider } from "../tools/Collider";
-import { Timer } from "../types/Timer";
-import { EntityRenderer } from "../types/EntityRenderer";
-import { BackgroundRenderer } from "../types/BackgroundRenderer";
+import { Camera } from "../components";
+import { EntityStore } from "./EntityStore";
+import { Collider } from "../tools";
+import { Timer } from "../types";
+import { EntityRenderer, BackgroundRenderer } from "../types";
 
 @singleton()
 export class GameRunner {

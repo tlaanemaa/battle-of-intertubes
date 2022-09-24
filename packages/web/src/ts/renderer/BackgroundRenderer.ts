@@ -1,8 +1,8 @@
 import { singleton } from "tsyringe";
-import { Camera } from "@battle-of-intertubes/core/src/components/Camera";
+import { Camera } from "@battle-of-intertubes/core";
 import { Renderer } from "./Renderer";
 import { BackgroundCanvas } from "./BackgroundCanvas";
-import { Canvas } from "../components/Canvas";
+import { Canvas } from "../components";
 
 @singleton()
 export class BackgroundRenderer extends Renderer {

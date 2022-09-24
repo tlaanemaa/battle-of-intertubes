@@ -1,4 +1,4 @@
-import { EventSource } from "../primitives/EventSource";
+import { EventSource } from "../primitives";
 
 export enum INTENT {
   MOVE_UP,

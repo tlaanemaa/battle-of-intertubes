@@ -1,5 +1,5 @@
-import { FastMap } from "@battle-of-intertubes/core/src/primitives/FastMap";
 import { singleton } from "tsyringe";
+import { FastMap } from "@battle-of-intertubes/core";
 
 @singleton()
 export class AssetCache {

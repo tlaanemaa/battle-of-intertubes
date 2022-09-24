@@ -1,9 +1,7 @@
 import { container } from "tsyringe";
 import { v4 as uuidV4 } from "uuid";
-import { AudioLoader } from "../types/AudioLoader";
-import { TextureLoader } from "../types/TextureLoader";
-import { Object2D } from "../primitives/Object2D";
-import { Texture } from "../types/Texture";
+import { AudioLoader, TextureLoader, Texture } from "../types";
+import { Object2D } from "../primitives";
 
 export class Entity {
   // Properties

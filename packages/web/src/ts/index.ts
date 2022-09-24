@@ -1,12 +1,9 @@
 import "reflect-metadata";
 import { container, Lifecycle } from "tsyringe";
 import { Game } from "@battle-of-intertubes/game";
-import { FrameTimer } from "./components/FrameTimer";
-import { EntityRenderer } from "./renderer/EntityRenderer";
-import { BackgroundRenderer } from "./renderer/BackgroundRenderer";
-import { WebUserInput } from "./services/WebUserInput";
-import { WebTextureLoader } from "./services/WebTextureLoader";
-import { WebAudioLoader } from "./services/WebAudioLoader";
+import { FrameTimer } from "./components";
+import { EntityRenderer, BackgroundRenderer } from "./renderer";
+import { WebUserInput, WebTextureLoader, WebAudioLoader } from "./services";
 
 container.register(
   "Timer",

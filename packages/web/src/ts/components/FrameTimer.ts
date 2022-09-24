@@ -1,5 +1,5 @@
-import { Timer } from "@battle-of-intertubes/core/src/types/Timer";
 import { injectable } from "tsyringe";
+import { Timer } from "@battle-of-intertubes/core";
 
 type Task = () => void;
 

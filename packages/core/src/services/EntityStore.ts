@@ -1,11 +1,11 @@
 import { singleton } from "tsyringe";
-import { Entity } from "../components/Entity";
-import { Grid } from "../primitives/Grid";
+import { Entity } from "../components";
+import { Grid } from "../primitives";
 
 @singleton()
 export class EntityStore {
   private readonly store = new Grid<Entity>(1000);
-  public getArea = this.store.getArea.bind(this.store)
+  public getArea = this.store.getArea.bind(this.store);
 
   add(entity: Entity) {
     entity.onChange = () => this.store.set(entity);

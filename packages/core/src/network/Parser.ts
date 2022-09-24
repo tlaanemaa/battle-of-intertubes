@@ -1,7 +1,9 @@
-import { ActionPerformedMessage } from "./messages/ActionPerformedMessage";
-import { ConnectionApprovedMessage } from "./messages/ConnectionApprovedMessage";
-import { ConnectionRequestMessage } from "./messages/ConnectionRequestMessage";
-import { StateUpdateMessage } from "./messages/StateUpdateMessage";
+import {
+  ActionPerformedMessage,
+  ConnectionApprovedMessage,
+  ConnectionRequestMessage,
+  StateUpdateMessage,
+} from "./messages";
 
 type SomeMessage =
   | ConnectionRequestMessage

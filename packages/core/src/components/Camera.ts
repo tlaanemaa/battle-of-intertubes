@@ -1,5 +1,5 @@
 import { singleton } from "tsyringe";
-import { Object2D } from "../primitives/Object2D";
+import { Object2D } from "../primitives";
 
 @singleton()
 export class Camera {

@@ -1,1 +1,1 @@
-export { Game } from "./services/Game";
+export { Game } from "./services";

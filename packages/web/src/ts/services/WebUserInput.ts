@@ -1,11 +1,11 @@
-import { EventSource } from "@battle-of-intertubes/core/src/primitives/EventSource";
-import { Object2D } from "@battle-of-intertubes/core/src/primitives/Object2D";
+import { inject, singleton } from "tsyringe";
 import {
+  EventSource,
+  Timer,
+  Object2D,
   UserInput,
   INTENT,
-} from "@battle-of-intertubes/core/src/types/UserInput";
-import { inject, singleton } from "tsyringe";
-import { Timer } from "@battle-of-intertubes/core/src/types/Timer";
+} from "@battle-of-intertubes/core";
 
 @singleton()
 export class WebUserInput

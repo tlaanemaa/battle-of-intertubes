@@ -1,5 +1,5 @@
 import { Camera, Object2D } from "@battle-of-intertubes/core";
-import { Canvas } from "../components/Canvas";
+import { Canvas } from "../components";
 
 export class Renderer {
   private previousCameraPosition: Object2D = { x: 0, y: 0 };
