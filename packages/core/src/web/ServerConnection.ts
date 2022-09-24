@@ -4,7 +4,7 @@ import { ConnectionRequestMessage } from "../network/messages/ConnectionRequestM
 import { StateUpdateMessage } from "../network/messages/StateUpdateMessage";
 import { Parser } from "../network/Parser";
 
-export class SocketConnection {
+export class ServerConnection {
   private ready = false;
   private readonly messageQueue: BaseMessage[] = [];
   private readonly socket: WebSocket;
