@@ -11,6 +11,7 @@ import { IncomingMessage } from "http";
 
 @singleton()
 export class SocketServer {
+  private connectionCount = 0;
   private readonly keyHandler = new KeyHandler();
   private readonly port = parseInt(process.env.PORT!) || 8080;
   private readonly server?: WebSocketServer;
@@ -28,12 +29,13 @@ export class SocketServer {
   }
 
   private handleConnection(socket: WebSocket, req: IncomingMessage) {
-    const socketMeta = {
+    const connectionId = this.connectionCount++;
+
+    this.logger.info("Client connected", {
+      connectionId,
       url: req.url,
       ip: req.headers["x-forwarded-for"] || req.socket.remoteAddress,
-    };
-
-    this.logger.info("Client connected", socketMeta);
+    });
 
     socket.once("message", (data) => {
       try {
@@ -44,13 +46,24 @@ export class SocketServer {
           this.keyHandler.keyIsValid(message.key)
         ) {
           this.roomStore.get(message.room).join(socket);
+          this.logger.info("Player joined room", {
+            connectionId,
+            playerId: message.playerId,
+            room: message.room,
+          });
         } else {
           socket.close();
         }
       } catch (e) {
-        this.logger.error("Client error", { ...socketMeta, error: e });
+        this.logger.error("Client error", { connectionId, error: e });
         socket.close();
       }
+    });
+
+    socket.on("close", () => {
+      this.logger.info("Client disconnected", {
+        connectionId,
+      });
     });
   }
 }

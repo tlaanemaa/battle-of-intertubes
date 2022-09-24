@@ -27,6 +27,10 @@ export class ServerConnection {
     }
   }
 
+  public close() {
+    this.socket.close();
+  }
+
   private flushQueue() {
     let message: BaseMessage | undefined;
     while ((message = this.messageQueue.shift())) {
@@ -58,3 +62,6 @@ export class ServerConnection {
 
   private handleError() {}
 }
+
+// FIXME: Remove after testing
+(window as any).ServerConnection = ServerConnection;
