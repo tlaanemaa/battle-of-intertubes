@@ -24,7 +24,7 @@ export class MooseGame implements Game {
   init() {
     this.store.add(this.player);
     const spaceFactor = 3;
-    const count = 10;
+    const count = 1000;
     new Array(count).fill(1).map(() => {
       const entity = new Moose(
         Math.round(
