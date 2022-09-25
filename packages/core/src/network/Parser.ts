@@ -12,32 +12,29 @@ type SomeMessage =
   | StateUpdateMessage;
 
 export class Parser {
-  private static createBlankMessageObject(type: SomeMessage["type"]) {
-    switch (type) {
-      case "connection-request":
-        return new ConnectionRequestMessage("");
-
-      case "connection-approved":
-        return new ConnectionApprovedMessage("");
-
-      case "action-performed":
-        return new ActionPerformedMessage();
-
-      case "state-update":
-        return new StateUpdateMessage();
-
-      default:
-        throw new Error(`Unknown message type: ${type}`);
-    }
-  }
+  private static readonly messageConstructors = {
+    "connection-request": ConnectionRequestMessage,
+    "connection-approved": ConnectionApprovedMessage,
+    "action-performed": ActionPerformedMessage,
+    "state-update": StateUpdateMessage,
+  } as const;
 
   public static parse(messageString: string) {
     // We kind of assume these messages are always correct, might want to add some validation later
     const objectLiteral = JSON.parse(messageString) as SomeMessage;
+    return this.buildMessageObject(objectLiteral);
+  }
+
+  private static buildMessageObject(messageLiteral: SomeMessage) {
+    const MessageConstructor = this.messageConstructors[messageLiteral.type];
+
+    if (!MessageConstructor) {
+      throw new Error(`Unknown message type: ${messageLiteral.type}`);
+    }
 
     return Object.assign(
-      this.createBlankMessageObject(objectLiteral.type),
-      objectLiteral
+      new (MessageConstructor as new () => SomeMessage)(),
+      messageLiteral
     );
   }
 }
