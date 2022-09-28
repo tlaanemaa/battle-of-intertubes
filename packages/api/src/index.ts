@@ -1,6 +1,6 @@
 import "reflect-metadata";
 import { container } from "tsyringe";
 import "@battle-of-intertubes/game";
-import { SocketServer } from "./services/SocketServer";
+import { SocketServer } from "./server/SocketServer";
 
 container.resolve(SocketServer);

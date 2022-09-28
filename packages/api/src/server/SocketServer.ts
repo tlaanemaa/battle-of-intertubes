@@ -1,24 +1,21 @@
+import { IncomingMessage } from "http";
 import { singleton } from "tsyringe";
 import { WebSocketServer, WebSocket } from "ws";
-import {
-  ConnectionRequestMessage,
-  KeyHandler,
-  Parser,
-} from "@battle-of-intertubes/core";
 import { Logger } from "@battle-of-intertubes/logger";
-import { RoomStore } from "./RoomStore";
-import { IncomingMessage } from "http";
+import { RoomManager } from "./RoomManager";
+import { KeyHandler, Parser } from "@battle-of-intertubes/core";
+import { ConnectionStore } from "./ConnectionStore";
 
 @singleton()
 export class SocketServer {
   private connectionCount = 0;
-  private readonly keyHandler = new KeyHandler();
   private readonly port = parseInt(process.env.PORT!) || 8080;
   private readonly server?: WebSocketServer;
 
   constructor(
     private readonly logger: Logger,
-    private readonly roomStore: RoomStore
+    private readonly connectionStore: ConnectionStore,
+    private readonly roomManager: RoomManager
   ) {
     this.server = new WebSocketServer({ port: this.port }, () =>
       this.logger.info(
@@ -29,7 +26,9 @@ export class SocketServer {
   }
 
   private handleConnection(socket: WebSocket, req: IncomingMessage) {
-    const connectionId = this.connectionCount++;
+    let connectionAuthorized = false;
+    const connectionId = String(this.connectionCount++);
+    this.connectionStore.register(connectionId, socket);
 
     this.logger.info("Client connected", {
       connectionId,
@@ -37,30 +36,25 @@ export class SocketServer {
       ip: req.headers["x-forwarded-for"] || req.socket.remoteAddress,
     });
 
-    socket.once("message", (data) => {
+    socket.on("message", (data) => {
+      const message = Parser.parse(data.toString());
       try {
-        const message = Parser.parse(data.toString());
-
-        if (
-          message instanceof ConnectionRequestMessage &&
-          this.keyHandler.keyIsValid(message.key)
-        ) {
-          this.roomStore.get(message.room).join(socket);
-          this.logger.info("Player joined room", {
-            connectionId,
-            playerId: message.playerId,
-            room: message.room,
-          });
-        } else {
-          socket.close();
+        if (message.type === "connection-request") {
+          connectionAuthorized = KeyHandler.keyIsValid(message.key);
         }
+        if (!connectionAuthorized) return;
+
+        this.roomManager.handleMessage(connectionId, message);
       } catch (e) {
-        this.logger.error("Client error", { connectionId, error: e });
+        console.error(e);
         socket.close();
       }
     });
 
     socket.on("close", () => {
+      this.connectionStore.deregister(connectionId);
+      this.roomManager.handleDisconnect(connectionId);
+
       this.logger.info("Client disconnected", {
         connectionId,
       });

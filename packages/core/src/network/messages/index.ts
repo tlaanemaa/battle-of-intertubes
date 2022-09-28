@@ -1,5 +1,20 @@
-export { BaseMessage } from "./BaseMessage";
-export { ActionPerformedMessage } from "./ActionPerformedMessage";
-export { ConnectionApprovedMessage } from "./ConnectionApprovedMessage";
-export { ConnectionRequestMessage } from "./ConnectionRequestMessage";
-export { StateUpdateMessage } from "./StateUpdateMessage";
+import { ConnectionRequestMessage } from "./ConnectionRequestMessage";
+import { ConnectionApprovedMessage } from "./ConnectionApprovedMessage";
+import { ActionPerformedMessage } from "./ActionPerformedMessage";
+import { StateUpdateMessage } from "./StateUpdateMessage";
+import { ClientLeftMessage } from "./ClientLeftMessage";
+
+export type AnyMessage =
+  | ConnectionRequestMessage
+  | ConnectionApprovedMessage
+  | ActionPerformedMessage
+  | StateUpdateMessage
+  | ClientLeftMessage;
+
+export {
+  ConnectionRequestMessage,
+  ConnectionApprovedMessage,
+  ActionPerformedMessage,
+  StateUpdateMessage,
+  ClientLeftMessage,
+};

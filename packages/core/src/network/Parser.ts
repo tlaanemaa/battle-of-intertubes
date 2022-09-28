@@ -3,38 +3,36 @@ import {
   ConnectionApprovedMessage,
   ConnectionRequestMessage,
   StateUpdateMessage,
+  AnyMessage,
+  ClientLeftMessage,
 } from "./messages";
 
-type SomeMessage =
-  | ConnectionRequestMessage
-  | ConnectionApprovedMessage
-  | ActionPerformedMessage
-  | StateUpdateMessage;
+type ConstructorMap = {
+  [K in AnyMessage["type"]]: new (...args: any) => AnyMessage;
+};
 
 export class Parser {
-  private static readonly messageConstructors = {
+  private static readonly messageConstructors: ConstructorMap = {
     "connection-request": ConnectionRequestMessage,
     "connection-approved": ConnectionApprovedMessage,
     "action-performed": ActionPerformedMessage,
     "state-update": StateUpdateMessage,
+    "client-left": ClientLeftMessage,
   } as const;
 
   public static parse(messageString: string) {
     // We kind of assume these messages are always correct, might want to add some validation later
-    const objectLiteral = JSON.parse(messageString) as SomeMessage;
+    const objectLiteral = JSON.parse(messageString) as AnyMessage;
     return this.buildMessageObject(objectLiteral);
   }
 
-  private static buildMessageObject(messageLiteral: SomeMessage) {
+  private static buildMessageObject(messageLiteral: AnyMessage) {
     const MessageConstructor = this.messageConstructors[messageLiteral.type];
 
     if (!MessageConstructor) {
       throw new Error(`Unknown message type: ${messageLiteral.type}`);
     }
 
-    return Object.assign(
-      new (MessageConstructor as new () => SomeMessage)(),
-      messageLiteral
-    );
+    return Object.assign(new MessageConstructor(), messageLiteral);
   }
 }
