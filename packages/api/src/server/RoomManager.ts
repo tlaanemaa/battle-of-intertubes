@@ -2,7 +2,6 @@ import { singleton } from "tsyringe";
 import {
   AnyMessage,
   ClientLeftMessage,
-  ConnectionRequestMessage,
   FastMap,
 } from "@battle-of-intertubes/core";
 import { Logger } from "@battle-of-intertubes/logger";

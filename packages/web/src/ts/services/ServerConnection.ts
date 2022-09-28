@@ -1,5 +1,5 @@
 import {
-  BaseMessage,
+  AnyMessage,
   ConnectionApprovedMessage,
   ConnectionRequestMessage,
   StateUpdateMessage,
@@ -8,7 +8,7 @@ import {
 
 export class ServerConnection {
   private ready = false;
-  private readonly messageQueue: BaseMessage[] = [];
+  private readonly messageQueue: AnyMessage[] = [];
   private readonly socket: WebSocket;
 
   constructor(url: string) {
@@ -19,7 +19,7 @@ export class ServerConnection {
     this.socket.addEventListener("error", this.handleError.bind(this));
   }
 
-  public send(message: BaseMessage) {
+  public send(message: AnyMessage) {
     if (!this.ready) {
       this.messageQueue.push(message);
     } else {
@@ -32,7 +32,7 @@ export class ServerConnection {
   }
 
   private flushQueue() {
-    let message: BaseMessage | undefined;
+    let message: AnyMessage | undefined;
     while ((message = this.messageQueue.shift())) {
       this.send(message);
     }
