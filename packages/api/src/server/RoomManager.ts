@@ -54,12 +54,15 @@ export class RoomManager {
 
   private createRoom(id: string) {
     const newRoom = new RoomThread(id);
-    newRoom.onMessage = (connectionId, message) => {
-      this.connectionStore.sendMessage(connectionId, message);
-    };
     newRoom.onExit = (code) => {
       this.rooms.delete(id);
       this.logger.error("Room exited!", { id, code });
+    };
+    newRoom.onError = (err) => {
+      this.logger.error("Room threw an error!", { err });
+    };
+    newRoom.onMessage = (connectionId, message) => {
+      this.connectionStore.sendMessage(connectionId, message);
     };
     return newRoom;
   }

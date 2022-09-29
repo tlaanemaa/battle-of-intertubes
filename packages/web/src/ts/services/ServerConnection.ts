@@ -49,6 +49,7 @@ export class ServerConnection {
 
   private handleMessage(event: MessageEvent) {
     const message = Parser.parse(event.data.toString());
+    console.log(message);
     switch (message.constructor) {
       case ConnectionApprovedMessage:
         this.setReady(true);

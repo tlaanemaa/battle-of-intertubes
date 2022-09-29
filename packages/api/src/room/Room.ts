@@ -1,5 +1,11 @@
+import "reflect-metadata";
 import { container } from "tsyringe";
-import { AnyMessage, FastMap, Game } from "@battle-of-intertubes/core";
+import {
+  AnyMessage,
+  FastMap,
+  Game,
+  StateUpdateMessage,
+} from "@battle-of-intertubes/core";
 import { SendMessage } from "./types";
 
 /**
@@ -15,7 +21,8 @@ export class Room {
     //this.game.init();
   }
 
-  onMessage(id: string, message: AnyMessage) {
-    console.log(message);
+  onMessage(connectionId: string, message: AnyMessage) {
+    console.log(connectionId, message);
+    this.sendMessage(connectionId, new StateUpdateMessage());
   }
 }
