@@ -4,17 +4,26 @@ import {
   workerData,
   parentPort,
 } from "node:worker_threads";
-import { v4 as uuidV4 } from "uuid";
 import { AnyMessage, Parser } from "@battle-of-intertubes/core/dist/network/";
 
 interface WorkerData {
   roomId: string;
 }
 
-interface WorkerMessage {
+interface MessageEnvelope {
   connectionId: string;
   message: string;
 }
+
+const createEnvelope = (connectionId: string, message: AnyMessage) => ({
+  connectionId,
+  message: message.serialize(),
+});
+
+const parseEnvelope = (envelope: MessageEnvelope) => ({
+  connectionId: envelope.connectionId,
+  message: Parser.parse(envelope.message),
+});
 
 export class RoomThread {
   private readonly worker: Worker;
@@ -23,22 +32,20 @@ export class RoomThread {
   public onError?: (error: Error) => void;
   public onExit?: (code: number) => void;
 
-  constructor(roomId: string = uuidV4()) {
+  constructor(roomId: string) {
     const workerData: WorkerData = { roomId };
     this.worker = new Worker(__filename, { workerData });
 
-    this.worker.on("message", ({ connectionId, message }: WorkerMessage) =>
-      this.onMessage?.(connectionId, Parser.parse(message))
-    );
+    this.worker.on("message", (envelope: MessageEnvelope) => {
+      const { connectionId, message } = parseEnvelope(envelope);
+      this.onMessage?.(connectionId, message);
+    });
     this.worker.on("error", (err) => this.onError?.(err));
     this.worker.on("exit", (code) => this.onExit?.(code));
   }
 
   public sendMessage(connectionId: string, message: AnyMessage) {
-    this.worker.postMessage({
-      connectionId,
-      message: message.serialize(),
-    } as WorkerMessage);
+    this.worker.postMessage(createEnvelope(connectionId, message));
   }
 }
 
@@ -50,16 +57,15 @@ if (!isMainThread) {
     const { Room } = await import("./Room");
     const data: WorkerData = workerData;
 
-    const send = (connectionId: string, message: AnyMessage) =>
-      parentPort!.postMessage({
-        connectionId,
-        message: message.serialize(),
-      } as WorkerMessage);
+    const send = (connectionId: string, message: AnyMessage) => {
+      parentPort!.postMessage(createEnvelope(connectionId, message));
+    };
 
     const room = new Room(data.roomId, send);
 
-    parentPort!.on("message", ({ connectionId, message }: WorkerMessage) =>
-      room.onMessage(connectionId, Parser.parse(message))
-    );
+    parentPort!.on("message", (envelope: any) => {
+      const { connectionId, message } = parseEnvelope(envelope);
+      room.onMessage(connectionId, message);
+    });
   })();
 }
