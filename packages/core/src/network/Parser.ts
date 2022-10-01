@@ -1,10 +1,9 @@
 import {
-  ActionPerformedMessage,
-  ConnectionApprovedMessage,
   ConnectionRequestMessage,
+  ConnectionApprovedMessage,
+  ActionPerformedMessage,
   StateUpdateMessage,
   AnyMessage,
-  ClientLeftMessage,
 } from "./messages";
 
 type ConstructorMap = {
@@ -17,7 +16,6 @@ export class Parser {
     "connection-approved": ConnectionApprovedMessage,
     "action-performed": ActionPerformedMessage,
     "state-update": StateUpdateMessage,
-    "client-left": ClientLeftMessage,
   } as const;
 
   public static parse(messageString: string) {

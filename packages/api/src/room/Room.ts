@@ -1,12 +1,13 @@
 import "reflect-metadata";
+import { MessagePort } from "node:worker_threads";
 import { container } from "tsyringe";
 import {
   AnyMessage,
   FastMap,
   Game,
+  Parser,
   StateUpdateMessage,
 } from "@battle-of-intertubes/core";
-import { SendMessage } from "./types";
 
 /**
  * Each Room will be executed on a new worker thread
@@ -14,15 +15,17 @@ import { SendMessage } from "./types";
 export class Room {
   //private readonly game = container.resolve<Game>("Game");
 
-  constructor(
-    private readonly id: string,
-    private readonly sendMessage: SendMessage
-  ) {
+  constructor(private readonly id: string) {
     //this.game.init();
   }
 
-  onMessage(connectionId: string, message: AnyMessage) {
-    console.log(connectionId, message);
-    this.sendMessage(connectionId, new StateUpdateMessage());
+  onConnect(userId: string, port: MessagePort) {
+    port.postMessage(new StateUpdateMessage().serialize());
+
+    port.on("message", (data) => {
+      const message = Parser.parse(data);
+      console.log(message);
+      port.postMessage(new StateUpdateMessage().serialize());
+    });
   }
 }

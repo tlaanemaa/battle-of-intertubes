@@ -3,69 +3,70 @@ import {
   Worker,
   workerData,
   parentPort,
+  MessageChannel,
+  MessagePort,
 } from "node:worker_threads";
-import { AnyMessage, Parser } from "@battle-of-intertubes/core/dist/network/";
+import WebSocket = require("ws");
 
-interface WorkerData {
-  roomId: string;
+// ================================================
+// General private utilities
+// ================================================
+const SOCKET_CONNECTION_MESSAGE_TYPE = "socket_to_port_connection_message";
+interface SocketConnectionMessage {
+  messageId: typeof SOCKET_CONNECTION_MESSAGE_TYPE;
+  socketPort: MessagePort;
+  userId: string;
 }
 
-interface MessageEnvelope {
-  connectionId: string;
-  message: string;
-}
+const isSocketConnectionMessage = (
+  data: any
+): data is SocketConnectionMessage => {
+  return (
+    data !== null &&
+    typeof data === "object" &&
+    !Array.isArray(data) &&
+    data.messageId === SOCKET_CONNECTION_MESSAGE_TYPE &&
+    data.socketPort instanceof MessagePort &&
+    typeof data.userId === "string"
+  );
+};
 
-const createEnvelope = (connectionId: string, message: AnyMessage) => ({
-  connectionId,
-  message: message.serialize(),
-});
-
-const parseEnvelope = (envelope: MessageEnvelope) => ({
-  connectionId: envelope.connectionId,
-  message: Parser.parse(envelope.message),
-});
-
-export class RoomThread {
-  private readonly worker: Worker;
-
-  public onMessage?: (connectionId: string, message: AnyMessage) => void;
-  public onError?: (error: Error) => void;
-  public onExit?: (code: number) => void;
-
+// ================================================
+// Thread class for using in the main process
+// ================================================
+export class RoomThread extends Worker {
   constructor(roomId: string) {
-    const workerData: WorkerData = { roomId };
-    this.worker = new Worker(__filename, { workerData });
-
-    this.worker.on("message", (envelope: MessageEnvelope) => {
-      const { connectionId, message } = parseEnvelope(envelope);
-      this.onMessage?.(connectionId, message);
-    });
-    this.worker.on("error", (err) => this.onError?.(err));
-    this.worker.on("exit", (code) => this.onExit?.(code));
+    super(__filename, { workerData: { roomId } });
   }
 
-  public sendMessage(connectionId: string, message: AnyMessage) {
-    this.worker.postMessage(createEnvelope(connectionId, message));
+  public connectSocket(userId: string, socket: WebSocket) {
+    const { port1, port2 } = new MessageChannel();
+
+    socket.on("message", (data) => port1.postMessage(data.toString())); // TODO: This should work without stringification
+    port1.on("message", (data) => socket.send(data));
+    socket.on("close", () => port1.close());
+    port1.on("close", () => socket.close());
+
+    const message: SocketConnectionMessage = {
+      messageId: SOCKET_CONNECTION_MESSAGE_TYPE,
+      socketPort: port2,
+      userId,
+    };
+    this.postMessage(message, [port2]);
   }
 }
 
-/**
- * Initialization script for the worker thread
- */
+// ================================================
+// Thread startup script
+// ================================================
 if (!isMainThread) {
   (async function initThread() {
     const { Room } = await import("./Room");
-    const data: WorkerData = workerData;
-
-    const send = (connectionId: string, message: AnyMessage) => {
-      parentPort!.postMessage(createEnvelope(connectionId, message));
-    };
-
-    const room = new Room(data.roomId, send);
-
-    parentPort!.on("message", (envelope: any) => {
-      const { connectionId, message } = parseEnvelope(envelope);
-      room.onMessage(connectionId, message);
+    const room = new Room(workerData.roomId);
+    parentPort!.on("message", (data: unknown) => {
+      if (isSocketConnectionMessage(data)) {
+        room.onConnect(data.userId, data.socketPort);
+      }
     });
   })();
 }

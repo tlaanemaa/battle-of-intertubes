@@ -4,6 +4,7 @@ import {
   ConnectionRequestMessage,
   StateUpdateMessage,
   Parser,
+  ActionPerformedMessage,
 } from "@battle-of-intertubes/core";
 
 export class ServerConnection {
@@ -62,6 +63,10 @@ export class ServerConnection {
   private handleClose() {}
 
   private handleError() {}
+
+  public test() {
+    this.socket.send(new ActionPerformedMessage().serialize());
+  }
 }
 
 // FIXME: Remove after testing

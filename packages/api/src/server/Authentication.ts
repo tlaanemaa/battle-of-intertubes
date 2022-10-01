@@ -6,17 +6,17 @@ const knownUsers: { [key: string]: string } = {
 };
 
 @singleton()
-export class AuthenticationService {
+export class Authentication {
   /**
    * Returns the user ID if the user is recognized, or null if they're not
    */
-  public authenticateUser(authHeader: string): string | null {
-    if (!(typeof authHeader === "string")) {
-      return null;
-    }
+  public authenticateUser(authHeader?: string): string | null {
+    if (!(typeof authHeader === "string")) return null;
 
     const [authType, base64AuthToken] = authHeader.split(" ");
-    if (authType !== "Basic") return null;
+    if (authType !== "Basic" || typeof base64AuthToken !== "string")
+      return null;
+
     const [username, password] = Buffer.from(base64AuthToken, "base64")
       .toString()
       .split(":");

@@ -1,69 +1,35 @@
+import { WebSocket } from "ws";
 import { singleton } from "tsyringe";
-import {
-  AnyMessage,
-  ClientLeftMessage,
-  FastMap,
-} from "@battle-of-intertubes/core";
+import { FastMap } from "@battle-of-intertubes/core";
 import { Logger } from "@battle-of-intertubes/logger";
-import { ConnectionStore } from "./ConnectionStore";
 import { RoomThread } from "../room";
 
 @singleton()
 export class RoomManager {
   private readonly rooms = new FastMap<RoomThread>();
-  private readonly connectionsToRooms = new FastMap<string>();
 
-  constructor(
-    private readonly logger: Logger,
-    private readonly connectionStore: ConnectionStore
-  ) {}
+  constructor(private readonly logger: Logger) {}
 
-  public handleMessage(connectionId: string, message: AnyMessage) {
-    if (message.type === "connection-request") {
-      this.connectionsToRooms.set(connectionId, message.room);
-    }
-
-    const roomId = this.connectionsToRooms.get(connectionId);
-    if (!roomId) {
-      this.logger.error("No room selected!", { connectionId });
-      return;
-    }
-
+  public connectSocket(userId: string, roomId: string, socket: WebSocket) {
     const room = this.getRoom(roomId);
-    room.sendMessage(connectionId, message);
-  }
-
-  public handleDisconnect(connectionId: string) {
-    const roomId = this.connectionsToRooms.get(connectionId);
-    if (roomId) {
-      this.connectionsToRooms.delete(connectionId);
-      const room = this.getRoom(roomId);
-      room.sendMessage(connectionId, new ClientLeftMessage());
-    }
+    room.connectSocket(userId, socket);
   }
 
   private getRoom(id: string) {
-    const room = this.rooms.get(id);
-    if (room) return room;
+    const existingRoom = this.rooms.get(id);
+    if (existingRoom) return existingRoom;
 
-    const newRoom = this.createRoom(id);
-    this.rooms.set(id, newRoom);
-    this.logger.info("Room created", { id });
-    return newRoom;
-  }
-
-  private createRoom(id: string) {
-    const newRoom = new RoomThread(id);
-    newRoom.onExit = (code) => {
+    const room = new RoomThread(id);
+    room.on("exit", (code) => {
       this.rooms.delete(id);
       this.logger.error("Room exited!", { id, code });
-    };
-    newRoom.onError = (err) => {
-      this.logger.error("Room threw an error!", { err });
-    };
-    newRoom.onMessage = (connectionId, message) => {
-      this.connectionStore.sendMessage(connectionId, message);
-    };
-    return newRoom;
+    });
+    room.on("error", (err) => {
+      this.logger.error("Room threw an error!", { id, err });
+    });
+
+    this.rooms.set(id, room);
+    this.logger.info("Room created", { id });
+    return room;
   }
 }

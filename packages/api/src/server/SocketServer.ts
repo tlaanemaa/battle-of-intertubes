@@ -1,34 +1,37 @@
-import { IncomingMessage } from "http";
+import { IncomingMessage } from "node:http";
+import { WebSocketServer, WebSocket, RawData } from "ws";
 import { singleton } from "tsyringe";
-import { WebSocketServer, WebSocket } from "ws";
 import { Logger } from "@battle-of-intertubes/logger";
 import { RoomManager } from "./RoomManager";
-import { KeyHandler, Parser } from "@battle-of-intertubes/core";
-import { ConnectionStore } from "./ConnectionStore";
+import { Authentication } from "./Authentication";
+import { Parser } from "@battle-of-intertubes/core";
 
 @singleton()
 export class SocketServer {
   private connectionCount = 0;
   private readonly port = parseInt(process.env.PORT!) || 8080;
-  private readonly server?: WebSocketServer;
+  private readonly server: WebSocketServer;
 
   constructor(
     private readonly logger: Logger,
-    private readonly connectionStore: ConnectionStore,
-    private readonly roomManager: RoomManager
+    private readonly roomManager: RoomManager,
+    private readonly authentication: Authentication
   ) {
     this.server = new WebSocketServer({ port: this.port }, () =>
       this.logger.info(
         `Websocket server listening at ws://localhost:${this.port}`
       )
     );
+
     this.server.on("connection", this.handleConnection.bind(this));
   }
 
+  private createConnectionId() {
+    return String(this.connectionCount++);
+  }
+
   private handleConnection(socket: WebSocket, req: IncomingMessage) {
-    let connectionAuthorized = false;
-    const connectionId = String(this.connectionCount++);
-    this.connectionStore.register(connectionId, socket);
+    const connectionId = this.createConnectionId();
 
     this.logger.info("Client connected", {
       connectionId,
@@ -36,28 +39,52 @@ export class SocketServer {
       ip: req.headers["x-forwarded-for"] || req.socket.remoteAddress,
     });
 
-    socket.on("message", (data) => {
-      const message = Parser.parse(data.toString());
-      try {
-        if (message.type === "connection-request") {
-          connectionAuthorized = KeyHandler.keyIsValid(message.key);
-        }
-        if (!connectionAuthorized) return;
+    socket.on("close", () => {
+      this.logger.info("Client disconnected", { connectionId });
+    });
 
-        this.roomManager.handleMessage(connectionId, message);
+    const authTimeout = setTimeout(() => socket.close(), 60000);
+    socket.once("message", (data) => {
+      try {
+        this.handleAuthorizationMessage(socket, connectionId, data);
       } catch (e) {
-        console.error(e);
+        this.logger.error("Error!", { connectionId, e });
         socket.close();
+      } finally {
+        clearTimeout(authTimeout);
       }
     });
+  }
 
-    socket.on("close", () => {
-      this.connectionStore.deregister(connectionId);
-      this.roomManager.handleDisconnect(connectionId);
+  public handleAuthorizationMessage(
+    socket: WebSocket,
+    connectionId: string,
+    data: RawData
+  ) {
+    const message = Parser.parse(data.toString());
 
-      this.logger.info("Client disconnected", {
+    if (message.type !== "connection-request") {
+      this.logger.info("Invalid initial message type!", {
         connectionId,
+        type: message.type,
       });
-    });
+      socket.close();
+      return;
+    }
+
+    const userName = this.authentication.authenticateUser(
+      message.authorization
+    );
+
+    if (userName == null) {
+      this.logger.info("Invalid credentials!", {
+        connectionId,
+        authorization: message.authorization,
+      });
+      socket.close();
+      return;
+    }
+
+    this.roomManager.connectSocket(userName, message.room, socket);
   }
 }
