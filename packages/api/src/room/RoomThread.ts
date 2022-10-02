@@ -39,11 +39,29 @@ export class RoomThread extends Worker {
     super(__filename, { workerData: { roomId } });
   }
 
+  private createMessageHandler<T>(send: (data: T) => void) {
+    return (data: T) => {
+      try {
+        send(data);
+      } catch (error) {
+        // We emit this as a room error so it can be handled downstream
+        this.emit("error", error);
+        this.terminate();
+      }
+    };
+  }
+
   public connectSocket(userId: string, socket: WebSocket) {
     const { port1, port2 } = new MessageChannel();
 
-    socket.on("message", (data) => port1.postMessage(data.toString())); // TODO: This should work without stringification
-    port1.on("message", (data) => socket.send(data));
+    socket.on(
+      "message",
+      this.createMessageHandler((data) => port1.postMessage(data.toString()))
+    );
+    port1.on(
+      "message",
+      this.createMessageHandler((data) => socket.send(data))
+    );
     socket.on("close", () => port1.close());
     port1.on("close", () => socket.close());
 
