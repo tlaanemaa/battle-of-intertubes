@@ -1,4 +1,4 @@
-name: Build web-client
+name: Build
 on:
   push:
     branches:
