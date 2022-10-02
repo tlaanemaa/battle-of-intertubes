@@ -5,7 +5,7 @@ import { EntityCanvas } from "./EntityCanvas";
 
 @singleton()
 export class EntityRenderer extends Renderer {
-  public drawEntityBoxes = true;
+  public drawEntityBoxes = false;
 
   constructor(canvas: EntityCanvas, camera: Camera) {
     super(canvas, camera);

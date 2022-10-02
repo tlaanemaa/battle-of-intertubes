@@ -11,6 +11,6 @@ export class Camera {
   }
 
   public set zoom(zoom: number) {
-    this._zoom = Math.max(0.005, Math.min(50, zoom));
+    this._zoom = Math.max(0.01, Math.min(2, zoom));
   }
 }

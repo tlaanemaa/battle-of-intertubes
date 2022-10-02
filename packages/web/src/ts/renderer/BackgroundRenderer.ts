@@ -6,9 +6,9 @@ import { Canvas } from "../components";
 
 @singleton()
 export class BackgroundRenderer extends Renderer {
-  private readonly imageUrl = "img/grid-me.png";
-  private readonly imageHeight = 50;
-  private readonly imageWidth = 50;
+  private readonly imageUrl = "img/grass.jpg";
+  private readonly imageHeight = 612;
+  private readonly imageWidth = 612;
 
   private readonly rawImage = new Image();
   private image = new Canvas();
