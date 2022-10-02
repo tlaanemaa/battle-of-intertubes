@@ -1,5 +1,5 @@
 {
-  "name": "@battle-of-intertubes/logger",
+  "name": "@battle-of-intertubes/messaging",
   "version": "0.0.0",
   "private": true,
   "main": "dist/index.js",

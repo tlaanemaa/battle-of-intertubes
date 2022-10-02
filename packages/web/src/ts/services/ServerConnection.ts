@@ -5,7 +5,7 @@ import {
   StateUpdateMessage,
   Parser,
   ActionPerformedMessage,
-} from "@battle-of-intertubes/core";
+} from "@battle-of-intertubes/messaging";
 
 export class ServerConnection {
   private ready = false;

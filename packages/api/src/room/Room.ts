@@ -1,14 +1,13 @@
 import "reflect-metadata";
 import { MessagePort } from "node:worker_threads";
 import { container } from "tsyringe";
+import { FastMap, Game } from "@battle-of-intertubes/core";
 import {
   AnyMessage,
   ConnectionApprovedMessage,
-  FastMap,
-  Game,
   Parser,
   StateUpdateMessage,
-} from "@battle-of-intertubes/core";
+} from "@battle-of-intertubes/messaging";
 
 /**
  * Each Room will be executed on a new worker thread

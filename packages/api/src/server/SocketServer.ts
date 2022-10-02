@@ -2,9 +2,9 @@ import { IncomingMessage } from "node:http";
 import { WebSocketServer, WebSocket, RawData } from "ws";
 import { singleton } from "tsyringe";
 import { Logger } from "@battle-of-intertubes/logger";
+import { Parser } from "@battle-of-intertubes/messaging";
 import { RoomManager } from "./RoomManager";
 import { Authentication } from "./Authentication";
-import { Parser } from "@battle-of-intertubes/core";
 
 @singleton()
 export class SocketServer {

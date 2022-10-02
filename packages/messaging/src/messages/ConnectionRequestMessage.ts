@@ -1,4 +1,4 @@
-import { BaseMessage } from "./BaseMessage";
+import { BaseMessage } from "../core";
 
 export class ConnectionRequestMessage extends BaseMessage {
   public readonly type = "connection-request";
