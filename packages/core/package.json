@@ -1,5 +1,5 @@
 {
-  "name": "@battle-of-intertubes/core",
+  "name": "@moose-rocket/core",
   "version": "0.0.0",
   "private": true,
   "main": "dist/index.js",

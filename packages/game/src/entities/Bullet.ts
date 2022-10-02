@@ -1,4 +1,4 @@
-import { Entity } from "@battle-of-intertubes/core";
+import { Entity } from "@moose-rocket/core";
 
 export class Bullet extends Entity {
   public width = 25;

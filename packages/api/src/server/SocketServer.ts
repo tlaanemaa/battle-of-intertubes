@@ -1,8 +1,8 @@
 import { IncomingMessage } from "node:http";
 import { WebSocketServer, WebSocket, RawData } from "ws";
 import { singleton } from "tsyringe";
-import { Logger } from "@battle-of-intertubes/logger";
-import { Parser } from "@battle-of-intertubes/messaging";
+import { Logger } from "@moose-rocket/logger";
+import { Parser } from "@moose-rocket/messaging";
 import { RoomManager } from "./RoomManager";
 import { Authentication } from "./Authentication";
 

@@ -1,5 +1,5 @@
 {
-  "name": "battle-of-intertubes",
+  "name": "moose-rocket",
   "version": "0.1.0",
   "description": "",
   "scripts": {
@@ -7,21 +7,21 @@
     "build-web": "npm run build -w packages/web",
     "start-api": "npm run start -w packages/api",
     "build-api": "npm run build -w packages/api",
-    "build-api-image": "docker build -t battle_of_intertubes_api -f packages/api/Dockerfile .",
+    "build-api-image": "docker build -t moose-rocket-api -f packages/api/Dockerfile .",
     "test-core": "npm run test -w packages/core",
     "build-core": "npm run build -w packages/core",
     "build": "npm run build -w packages"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/tlaanemaa/battle-of-intertubes.git"
+    "url": "git+https://github.com/tlaanemaa/moose-rocket.git"
   },
   "author": "Taavi Laanemaa <taavi.laanemaa@gmail.com>",
   "license": "Apache-2.0",
   "bugs": {
-    "url": "https://github.com/tlaanemaa/battle-of-intertubes/issues"
+    "url": "https://github.com/tlaanemaa/moose-rocket/issues"
   },
-  "homepage": "https://github.com/tlaanemaa/battle-of-intertubes#readme",
+  "homepage": "https://github.com/tlaanemaa/moose-rocket#readme",
   "workspaces": [
     "packages/*"
   ],

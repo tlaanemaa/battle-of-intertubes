@@ -1,5 +1,5 @@
 import { singleton } from "tsyringe";
-import { Texture, TextureLoader } from "@battle-of-intertubes/core";
+import { Texture, TextureLoader } from "@moose-rocket/core";
 import { AssetCache } from "./AssetCache";
 
 class WebTexture implements Texture {

@@ -1,5 +1,5 @@
 import { singleton } from "tsyringe";
-import { FastMap } from "@battle-of-intertubes/core";
+import { FastMap } from "@moose-rocket/core";
 
 @singleton()
 export class AssetCache {

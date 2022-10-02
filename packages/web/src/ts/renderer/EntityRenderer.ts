@@ -1,5 +1,5 @@
 import { singleton } from "tsyringe";
-import { Entity, Camera } from "@battle-of-intertubes/core";
+import { Entity, Camera } from "@moose-rocket/core";
 import { Renderer } from "./Renderer";
 import { EntityCanvas } from "./EntityCanvas";
 

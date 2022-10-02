@@ -1,5 +1,5 @@
 {
-  "name": "@battle-of-intertubes/web",
+  "name": "@moose-rocket/web",
   "version": "0.0.0",
   "private": true,
   "main": "dist/bundle.js",

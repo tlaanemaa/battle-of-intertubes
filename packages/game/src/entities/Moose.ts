@@ -1,4 +1,4 @@
-import { Entity } from "@battle-of-intertubes/core";
+import { Entity } from "@moose-rocket/core";
 import { Player } from "./Player";
 
 export class Moose extends Entity {

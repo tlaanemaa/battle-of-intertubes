@@ -6,7 +6,7 @@ import {
   UserInput,
   INTENT,
   Game,
-} from "@battle-of-intertubes/core";
+} from "@moose-rocket/core";
 import { Moose } from "../entities/Moose";
 import { Player } from "../entities/Player";
 

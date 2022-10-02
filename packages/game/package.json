@@ -1,5 +1,5 @@
 {
-  "name": "@battle-of-intertubes/game",
+  "name": "@moose-rocket/game",
   "version": "0.0.0",
   "private": true,
   "main": "dist/index.js",

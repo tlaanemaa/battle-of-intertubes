@@ -1,5 +1,5 @@
 import { singleton } from "tsyringe";
-import { Camera, Entity, EntityStore } from "@battle-of-intertubes/core";
+import { Camera, Entity, EntityStore } from "@moose-rocket/core";
 import { Bullet } from "./Bullet";
 
 @singleton()

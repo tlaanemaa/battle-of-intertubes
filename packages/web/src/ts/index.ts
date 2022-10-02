@@ -1,7 +1,7 @@
 import "reflect-metadata";
 import { container, Lifecycle } from "tsyringe";
-import "@battle-of-intertubes/game";
-import { Game } from "@battle-of-intertubes/core";
+import "@moose-rocket/game";
+import { Game } from "@moose-rocket/core";
 import { FrameTimer } from "./components";
 import { EntityRenderer, BackgroundRenderer } from "./renderer";
 import { WebUserInput, WebTextureLoader, WebAudioLoader } from "./services";

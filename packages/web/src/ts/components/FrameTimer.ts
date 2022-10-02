@@ -1,6 +1,6 @@
 import { injectable } from "tsyringe";
-import { Timer } from "@battle-of-intertubes/core";
-import { Logger } from "@battle-of-intertubes/logger";
+import { Timer } from "@moose-rocket/core";
+import { Logger } from "@moose-rocket/logger";
 
 type Task = () => void;
 

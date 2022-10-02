@@ -1,7 +1,7 @@
 import { WebSocket } from "ws";
 import { singleton } from "tsyringe";
-import { FastMap } from "@battle-of-intertubes/core";
-import { Logger } from "@battle-of-intertubes/logger";
+import { FastMap } from "@moose-rocket/core";
+import { Logger } from "@moose-rocket/logger";
 import { RoomThread } from "../room";
 
 @singleton()

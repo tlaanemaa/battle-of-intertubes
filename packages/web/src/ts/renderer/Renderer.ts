@@ -1,4 +1,4 @@
-import { Camera, Object2D } from "@battle-of-intertubes/core";
+import { Camera, Object2D } from "@moose-rocket/core";
 import { Canvas } from "../components";
 
 export class Renderer {

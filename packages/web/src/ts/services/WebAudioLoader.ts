@@ -1,5 +1,5 @@
 import { singleton } from "tsyringe";
-import { Audio, AudioLoader } from "@battle-of-intertubes/core";
+import { Audio, AudioLoader } from "@moose-rocket/core";
 import { AssetCache } from "./AssetCache";
 
 class WebAudio implements Audio {

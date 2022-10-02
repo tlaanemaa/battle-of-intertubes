@@ -5,7 +5,7 @@ import {
   Object2D,
   UserInput,
   INTENT,
-} from "@battle-of-intertubes/core";
+} from "@moose-rocket/core";
 
 @singleton()
 export class WebUserInput
