@@ -1,23 +1,24 @@
 import "reflect-metadata";
 import { MessagePort } from "node:worker_threads";
 import { container } from "tsyringe";
+import "@moose-rocket/game";
 import { FastMap, Game } from "@moose-rocket/core";
 import {
   AnyMessage,
   ConnectionApprovedMessage,
   Parser,
-  StateUpdateMessage,
 } from "@moose-rocket/messaging";
+import "./components";
 
 /**
  * Each Room will be executed on a new worker thread
  */
 export class Room {
   private readonly players = new FastMap<MessagePort>();
-  //private readonly game = container.resolve<Game>("Game");
+  private readonly game = container.resolve<Game>("Game");
 
   constructor(private readonly id: string) {
-    //this.game.init();
+    this.game.init();
   }
 
   public onConnect(playerId: string, port: MessagePort) {

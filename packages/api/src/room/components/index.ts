@@ -1,48 +1,52 @@
-import "reflect-metadata";
 import { container, Lifecycle } from "tsyringe";
-import "@moose-rocket/game";
 import {
   AudioLoader,
   BackgroundRenderer,
   EntityRenderer,
-  Game,
   TextureLoader,
   Timer,
   UserInput,
 } from "@moose-rocket/core";
-import { FrameTimer } from "./components";
-import { WebEntityRenderer, WebBackgroundRenderer } from "./renderer";
-import { WebUserInput, WebTextureLoader, WebAudioLoader } from "./services";
+import { ServerAudioLoader } from "./ServerAudioLoader";
+import { ServerBackgroundRenderer } from "./ServerBackgroundRenderer";
+import { ServerEntityRenderer } from "./ServerEntityRenderer";
+import { ServerTextureLoader } from "./ServerTextureLoader";
+import { ServerTimer } from "./ServerTimer";
+import { ServerUserInput } from "./UserInput";
+
+/**
+ * FIXME: Dirty hack to temporarily allow running stuff that
+ * relies on window in the server
+ */
+(global as any).window = { innerWidth: 1000, innerHeight: 1000 };
 
 container.register<Timer>(
   "Timer",
-  { useClass: FrameTimer },
+  { useClass: ServerTimer },
   { lifecycle: Lifecycle.Singleton }
 );
 container.register<UserInput>(
   "UserInput",
-  { useClass: WebUserInput },
+  { useClass: ServerUserInput },
   { lifecycle: Lifecycle.Singleton }
 );
 container.register<BackgroundRenderer>(
   "BackgroundRenderer",
-  { useClass: WebBackgroundRenderer },
+  { useClass: ServerBackgroundRenderer },
   { lifecycle: Lifecycle.Singleton }
 );
 container.register<EntityRenderer>(
   "EntityRenderer",
-  { useClass: WebEntityRenderer },
+  { useClass: ServerEntityRenderer },
   { lifecycle: Lifecycle.Singleton }
 );
 container.register<TextureLoader>(
   "TextureLoader",
-  { useClass: WebTextureLoader },
+  { useClass: ServerTextureLoader },
   { lifecycle: Lifecycle.Singleton }
 );
 container.register<AudioLoader>(
   "AudioLoader",
-  { useClass: WebAudioLoader },
+  { useClass: ServerAudioLoader },
   { lifecycle: Lifecycle.Singleton }
 );
-
-container.resolve<Game>("Game").init();

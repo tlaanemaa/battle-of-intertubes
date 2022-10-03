@@ -5,19 +5,21 @@ import { Logger } from "@moose-rocket/logger";
 type Task = () => void;
 
 @singleton()
-export class FrameTimer implements Timer {
-  private shouldStop = false;
+export class ServerTimer implements Timer {
+  private interval: NodeJS.Timer | null = null;
   private tasks: Task[] = [];
 
   constructor(private readonly logger: Logger) {}
 
   public start() {
-    this.shouldStop = false;
-    window.requestAnimationFrame(() => this.handleFrame());
+    this.interval = setInterval(() => this.handleFrame(), 500);
   }
 
   public stop() {
-    this.shouldStop = true;
+    if (this.interval != null) {
+      clearInterval(this.interval);
+      this.interval = null;
+    }
   }
 
   public schedulePrimary(task: Task) {
@@ -26,13 +28,10 @@ export class FrameTimer implements Timer {
 
   private handleFrame() {
     try {
+        console.log("SERVER TICK")
       this.tasks.forEach((task) => task());
     } catch (e) {
       this.logger.error(e);
-    } finally {
-      if (!this.shouldStop) {
-        window.requestAnimationFrame(() => this.handleFrame());
-      }
     }
   }
 }

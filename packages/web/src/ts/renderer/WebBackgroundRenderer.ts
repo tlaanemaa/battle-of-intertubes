@@ -5,7 +5,7 @@ import { BackgroundCanvas } from "./BackgroundCanvas";
 import { Canvas } from "../components";
 
 @singleton()
-export class BackgroundRenderer extends Renderer {
+export class WebBackgroundRenderer extends Renderer {
   private readonly imageUrl = "img/grass.jpg";
   private readonly imageHeight = 612;
   private readonly imageWidth = 612;

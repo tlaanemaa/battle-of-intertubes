@@ -4,7 +4,7 @@ import { Renderer } from "./Renderer";
 import { EntityCanvas } from "./EntityCanvas";
 
 @singleton()
-export class EntityRenderer extends Renderer {
+export class WebEntityRenderer extends Renderer {
   public drawEntityBoxes = false;
 
   constructor(canvas: EntityCanvas, camera: Camera) {
