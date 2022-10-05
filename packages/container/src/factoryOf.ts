@@ -1,9 +1,23 @@
 import { inject, injectable, interfaces } from "inversify";
-import { container } from "./container";
+import { container as globalContainer } from "./container";
 
 type AnyConstructor<T> = new (...args: any) => T;
 
-export const factoryOf = <T>(constructor: AnyConstructor<T>) => {
+/**
+ * Utility function to create factory classes for other classes.
+ * This makes working with factories easier as you can perform class based injections.
+ *
+ * Example:
+ * ```ts
+ * class Moose {}
+ * export class MooseFactory extends factoryOf(Moose) {}
+ * container.bind(MooseFactory).toSelf();
+ * ```
+ */
+export const factoryOf = <T>(
+  constructor: AnyConstructor<T>,
+  container = globalContainer
+) => {
   const rawFactoryId = Symbol.for(`raw-${constructor.name}-factory`);
 
   container
