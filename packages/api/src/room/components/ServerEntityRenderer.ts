@@ -1,6 +1,6 @@
 import { injectable } from "inversify";
 import { container } from "@moose-rocket/container";
-import { Entity, EntityRenderer } from "@moose-rocket/core";
+import { DEPENDENCIES, Entity, EntityRenderer } from "@moose-rocket/core";
 
 @injectable()
 export class ServerEntityRenderer implements EntityRenderer {
@@ -10,4 +10,7 @@ export class ServerEntityRenderer implements EntityRenderer {
   draw(entities: Entity[]): void {}
 }
 
-container.bind(ServerEntityRenderer).toSelf().inSingletonScope();
+container
+  .bind(DEPENDENCIES.EntityRenderer)
+  .to(ServerEntityRenderer)
+  .inSingletonScope();

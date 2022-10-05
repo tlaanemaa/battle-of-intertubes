@@ -1,6 +1,6 @@
 import { injectable } from "inversify";
 import { container } from "@moose-rocket/container";
-import { Audio, AudioLoader } from "@moose-rocket/core";
+import { Audio, AudioLoader, DEPENDENCIES } from "@moose-rocket/core";
 
 @injectable()
 export class ServerAudioLoader implements AudioLoader {
@@ -11,4 +11,7 @@ export class ServerAudioLoader implements AudioLoader {
   }
 }
 
-container.bind(ServerAudioLoader).toSelf().inSingletonScope();
+container
+  .bind(DEPENDENCIES.AudioLoader)
+  .to(ServerAudioLoader)
+  .inSingletonScope();

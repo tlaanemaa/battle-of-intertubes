@@ -1,6 +1,6 @@
 import { injectable } from "inversify";
 import { container } from "@moose-rocket/container";
-import { Timer } from "@moose-rocket/core";
+import { DEPENDENCIES, Timer } from "@moose-rocket/core";
 import { Logger } from "@moose-rocket/logger";
 
 type Task = () => void;
@@ -37,4 +37,4 @@ export class ServerTimer implements Timer {
   }
 }
 
-container.bind(ServerTimer).toSelf().inSingletonScope();
+container.bind(DEPENDENCIES.Timer).to(ServerTimer).inSingletonScope();

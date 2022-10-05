@@ -1,6 +1,6 @@
 import { injectable } from "inversify";
 import { container } from "@moose-rocket/container";
-import { Texture, TextureLoader } from "@moose-rocket/core";
+import { DEPENDENCIES, Texture, TextureLoader } from "@moose-rocket/core";
 
 @injectable()
 export class ServerTextureLoader implements TextureLoader {
@@ -13,4 +13,7 @@ export class ServerTextureLoader implements TextureLoader {
   }
 }
 
-container.bind(ServerTextureLoader).toSelf().inSingletonScope();
+container
+  .bind(DEPENDENCIES.TextureLoader)
+  .to(ServerTextureLoader)
+  .inSingletonScope();
