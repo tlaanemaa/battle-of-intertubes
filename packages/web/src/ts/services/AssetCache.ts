@@ -1,7 +1,8 @@
-import { singleton } from "tsyringe";
+import { injectable } from "inversify";
 import { FastMap } from "@moose-rocket/core";
+import { container } from "@moose-rocket/container";
 
-@singleton()
+@injectable()
 export class AssetCache {
   private readonly assets = new FastMap<Promise<string>>();
 
@@ -21,3 +22,5 @@ export class AssetCache {
     return URL.createObjectURL(blob);
   }
 }
+
+container.bind(AssetCache).toSelf().inSingletonScope();

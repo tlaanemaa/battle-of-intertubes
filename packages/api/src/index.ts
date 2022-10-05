@@ -1,5 +1,5 @@
 import "reflect-metadata";
-import { container } from "tsyringe";
+import { container } from "@moose-rocket/container";
 import { SocketServer } from "./server/SocketServer";
 
-container.resolve(SocketServer);
+container.get(SocketServer);

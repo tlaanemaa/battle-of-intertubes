@@ -1,11 +1,12 @@
-import { singleton } from "tsyringe";
+import { container } from "@moose-rocket/container";
+import { injectable } from "inversify";
 
 // FIXME: Move this somewhere else
 const knownUsers: { [key: string]: string } = {
   banana: "45c993a5-f1bd-4bb9-b6a7-e543b3f80560",
 };
 
-@singleton()
+@injectable()
 export class Authentication {
   /**
    * Returns the user ID if the user is recognized, or null if they're not
@@ -28,3 +29,5 @@ export class Authentication {
     return null;
   }
 }
+
+container.bind(Authentication).toSelf().inSingletonScope();

@@ -1,7 +1,10 @@
+import { injectable, unmanaged } from "inversify";
+
+@injectable()
 export class Canvas {
   public readonly element: HTMLCanvasElement;
 
-  constructor(elementId?: string) {
+  constructor(@unmanaged() elementId?: string) {
     this.element = elementId
       ? (document.getElementById(elementId) as HTMLCanvasElement)
       : document.createElement("canvas");

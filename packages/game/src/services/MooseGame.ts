@@ -1,4 +1,4 @@
-import { inject, singleton } from "tsyringe";
+import { inject, injectable } from "inversify";
 import {
   EntityStore,
   Camera,
@@ -6,19 +6,22 @@ import {
   UserInput,
   INTENT,
   Game,
+  DEPENDENCIES,
 } from "@moose-rocket/core";
-import { Moose } from "../entities/Moose";
+import { MooseFactory } from "../entities/Moose";
 import { Player } from "../entities/Player";
+import { container } from "@moose-rocket/container";
 
-@singleton()
+@injectable()
 export class MooseGame implements Game {
   constructor(
-    @inject("UserInput")
+    @inject(DEPENDENCIES.UserInput)
     private readonly userInput: UserInput,
     private readonly camera: Camera,
     private readonly gameRunner: GameRunner,
     private readonly store: EntityStore,
-    private readonly player: Player
+    private readonly player: Player,
+    private readonly mooseFactory: MooseFactory
   ) {}
 
   init() {
@@ -26,18 +29,16 @@ export class MooseGame implements Game {
     const spaceFactor = 3;
     const count = 1000;
     new Array(count).fill(1).map(() => {
-      const entity = new Moose(
-        Math.round(
-          Math.random() * count * spaceFactor * 2 - count * spaceFactor
-        ),
-        Math.round(
-          Math.random() * count * spaceFactor * 2 - count * spaceFactor
-        ),
-        this.player
+      const moose = this.mooseFactory.get();
+      moose.x = Math.round(
+        Math.random() * count * spaceFactor * 2 - count * spaceFactor
+      );
+      moose.y = Math.round(
+        Math.random() * count * spaceFactor * 2 - count * spaceFactor
       );
 
-      this.store.add(entity);
-      return entity;
+      this.store.add(moose);
+      return moose;
     });
 
     this.userInput.on(INTENT.ZOOM_IN, (x) => {
@@ -66,3 +67,5 @@ export class MooseGame implements Game {
     this.gameRunner.start();
   }
 }
+
+container.bind(DEPENDENCIES.Game).to(MooseGame).inSingletonScope();

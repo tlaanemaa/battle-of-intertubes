@@ -1,13 +1,15 @@
-import { inject, singleton } from "tsyringe";
+import { injectable, inject } from "inversify";
 import {
   EventSource,
   Timer,
   Object2D,
   UserInput,
   INTENT,
+  DEPENDENCIES,
 } from "@moose-rocket/core";
+import { container } from "@moose-rocket/container";
 
-@singleton()
+@injectable()
 export class WebUserInput
   extends EventSource<INTENT, number>
   implements UserInput
@@ -22,7 +24,7 @@ export class WebUserInput
 
   private readonly pressedKeys = new Set<string>();
 
-  constructor(@inject("Timer") private readonly timer: Timer) {
+  constructor(@inject(DEPENDENCIES.Timer) private readonly timer: Timer) {
     super();
     this.attachListeners();
 
@@ -178,3 +180,5 @@ export class WebUserInput
     return Math.sqrt(Math.pow(x0 - x1, 2) + Math.pow(y0 - y1, 2));
   }
 }
+
+container.bind(DEPENDENCIES.UserInput).to(WebUserInput).inSingletonScope();

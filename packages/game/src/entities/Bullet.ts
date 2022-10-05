@@ -1,6 +1,10 @@
-import { Entity } from "@moose-rocket/core";
+import { injectable } from "inversify";
+import { container, factoryOf } from "@moose-rocket/container";
+import { DEPENDENCIES, Entity, TextureLoader } from "@moose-rocket/core";
+import { inject } from "inversify";
 
-export class Bullet extends Entity {
+@injectable()
+class Bullet extends Entity {
   public width = 25;
   public height = 25;
   public mass = 500;
@@ -12,12 +16,14 @@ export class Bullet extends Entity {
     50
   );
 
-  constructor(x: number, y: number, rotation: number) {
+  constructor(
+    @inject(DEPENDENCIES.TextureLoader)
+    private readonly textureLoader: TextureLoader
+  ) {
     super();
-    this.x = x;
-    this.y = y;
-    this.rotation = rotation;
+  }
 
+  public init() {
     const speed = 2000;
     const rotationRad = (this.rotation * Math.PI) / 180;
     this.velocity = {
@@ -26,3 +32,6 @@ export class Bullet extends Entity {
     };
   }
 }
+
+export class BulletFactory extends factoryOf(Bullet) {}
+container.bind(BulletFactory).toSelf();

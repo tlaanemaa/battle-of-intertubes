@@ -1,7 +1,10 @@
-import { singleton } from "tsyringe";
+import { injectable } from "inversify";
+import { container } from "@moose-rocket/container";
 import { BackgroundRenderer } from "@moose-rocket/core";
 
-@singleton()
+@injectable()
 export class ServerBackgroundRenderer implements BackgroundRenderer {
   draw(): void {}
 }
+
+container.bind(ServerBackgroundRenderer).toSelf().inSingletonScope();

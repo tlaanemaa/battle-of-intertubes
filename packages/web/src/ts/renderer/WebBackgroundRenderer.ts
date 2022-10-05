@@ -1,10 +1,11 @@
-import { singleton } from "tsyringe";
-import { Camera } from "@moose-rocket/core";
+import { injectable } from "inversify";
+import { Camera, DEPENDENCIES } from "@moose-rocket/core";
 import { Renderer } from "./Renderer";
 import { BackgroundCanvas } from "./BackgroundCanvas";
 import { Canvas } from "../components";
+import { container } from "@moose-rocket/container";
 
-@singleton()
+@injectable()
 export class WebBackgroundRenderer extends Renderer {
   private readonly imageUrl = "img/grass.jpg";
   private readonly imageHeight = 612;
@@ -97,3 +98,8 @@ export class WebBackgroundRenderer extends Renderer {
     this.imageHasChanged = true;
   }
 }
+
+container
+  .bind(DEPENDENCIES.BackgroundRenderer)
+  .to(WebBackgroundRenderer)
+  .inSingletonScope();

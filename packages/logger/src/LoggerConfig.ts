@@ -1,9 +1,12 @@
-import { singleton } from "tsyringe";
+import { injectable } from "inversify";
+import { container } from "@moose-rocket/container";
 
 export type Level = "debug" | "info" | "warn" | "error";
 
-@singleton()
+@injectable()
 export class LoggerConfig {
   public enabled = true;
   public level: Level = "debug";
 }
+
+container.bind(LoggerConfig).toSelf().inSingletonScope();

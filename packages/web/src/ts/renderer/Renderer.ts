@@ -1,6 +1,8 @@
 import { Camera, Object2D } from "@moose-rocket/core";
+import { injectable } from "inversify";
 import { Canvas } from "../components";
 
+@injectable()
 export class Renderer {
   private previousCameraPosition: Object2D = { x: 0, y: 0 };
   private previousCameraZoom: number = 1;

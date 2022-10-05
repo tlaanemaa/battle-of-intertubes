@@ -1,4 +1,5 @@
-import { injectable } from "tsyringe";
+import { container } from "@moose-rocket/container";
+import { injectable } from "inversify";
 
 @injectable()
 export class DebugConsole {
@@ -20,3 +21,5 @@ export class DebugConsole {
     this.element.prepend(line);
   }
 }
+
+container.bind(DebugConsole).toSelf().inSingletonScope();

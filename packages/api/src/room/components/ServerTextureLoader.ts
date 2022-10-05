@@ -1,7 +1,8 @@
-import { singleton } from "tsyringe";
+import { injectable } from "inversify";
+import { container } from "@moose-rocket/container";
 import { Texture, TextureLoader } from "@moose-rocket/core";
 
-@singleton()
+@injectable()
 export class ServerTextureLoader implements TextureLoader {
   load(
     src: string,
@@ -11,3 +12,5 @@ export class ServerTextureLoader implements TextureLoader {
     return {} as Texture;
   }
 }
+
+container.bind(ServerTextureLoader).toSelf().inSingletonScope();

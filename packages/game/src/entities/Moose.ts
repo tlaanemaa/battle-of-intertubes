@@ -1,7 +1,10 @@
-import { Entity } from "@moose-rocket/core";
+import { container, factoryOf } from "@moose-rocket/container";
+import { DEPENDENCIES, Entity, TextureLoader } from "@moose-rocket/core";
+import { inject, injectable } from "inversify";
 import { Player } from "./Player";
 
-export class Moose extends Entity {
+@injectable()
+class Moose extends Entity {
   public readonly width = 70;
   public readonly height = 70;
   public rotation = 0;
@@ -17,10 +20,13 @@ export class Moose extends Entity {
     "img/herobrine.png",
   ];
 
-  constructor(x: number = 0, y: number = 0, private readonly player: Player) {
+  constructor(
+    @inject(DEPENDENCIES.TextureLoader)
+    private readonly textureLoader: TextureLoader,
+    private readonly player: Player
+  ) {
     super();
-    this.x = x;
-    this.y = y;
+
     this.dragCoefficient = 0.0001;
     this.mass = 100;
 
@@ -47,3 +53,6 @@ export class Moose extends Entity {
     });
   }
 }
+
+export class MooseFactory extends factoryOf(Moose) {}
+container.bind(MooseFactory).toSelf();

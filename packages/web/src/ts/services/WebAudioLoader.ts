@@ -1,6 +1,7 @@
-import { singleton } from "tsyringe";
-import { Audio, AudioLoader } from "@moose-rocket/core";
+import { injectable } from "inversify";
+import { Audio, AudioLoader, DEPENDENCIES } from "@moose-rocket/core";
 import { AssetCache } from "./AssetCache";
+import { container } from "@moose-rocket/container";
 
 class WebAudio implements Audio {
   constructor(private readonly blobPromise: Promise<string>) {}
@@ -11,7 +12,7 @@ class WebAudio implements Audio {
   }
 }
 
-@singleton()
+@injectable()
 export class WebAudioLoader implements AudioLoader {
   constructor(private readonly assetCache: AssetCache) {}
 
@@ -19,3 +20,5 @@ export class WebAudioLoader implements AudioLoader {
     return new WebAudio(this.assetCache.get(src));
   }
 }
+
+container.bind(DEPENDENCIES.AudioLoader).to(WebAudioLoader).inSingletonScope();

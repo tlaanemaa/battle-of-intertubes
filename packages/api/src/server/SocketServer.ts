@@ -1,12 +1,13 @@
 import { IncomingMessage } from "node:http";
+import { injectable } from "inversify";
 import { WebSocketServer, WebSocket, RawData } from "ws";
-import { singleton } from "tsyringe";
+import { container } from "@moose-rocket/container";
 import { Logger } from "@moose-rocket/logger";
 import { Parser } from "@moose-rocket/messaging";
 import { RoomManager } from "./RoomManager";
 import { Authentication } from "./Authentication";
 
-@singleton()
+@injectable()
 export class SocketServer {
   private connectionCount = 0;
   private readonly port = parseInt(process.env.PORT!) || 8080;
@@ -88,3 +89,5 @@ export class SocketServer {
     this.roomManager.connectSocket(userName, message.room, socket);
   }
 }
+
+container.bind(SocketServer).toSelf().inSingletonScope();

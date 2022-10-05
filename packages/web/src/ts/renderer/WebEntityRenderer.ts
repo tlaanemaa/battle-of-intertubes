@@ -1,9 +1,10 @@
-import { singleton } from "tsyringe";
-import { Entity, Camera } from "@moose-rocket/core";
+import { injectable } from "inversify";
+import { Entity, Camera, DEPENDENCIES } from "@moose-rocket/core";
 import { Renderer } from "./Renderer";
 import { EntityCanvas } from "./EntityCanvas";
+import { container } from "@moose-rocket/container";
 
-@singleton()
+@injectable()
 export class WebEntityRenderer extends Renderer {
   public drawEntityBoxes = false;
 
@@ -77,3 +78,8 @@ export class WebEntityRenderer extends Renderer {
     });
   }
 }
+
+container
+  .bind(DEPENDENCIES.EntityRenderer)
+  .to(WebEntityRenderer)
+  .inSingletonScope();

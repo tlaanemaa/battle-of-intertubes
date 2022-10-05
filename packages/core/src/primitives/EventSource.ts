@@ -1,7 +1,9 @@
+import { injectable } from "inversify";
 import { FastMap } from "./FastMap";
 
 type Handler<V> = (x: V) => void;
 
+@injectable()
 export class EventSource<K extends string | number, V> {
   private readonly store = new FastMap<Set<Handler<V>>>();
 

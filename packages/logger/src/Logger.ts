@@ -1,4 +1,5 @@
-import { injectable } from "tsyringe";
+import { injectable } from "inversify";
+import { container } from "@moose-rocket/container";
 import { LoggerConfig, Level } from "./LoggerConfig";
 
 @injectable()
@@ -31,3 +32,5 @@ export class Logger {
     console[level](`[${time}]`, ...data);
   }
 }
+
+container.bind(Logger).toSelf();

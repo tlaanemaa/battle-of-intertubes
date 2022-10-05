@@ -1,10 +1,11 @@
 import { WebSocket } from "ws";
-import { singleton } from "tsyringe";
+import { injectable } from "inversify";
+import { container } from "@moose-rocket/container";
 import { FastMap } from "@moose-rocket/core";
 import { Logger } from "@moose-rocket/logger";
 import { RoomThread } from "../room";
 
-@singleton()
+@injectable()
 export class RoomManager {
   private readonly rooms = new FastMap<RoomThread>();
 
@@ -33,3 +34,5 @@ export class RoomManager {
     return room;
   }
 }
+
+container.bind(RoomManager).toSelf().inSingletonScope();

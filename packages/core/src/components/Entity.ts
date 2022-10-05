@@ -1,8 +1,9 @@
-import { container } from "tsyringe";
+import { injectable } from "inversify";
 import { v4 as uuidV4 } from "uuid";
-import { AudioLoader, TextureLoader, Texture } from "../types";
+import { Texture } from "../dependencies";
 import { Object2D } from "../primitives";
 
+@injectable()
 export class Entity {
   // Properties
   public readonly id = uuidV4();
@@ -30,12 +31,6 @@ export class Entity {
   private lastCalculationTime = Date.now();
   private targetRotation = this.rotation;
   private readonly rotationDegreesPerSec = 720;
-
-  // Hooks into services
-  protected readonly textureLoader: TextureLoader =
-    container.resolve("TextureLoader");
-  protected readonly audioLoader: AudioLoader =
-    container.resolve("AudioLoader");
 
   public get x() {
     this.recalculatePosition();

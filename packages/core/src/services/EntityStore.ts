@@ -1,8 +1,9 @@
-import { singleton } from "tsyringe";
+import { injectable } from "inversify";
+import { container } from "@moose-rocket/container";
 import { Entity } from "../components";
 import { Grid } from "../primitives";
 
-@singleton()
+@injectable()
 export class EntityStore {
   private readonly store = new Grid<Entity>(1000);
   public getArea = this.store.getArea.bind(this.store);
@@ -17,3 +18,5 @@ export class EntityStore {
     this.store.delete(entity);
   }
 }
+
+container.bind(EntityStore).toSelf().inSingletonScope();

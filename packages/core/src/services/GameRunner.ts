@@ -1,18 +1,19 @@
-import { inject, singleton } from "tsyringe";
+import { inject, injectable } from "inversify";
 import { Camera } from "../components";
 import { EntityStore } from "./EntityStore";
 import { Collider } from "../tools";
-import { Timer } from "../types";
-import { EntityRenderer, BackgroundRenderer } from "../types";
+import { DEPENDENCIES, Timer } from "../dependencies";
+import { EntityRenderer, BackgroundRenderer } from "../dependencies";
+import { container } from "@moose-rocket/container";
 
-@singleton()
+@injectable()
 export class GameRunner {
   constructor(
-    @inject("BackgroundRenderer")
+    @inject(DEPENDENCIES.BackgroundRenderer)
     private readonly backgroundRenderer: BackgroundRenderer,
-    @inject("EntityRenderer")
+    @inject(DEPENDENCIES.EntityRenderer)
     private readonly entityRenderer: EntityRenderer,
-    @inject("Timer")
+    @inject(DEPENDENCIES.Timer)
     private readonly timer: Timer,
     private readonly camera: Camera,
     private readonly store: EntityStore
@@ -50,3 +51,5 @@ export class GameRunner {
     this.entityRenderer.draw(entities);
   }
 }
+
+container.bind(GameRunner).toSelf().inSingletonScope();

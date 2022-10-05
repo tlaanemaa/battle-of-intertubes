@@ -1,8 +1,16 @@
-import { singleton } from "tsyringe";
-import { Camera, Entity, EntityStore } from "@moose-rocket/core";
-import { Bullet } from "./Bullet";
+import { inject, injectable } from "inversify";
+import {
+  AudioLoader,
+  Camera,
+  DEPENDENCIES,
+  Entity,
+  EntityStore,
+  TextureLoader,
+} from "@moose-rocket/core";
+import { BulletFactory } from "./Bullet";
+import { container } from "@moose-rocket/container";
 
-@singleton()
+@injectable()
 export class Player extends Entity {
   public width = 100;
   public height = 100;
@@ -21,7 +29,12 @@ export class Player extends Entity {
 
   constructor(
     private readonly camera: Camera,
-    private readonly store: EntityStore
+    private readonly store: EntityStore,
+    @inject(DEPENDENCIES.TextureLoader)
+    private readonly textureLoader: TextureLoader,
+    @inject(DEPENDENCIES.AudioLoader)
+    private readonly audioLoader: AudioLoader,
+    private readonly bulletFactory: BulletFactory
   ) {
     super();
     this.x = 0;
@@ -58,9 +71,11 @@ export class Player extends Entity {
     this.lastShot = now;
 
     const rotationRad = (this.rotation * Math.PI) / 180;
-    const spawnX = this.x + (this.width / 2 + 30) * Math.sin(rotationRad);
-    const spawnY = this.y - (this.height / 2 + 30) * Math.cos(rotationRad);
-    const bullet = new Bullet(spawnX, spawnY, this.rotation);
+    const bullet = this.bulletFactory.get();
+    bullet.x = this.x + (this.width / 2 + 30) * Math.sin(rotationRad);
+    bullet.y = this.y - (this.height / 2 + 30) * Math.cos(rotationRad);
+    bullet.rotation = this.rotation;
+    bullet.init();
     // bullet.onCollision = (target) => {
     //  if (!(target instanceof Bullet) && target !== this) {
     //    this.store.remove(bullet);
@@ -71,3 +86,5 @@ export class Player extends Entity {
     this.shootingSound.play();
   }
 }
+
+container.bind(Player).toSelf().inSingletonScope();

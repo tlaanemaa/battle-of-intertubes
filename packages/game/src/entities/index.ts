@@ -1,3 +1,3 @@
-export { Bullet } from "./Bullet";
-export { Moose } from "./Moose";
-export { Player } from "./Player";
+export * from "./Bullet";
+export * from "./Moose";
+export * from "./Player";

@@ -1,10 +1,11 @@
-import { singleton } from "tsyringe";
+import { injectable } from "inversify";
+import { container } from "@moose-rocket/container";
 import { Timer } from "@moose-rocket/core";
 import { Logger } from "@moose-rocket/logger";
 
 type Task = () => void;
 
-@singleton()
+@injectable()
 export class ServerTimer implements Timer {
   private interval: NodeJS.Timer | null = null;
   private tasks: Task[] = [];
@@ -28,10 +29,12 @@ export class ServerTimer implements Timer {
 
   private handleFrame() {
     try {
-        console.log("SERVER TICK")
+      console.log("SERVER TICK");
       this.tasks.forEach((task) => task());
     } catch (e) {
       this.logger.error(e);
     }
   }
 }
+
+container.bind(ServerTimer).toSelf().inSingletonScope();

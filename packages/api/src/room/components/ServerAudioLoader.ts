@@ -1,7 +1,8 @@
-import { singleton } from "tsyringe";
+import { injectable } from "inversify";
+import { container } from "@moose-rocket/container";
 import { Audio, AudioLoader } from "@moose-rocket/core";
 
-@singleton()
+@injectable()
 export class ServerAudioLoader implements AudioLoader {
   load(src: string): Audio {
     return {
@@ -9,3 +10,5 @@ export class ServerAudioLoader implements AudioLoader {
     };
   }
 }
+
+container.bind(ServerAudioLoader).toSelf().inSingletonScope();

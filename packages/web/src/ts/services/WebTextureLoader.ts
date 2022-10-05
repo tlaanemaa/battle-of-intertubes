@@ -1,6 +1,7 @@
-import { singleton } from "tsyringe";
-import { Texture, TextureLoader } from "@moose-rocket/core";
+import { injectable } from "inversify";
+import { DEPENDENCIES, Texture, TextureLoader } from "@moose-rocket/core";
 import { AssetCache } from "./AssetCache";
+import { container } from "@moose-rocket/container";
 
 class WebTexture implements Texture {
   private readonly image = new window.Image();
@@ -22,7 +23,7 @@ class WebTexture implements Texture {
   }
 }
 
-@singleton()
+@injectable()
 export class WebTextureLoader implements TextureLoader {
   constructor(private readonly assetCache: AssetCache) {}
 
@@ -30,3 +31,8 @@ export class WebTextureLoader implements TextureLoader {
     return new WebTexture(this.assetCache.get(src), width, height);
   }
 }
+
+container
+  .bind(DEPENDENCIES.TextureLoader)
+  .to(WebTextureLoader)
+  .inSingletonScope();

@@ -1,10 +1,11 @@
-import { singleton } from "tsyringe";
-import { Timer } from "@moose-rocket/core";
+import { injectable } from "inversify";
+import { container } from "@moose-rocket/container";
+import { DEPENDENCIES, Timer } from "@moose-rocket/core";
 import { Logger } from "@moose-rocket/logger";
 
 type Task = () => void;
 
-@singleton()
+@injectable()
 export class FrameTimer implements Timer {
   private shouldStop = false;
   private tasks: Task[] = [];
@@ -36,3 +37,5 @@ export class FrameTimer implements Timer {
     }
   }
 }
+
+container.bind(DEPENDENCIES.Timer).to(FrameTimer).inSingletonScope();
