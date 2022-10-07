@@ -1,3 +1,4 @@
+import { container } from "@moose-rocket/container";
 import {
   AnyMessage,
   ConnectionApprovedMessage,
@@ -6,13 +7,18 @@ import {
   Parser,
   ActionPerformedMessage,
 } from "@moose-rocket/messaging";
+import { injectable } from "inversify";
 
+@injectable()
 export class ServerConnection {
   private ready = false;
   private readonly messageQueue: AnyMessage[] = [];
   private readonly socket: WebSocket;
 
-  constructor(url: string) {
+  constructor(
+    url: string,
+    private readonly onMessage: (message: AnyMessage) => void
+  ) {
     this.socket = new WebSocket(url);
     this.socket.addEventListener("open", this.handleOpen.bind(this));
     this.socket.addEventListener("message", this.handleMessage.bind(this));
@@ -50,24 +56,22 @@ export class ServerConnection {
 
   private handleMessage(event: MessageEvent) {
     const message = Parser.parse(event.data.toString());
-    console.log(message);
     switch (message.constructor) {
       case ConnectionApprovedMessage:
         this.setReady(true);
         break;
-
-      case StateUpdateMessage:
     }
+
+    this.onMessage(message);
   }
 
-  private handleClose() {}
+  private handleClose() {
+    console.log("CLOSEEED");
+  }
 
-  private handleError() {}
-
-  public test() {
-    this.socket.send(new ActionPerformedMessage().serialize());
+  private handleError() {
+    console.error("ERRUR");
   }
 }
 
-// FIXME: Remove after testing
-(window as any).ServerConnection = ServerConnection;
+container.bind(ServerConnection).toSelf().inSingletonScope();

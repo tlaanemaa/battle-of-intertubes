@@ -1,2 +1,2 @@
-export { WebBackgroundRenderer } from "./WebBackgroundRenderer";
-export { WebEntityRenderer } from "./WebEntityRenderer";
+export { BackgroundRenderer } from "./BackgroundRenderer";
+export { EntityRenderer } from "./EntityRenderer";

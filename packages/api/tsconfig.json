@@ -4,5 +4,10 @@
     "rootDir": "src",
     "outDir": "./dist"
   },
-  "references": [{ "path": "../container" }, { "path": "../core" }, { "path": "../logger" }, { "path": "../messaging" }]
+  "references": [
+    { "path": "../container" },
+    { "path": "../core" },
+    { "path": "../logger" },
+    { "path": "../messaging" }
+  ]
 }

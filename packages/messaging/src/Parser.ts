@@ -1,3 +1,4 @@
+import { Entity } from "@moose-rocket/core";
 import {
   ConnectionRequestMessage,
   ConnectionApprovedMessage,
@@ -6,31 +7,27 @@ import {
   AnyMessage,
 } from "./messages";
 
-type ConstructorMap = {
-  [K in AnyMessage["type"]]: new (...args: any) => AnyMessage;
-};
-
 export class Parser {
-  private static readonly messageConstructors: ConstructorMap = {
-    "connection-request": ConnectionRequestMessage,
-    "connection-approved": ConnectionApprovedMessage,
-    "action-performed": ActionPerformedMessage,
-    "state-update": StateUpdateMessage,
-  } as const;
-
   public static parse(messageString: string) {
     // We kind of assume these messages are always correct, might want to add some validation later
     const objectLiteral = JSON.parse(messageString) as AnyMessage;
-    return this.buildMessageObject(objectLiteral);
-  }
 
-  private static buildMessageObject(messageLiteral: AnyMessage) {
-    const MessageConstructor = this.messageConstructors[messageLiteral.type];
+    switch (objectLiteral.type) {
+      case "action-performed":
+        return new ActionPerformedMessage(new Set(objectLiteral.actions));
+      case "connection-approved":
+        return new ConnectionApprovedMessage(objectLiteral.room);
+      case "connection-request":
+        return new ConnectionRequestMessage(objectLiteral.room);
+      case "state-update":
+        return new StateUpdateMessage(
+          objectLiteral.entities.map((entity) =>
+            Object.assign(new Entity(), entity)
+          )
+        );
 
-    if (!MessageConstructor) {
-      throw new Error(`Unknown message type: ${messageLiteral.type}`);
+      default:
+        throw new Error(`Unknown message type: ${(objectLiteral as any).type}`);
     }
-
-    return Object.assign(new MessageConstructor(), messageLiteral);
   }
 }

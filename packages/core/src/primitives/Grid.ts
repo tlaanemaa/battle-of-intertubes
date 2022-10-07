@@ -10,7 +10,7 @@ interface GridItem {
 export class Grid<T extends GridItem> {
   private readonly grid: FastMap<FastMap<FastMap<T>>> = new FastMap();
   private readonly itemBoxCoordinates = new FastMap<Object2D>();
-  private readonly allItems = new FastMap<Object2D>();
+  private readonly allItems = new FastMap<T>();
 
   constructor(private readonly boxSize = 10) {}
 
@@ -66,6 +66,10 @@ export class Grid<T extends GridItem> {
 
     this.itemBoxCoordinates.delete(item.id);
     this.allItems.delete(item.id);
+  }
+
+  public getId(id: string) {
+    return this.allItems.get(id);
   }
 
   public getPoint(x: number, y: number): T[] {

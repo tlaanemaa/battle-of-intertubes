@@ -1,7 +1,6 @@
 import { container, factoryOf } from "@moose-rocket/container";
 import { DEPENDENCIES, Entity, TextureLoader } from "@moose-rocket/core";
 import { inject, injectable } from "inversify";
-import { Player } from "./Player";
 
 @injectable()
 class Moose extends Entity {
@@ -22,8 +21,7 @@ class Moose extends Entity {
 
   constructor(
     @inject(DEPENDENCIES.TextureLoader)
-    private readonly textureLoader: TextureLoader,
-    private readonly player: Player
+    private readonly textureLoader: TextureLoader
   ) {
     super();
 
@@ -42,14 +40,8 @@ class Moose extends Entity {
 
   tick(forceBound: number) {
     this.applyForce({
-      x:
-        Math.random() * 2 * forceBound -
-        forceBound -
-        (this.x - this.player.x) / 2,
-      y:
-        Math.random() * 2 * forceBound -
-        forceBound -
-        (this.y - this.player.y) / 2,
+      x: Math.random() * 2 * forceBound - forceBound - this.x / 2,
+      y: Math.random() * 2 * forceBound - forceBound - this.y / 2,
     });
   }
 }

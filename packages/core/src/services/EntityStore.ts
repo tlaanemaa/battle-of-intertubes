@@ -8,14 +8,18 @@ export class EntityStore {
   private readonly store = new Grid<Entity>(1000);
   public getArea = this.store.getArea.bind(this.store);
 
-  add(entity: Entity) {
+  public add(entity: Entity) {
     entity.onChange = () => this.store.set(entity);
     this.store.set(entity);
   }
 
-  remove(entity: Entity) {
+  public remove(entity: Entity) {
     entity.onChange = undefined;
     this.store.delete(entity);
+  }
+
+  public getByID(id: string) {
+    return this.store.getId(id);
   }
 }
 

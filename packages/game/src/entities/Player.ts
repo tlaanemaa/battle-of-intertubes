@@ -5,10 +5,13 @@ import {
   DEPENDENCIES,
   Entity,
   EntityStore,
+  INTENT,
+  Object2D,
   TextureLoader,
+  UserInput,
 } from "@moose-rocket/core";
 import { BulletFactory } from "./Bullet";
-import { container } from "@moose-rocket/container";
+import { container, factoryOf } from "@moose-rocket/container";
 
 @injectable()
 export class Player extends Entity {
@@ -30,6 +33,7 @@ export class Player extends Entity {
   constructor(
     private readonly camera: Camera,
     private readonly store: EntityStore,
+    private readonly userInput: UserInput,
     @inject(DEPENDENCIES.TextureLoader)
     private readonly textureLoader: TextureLoader,
     @inject(DEPENDENCIES.AudioLoader)
@@ -41,11 +45,46 @@ export class Player extends Entity {
     this.y = 0;
 
     this.onCollision = () => this.collisionSound.play();
+    this.userInput.onAction(this.id, this.handleInputs.bind(this));
   }
 
   protected triggerOnChange(): void {
     this.setCamera();
     super.triggerOnChange();
+  }
+
+  private handleInputs(intents: Set<INTENT>) {
+    const movementForce: Object2D = {
+      x: 0,
+      y: 0,
+    };
+
+    if (intents.has(INTENT.MOVE_UP)) {
+      movementForce.y = -100 * this.mass * 2;
+    }
+    if (intents.has(INTENT.MOVE_RIGHT)) {
+      movementForce.x = 100 * this.mass * 2;
+    }
+    if (intents.has(INTENT.MOVE_DOWN)) {
+      movementForce.y = 100 * this.mass * 2;
+    }
+    if (intents.has(INTENT.MOVE_LEFT)) {
+      movementForce.x = -100 * this.mass * 2;
+    }
+    if (intents.has(INTENT.SHOOT)) {
+      this.shoot();
+    }
+
+    if (movementForce.x !== 0 || movementForce.y !== 0) {
+      this.applyForce(movementForce);
+    }
+
+    if (intents.has(INTENT.ZOOM_IN)) {
+      this.camera.zoom *= 1.1;
+    }
+    if (intents.has(INTENT.ZOOM_OUT)) {
+      this.camera.zoom *= 0.9;
+    }
   }
 
   private setCamera() {
@@ -87,4 +126,5 @@ export class Player extends Entity {
   }
 }
 
-container.bind(Player).toSelf().inSingletonScope();
+export class PlayerFactory extends factoryOf(Player) {}
+container.bind(PlayerFactory).toSelf().inSingletonScope();

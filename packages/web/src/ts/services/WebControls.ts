@@ -1,19 +1,11 @@
-import { injectable, inject } from "inversify";
-import {
-  EventSource,
-  Timer,
-  Object2D,
-  UserInput,
-  INTENT,
-  DEPENDENCIES,
-} from "@moose-rocket/core";
+import { injectable } from "inversify";
+import { Object2D, UserInput, INTENT, Clock } from "@moose-rocket/core";
 import { container } from "@moose-rocket/container";
 
 @injectable()
-export class WebUserInput
-  extends EventSource<INTENT, number>
-  implements UserInput
-{
+export class WebControls {
+  public target?: string;
+
   private pinchStartCoordinatesA?: Object2D;
   private pinchStartCoordinatesB?: Object2D;
   private pinchCurrentCoordinatesA?: Object2D;
@@ -24,26 +16,31 @@ export class WebUserInput
 
   private readonly pressedKeys = new Set<string>();
 
-  constructor(@inject(DEPENDENCIES.Timer) private readonly timer: Timer) {
-    super();
+  constructor(clock: Clock, private readonly userInput: UserInput) {
     this.attachListeners();
-
-    this.timer.schedulePrimary(() => this.handleHeldInput());
+    clock.schedulePrimary(this.handlePressedKeys.bind(this));
   }
 
   private attachListeners() {
     window.addEventListener("wheel", (event: WheelEvent) => {
-      if (event.deltaY > 0)
-        this.trigger(INTENT.ZOOM_OUT, Math.abs(event.deltaY));
-      if (event.deltaY < 0)
-        this.trigger(INTENT.ZOOM_IN, Math.abs(event.deltaY));
+      if (!this.target) return;
+
+      if (event.deltaY > 0) {
+        this.userInput.trigger(this.target, INTENT.ZOOM_OUT);
+      }
+
+      if (event.deltaY < 0) {
+        this.userInput.trigger(this.target, INTENT.ZOOM_IN);
+      }
     });
+
     window.addEventListener("keydown", (event: KeyboardEvent) => {
       this.pressedKeys.add(event.code);
     });
     window.addEventListener("keyup", (event: KeyboardEvent) => {
       this.pressedKeys.delete(event.code);
     });
+
     window.addEventListener(
       "touchstart",
       (event: TouchEvent) => {
@@ -63,6 +60,8 @@ export class WebUserInput
             y: event.touches[0].pageY,
           };
         }
+
+        this.handleTouch();
       },
       { passive: false }
     );
@@ -85,6 +84,8 @@ export class WebUserInput
             y: event.touches[0].pageY,
           };
         }
+
+        this.handleTouch();
       },
       { passive: false }
     );
@@ -98,17 +99,34 @@ export class WebUserInput
         this.pinchCurrentCoordinatesB = undefined;
         this.touchStartCoordinates = undefined;
         this.touchCurrentCoordinates = undefined;
+
+        this.handleTouch();
       },
       { passive: false }
     );
   }
 
-  private handleHeldInput() {
-    this.handleTouch();
-    this.handlePressedKeys();
+  private handlePressedKeys() {
+    this.pressedKeys.forEach((keyName) => {
+      if (!this.target) return;
+      switch (keyName) {
+        case "ArrowUp":
+          return this.userInput.trigger(this.target, INTENT.MOVE_UP);
+        case "ArrowRight":
+          return this.userInput.trigger(this.target, INTENT.MOVE_RIGHT);
+        case "ArrowDown":
+          return this.userInput.trigger(this.target, INTENT.MOVE_DOWN);
+        case "ArrowLeft":
+          return this.userInput.trigger(this.target, INTENT.MOVE_LEFT);
+        case "Space":
+          return this.userInput.trigger(this.target, INTENT.SHOOT);
+      }
+    });
   }
 
   private handleTouch() {
+    if (!this.target) return;
+
     if (
       this.pinchStartCoordinatesA &&
       this.pinchStartCoordinatesB &&
@@ -129,9 +147,9 @@ export class WebUserInput
       );
 
       if (currentDistance > startDistance) {
-        this.trigger(INTENT.ZOOM_IN, 100);
+        this.userInput.trigger(this.target, INTENT.ZOOM_IN);
       } else if (currentDistance < startDistance) {
-        this.trigger(INTENT.ZOOM_OUT, 100);
+        this.userInput.trigger(this.target, INTENT.ZOOM_OUT);
       }
     }
 
@@ -145,35 +163,18 @@ export class WebUserInput
       const scaledY = diffY / divisor;
 
       if (scaledX < 0) {
-        this.trigger(INTENT.MOVE_LEFT, Math.abs(10 * scaledX));
+        this.userInput.trigger(this.target, INTENT.MOVE_LEFT);
       }
       if (scaledX > 0) {
-        this.trigger(INTENT.MOVE_RIGHT, Math.abs(10 * scaledX));
+        this.userInput.trigger(this.target, INTENT.MOVE_RIGHT);
       }
       if (scaledY < 0) {
-        this.trigger(INTENT.MOVE_UP, Math.abs(10 * scaledY));
+        this.userInput.trigger(this.target, INTENT.MOVE_UP);
       }
       if (scaledY > 0) {
-        this.trigger(INTENT.MOVE_DOWN, Math.abs(10 * scaledY));
+        this.userInput.trigger(this.target, INTENT.MOVE_DOWN);
       }
     }
-  }
-
-  private handlePressedKeys() {
-    this.pressedKeys.forEach((keyName) => {
-      switch (keyName) {
-        case "ArrowUp":
-          return this.trigger(INTENT.MOVE_UP, 10);
-        case "ArrowRight":
-          return this.trigger(INTENT.MOVE_RIGHT, 10);
-        case "ArrowDown":
-          return this.trigger(INTENT.MOVE_DOWN, 10);
-        case "ArrowLeft":
-          return this.trigger(INTENT.MOVE_LEFT, 10);
-        case "Space":
-          return this.trigger(INTENT.SHOOT, 1);
-      }
-    });
   }
 
   private distance(x0: number, y0: number, x1: number, y1: number) {
@@ -181,4 +182,4 @@ export class WebUserInput
   }
 }
 
-container.bind(DEPENDENCIES.UserInput).to(WebUserInput).inSingletonScope();
+container.bind(WebControls).toSelf().inSingletonScope();

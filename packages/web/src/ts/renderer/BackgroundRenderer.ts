@@ -1,12 +1,12 @@
 import { injectable } from "inversify";
-import { Camera, DEPENDENCIES } from "@moose-rocket/core";
+import { Camera } from "@moose-rocket/core";
 import { Renderer } from "./Renderer";
 import { BackgroundCanvas } from "./BackgroundCanvas";
 import { Canvas } from "../components";
 import { container } from "@moose-rocket/container";
 
 @injectable()
-export class WebBackgroundRenderer extends Renderer {
+export class BackgroundRenderer extends Renderer {
   private readonly imageUrl = "img/grass.jpg";
   private readonly imageHeight = 612;
   private readonly imageWidth = 612;
@@ -99,7 +99,4 @@ export class WebBackgroundRenderer extends Renderer {
   }
 }
 
-container
-  .bind(DEPENDENCIES.BackgroundRenderer)
-  .to(WebBackgroundRenderer)
-  .inSingletonScope();
+container.bind(BackgroundRenderer).toSelf().inSingletonScope();
