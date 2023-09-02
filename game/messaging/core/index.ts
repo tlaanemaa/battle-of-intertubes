@@ -1,0 +1,1 @@
+export { BaseMessage } from "./BaseMessage";
