@@ -53,7 +53,7 @@ export default function RenderDemo() {
       <Box position={[-1.2, 0, 2]} />
       <Box position={[1.2, 0, 2]} />
 
-      <OrbitControls />
+      <OrbitControls screenSpacePanning position={[0, 0, 0]} />
     </Canvas>
   );
 }

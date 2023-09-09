@@ -2,7 +2,7 @@ import { Box } from "@react-three/drei";
 import { PerlinNoise } from "../util/Perlin";
 
 // Create a noise generator
-const noiseGenerator = new PerlinNoise(Math.random())
+const noiseGenerator = new PerlinNoise(Math.random() * 10000);
 
 type Props = {
   x: number;
@@ -15,14 +15,14 @@ type Props = {
 function calculateNaturalLandscape(x: number, y: number): number {
   // Parameters for the landscape generation
   const scale = 0.01; // Adjust the scale to control the level of detail
-  const amplitude = 10; // Adjust the amplitude to change the landscape height
-  
+  const amplitude = 40; // Adjust the amplitude to change the landscape height
+
   // Generate Perlin noise values for the given (x, y) coordinates
   const noiseValue = noiseGenerator.noise(x * scale, y * scale);
 
   // Map the noise value to the desired amplitude and return it
   const z = amplitude * noiseValue;
-  
+
   return z;
 }
 
@@ -65,12 +65,14 @@ function randomColorInRange(
 
 export default function Ground(props: Props) {
   const xStart = props.x - props.w / 2;
+  const xEnd = xStart + props.w
   const yStart = props.y - props.h / 2;
+  const yEnd = yStart + props.h
   const boxSize = props.boxSize || 1;
 
   const blocks = [];
-  for (let x = xStart; x < props.w; x += boxSize) {
-    for (let y = yStart; y < props.h; y += boxSize) {
+  for (let x = xStart; x < xEnd; x += boxSize) {
+    for (let y = yStart; y < yEnd; y += boxSize) {
       const z = calculateNaturalLandscape(x, y);
       blocks.push(
         <Box
