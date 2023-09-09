@@ -1,8 +1,9 @@
+import RenderDemo from "./components/test";
 import Game from "./game";
 
 export default function Home() {
   return (
-    <main>
+    <main className="h-screen w-screen">
       <canvas
         id="game-background"
         className="fixed top-0 left-0 z-[--2]"
@@ -12,7 +13,7 @@ export default function Home() {
         id="fog"
         className="fixed top-0 left-0 h-full w-full shadow-[inset_0_0_20px_20px_black]"
       ></div>
-      <Game />
+      <RenderDemo />
     </main>
   );
 }
