@@ -11,6 +11,7 @@ class Bullet extends Entity {
   public mass = 500;
   public dragCoefficient = 0.00001;
   public keepHeading = true;
+  public readonly texturePath = "/img/red-rocket.png";
   public readonly texture = this.textureLoader.load(
     "/img/red-rocket.png",
     50,

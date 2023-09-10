@@ -29,8 +29,9 @@ class Moose extends Entity {
     this.dragCoefficient = 0.0001;
     this.mass = 100;
 
+    this.texturePath = this.images[Math.floor(Math.random() * this.images.length)]
     this.texture = this.textureLoader.load(
-      this.images[Math.floor(Math.random() * this.images.length)],
+      this.texturePath,
       100,
       100
     );

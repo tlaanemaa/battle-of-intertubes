@@ -8,6 +8,7 @@ export class Entity {
   // Properties
   public readonly id = uuidV4();
   public texture?: Texture;
+  public texturePath?: string;
   private _x = 0;
   private _y = 0;
   public width = 50;

@@ -19,6 +19,7 @@ export class Player extends Entity {
   public mass = 50;
   public dragCoefficient = 0.999;
   public keepHeading = true;
+  public readonly texturePath = "/img/hero1.png";
   public readonly texture = this.textureLoader.load(
     "/img/hero1.png",
     this.width,
