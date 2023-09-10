@@ -55,7 +55,7 @@ function Scene() {
 
       <OrbitControls
         position={[0, 0, 0]}
-        maxDistance={5000}
+        maxDistance={200}
         minDistance={1}
         minAzimuthAngle={-cameraTiltLimit}
         maxAzimuthAngle={cameraTiltLimit}
