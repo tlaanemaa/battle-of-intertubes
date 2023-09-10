@@ -49,8 +49,8 @@ function Scene() {
   const [bgY, setBgY] = useState(0);
 
   useFrame(() => {
-    setBgX(bgX + 0.1);
-    setBgY(bgY + 0.1);
+    setBgX(bgX + 0.01);
+    setBgY(bgY + 0.01);
   });
 
   return (
