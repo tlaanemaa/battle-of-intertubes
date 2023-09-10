@@ -24,8 +24,8 @@ function Box(props: any) {
       onPointerOver={(event) => (event.stopPropagation(), hover(true))}
       onPointerOut={(event) => hover(false)}
     >
-      <boxGeometry args={[1, 1, 0]} />
-      <meshStandardMaterial map={tex} color={hovered ? "yellow" : "white"} />
+      <planeGeometry args={[1, 1]} />
+      <meshStandardMaterial transparent map={tex} color={hovered ? "yellow" : "white"} />
     </mesh>
   );
 }
