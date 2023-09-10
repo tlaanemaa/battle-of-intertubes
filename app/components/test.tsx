@@ -41,19 +41,46 @@ function Background() {
   );
 }
 
-export default function RenderDemo() {
+function Scene() {
+  const ninetyDeg = Math.PI / 2;
+  const cameraTiltLimit = ninetyDeg / 4;
+
+  const [bgX, setBgX] = useState(0);
+  const [bgY, setBgY] = useState(0);
+
+  useFrame(() => {
+    setBgX(bgX + 0.1);
+    setBgY(bgY + 0.1);
+  });
+
   return (
-    <Canvas>
+    <>
       <ambientLight intensity={4} />
       <pointLight position={[10, 10, 10]} />
       <pointLight position={[-10, -10, -10]} />
 
-      <Ground x={0} y={0} h={50} w={50} boxSize={1} />
+      <Ground x={Math.sin(bgX) * 2} y={Math.cos(bgY) * 2} r={10} />
 
-      <Box position={[-1.2, 0, 2]} />
-      <Box position={[1.2, 0, 2]} />
+      <Box position={[-1.2, 0, 0.1]} />
+      <Box position={[1.2, 0, 0.1]} />
 
-      <OrbitControls screenSpacePanning position={[0, 0, 0]} />
+      <OrbitControls
+        position={[0, 0, 0]}
+        maxDistance={5000}
+        minDistance={1}
+        minAzimuthAngle={-cameraTiltLimit}
+        maxAzimuthAngle={cameraTiltLimit}
+        minPolarAngle={ninetyDeg - cameraTiltLimit}
+        maxPolarAngle={ninetyDeg + cameraTiltLimit}
+      />
+    </>
+  );
+}
+
+export default function RenderDemo() {
+  return (
+    <Canvas>
+      <Scene />
     </Canvas>
   );
 }
