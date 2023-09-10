@@ -30,17 +30,6 @@ function Box(props: any) {
   );
 }
 
-function Background() {
-  const grassTexture = useTexture("/img/grass.jpg");
-
-  return (
-    <mesh>
-      <planeGeometry args={[5, 5]} />
-      <meshStandardMaterial map={grassTexture} />
-    </mesh>
-  );
-}
-
 function Scene() {
   const ninetyDeg = Math.PI / 2;
   const cameraTiltLimit = ninetyDeg / 4;
