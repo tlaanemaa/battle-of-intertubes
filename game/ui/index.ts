@@ -1,6 +1,7 @@
 import { container } from "@/game/container";
 import { Application } from "./Application";
+import { Entity } from "../core";
 
-export const startGameUI = () => {
-  const app = container.get(Application);
+export const startGameUI = (updateState: (entities: Entity[]) => void) => {
+  container.get(Application).init(updateState);
 };
