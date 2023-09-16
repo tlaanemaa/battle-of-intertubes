@@ -2,7 +2,7 @@ import { inject, injectable } from "inversify";
 import { container } from "@/game/container";
 import { Camera, DEPENDENCIES, GameRunner } from "@/game/core";
 import type { Entity, Game } from "@/game/core";
-import { PlayerFactory } from "@/game/game";
+import { Player, PlayerFactory } from "@/game/game";
 import "./components";
 import "./renderer";
 import "./services";
@@ -13,7 +13,9 @@ import { AnyMessage } from "@/game/messaging";
 
 @injectable()
 export class Application {
+  private player: Player;
   private updateState?: (entities: Entity[]) => void;
+  private setCameraPosition?: (position: { x: number; y: number }) => void;
   // private readonly serverConnection = new ServerConnection(
   //   "ws://localhost:8080",
   //   this.handleServerMessage.bind(this)
@@ -30,13 +32,18 @@ export class Application {
   ) {
     this.render = this.render.bind(this);
     const player = this.playerFactory.get();
+    this.player = player;
     this.webControls.target = player.id;
     this.game.addPlayer(player);
     this.game.init();
   }
 
-  public init(updateState: (entities: Entity[]) => void) {
+  public init(
+    updateState: (entities: Entity[]) => void,
+    setCameraPosition: (position: { x: number; y: number }) => void
+  ) {
     this.updateState = updateState;
+    this.setCameraPosition = setCameraPosition;
     window.requestAnimationFrame(this.render);
   }
 
@@ -45,6 +52,7 @@ export class Application {
     //this.backgroundRenderer.draw();
     //this.entityRenderer.draw(entities);
     this.updateState?.(entities);
+    this.setCameraPosition?.({ x: this.player.x, y: this.player.y });
     window.requestAnimationFrame(this.render);
 
     // this.camera.viewRadius = {
