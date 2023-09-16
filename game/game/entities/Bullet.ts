@@ -6,8 +6,8 @@ import { inject } from "inversify";
 
 @injectable()
 class Bullet extends Entity {
-  public width = 25;
-  public height = 25;
+  public width = 0.5;
+  public height = 0.5;
   public mass = 500;
   public dragCoefficient = 0.00001;
   public keepHeading = true;
@@ -26,7 +26,7 @@ class Bullet extends Entity {
   }
 
   public init() {
-    const speed = 2000;
+    const speed = 6;
     const rotationRad = (this.rotation * Math.PI) / 180;
     this.velocity = {
       x: speed * Math.sin(rotationRad),

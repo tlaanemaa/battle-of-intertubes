@@ -14,8 +14,8 @@ import { container, factoryOf } from "@/game/container";
 
 @injectable()
 export class Player extends Entity {
-  public width = 100;
-  public height = 100;
+  public width = 1;
+  public height = 1;
   public mass = 50;
   public dragCoefficient = 0.999;
   public keepHeading = true;
@@ -54,7 +54,7 @@ export class Player extends Entity {
   }
 
   private handleInputs(intents: Set<INTENT>) {
-    const speed = 40;
+    const speed = 0.2;
     const movementForce: Object2D = {
       x: 0,
       y: 0,
@@ -107,13 +107,13 @@ export class Player extends Entity {
 
   public shoot() {
     const now = Date.now();
-    if (now - this.lastShot < 50) return;
+    if (now - this.lastShot < 200) return;
     this.lastShot = now;
 
     const rotationRad = (this.rotation * Math.PI) / 180;
     const bullet = this.bulletFactory.get();
-    bullet.x = this.x + (this.width / 2 + 30) * Math.sin(rotationRad);
-    bullet.y = this.y - (this.height / 2 + 30) * Math.cos(rotationRad);
+    bullet.x = this.x + (this.width / 2 + 0.1) * Math.sin(rotationRad);
+    bullet.y = this.y - (this.height / 2 + 0.1) * Math.cos(rotationRad);
     bullet.rotation = this.rotation;
     bullet.init();
     // bullet.onCollision = (target) => {

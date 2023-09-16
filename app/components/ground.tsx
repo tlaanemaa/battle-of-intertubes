@@ -9,7 +9,7 @@ interface GroundProps {
 
 export default function Ground(props: GroundProps) {
   const texture = useTexture("/img/grass.jpg");
-  const textureScale = 100;
+  const textureScale = 2;
 
   const repeats = Math.max(1, Math.round(props.r / textureScale));
   const offsetDivisor = (props.r * 2) / repeats;

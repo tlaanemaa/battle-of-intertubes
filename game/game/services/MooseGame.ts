@@ -26,7 +26,7 @@ export class MooseGame implements Game {
   }
 
   init() {
-    const spaceFactor = 3;
+    const spaceFactor = 0.3;
     const count = 100;
     new Array(count).fill(1).map(() => {
       const moose = this.mooseFactory.get();

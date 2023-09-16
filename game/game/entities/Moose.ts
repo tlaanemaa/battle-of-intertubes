@@ -5,8 +5,8 @@ import { inject, injectable } from "inversify";
 
 @injectable()
 class Moose extends Entity {
-  public readonly width = 70;
-  public readonly height = 70;
+  public readonly width = 1;
+  public readonly height = 1;
   public rotation = 0;
   public children = undefined;
   public keepHeading = true;
@@ -36,8 +36,8 @@ class Moose extends Entity {
       100
     );
 
-    this.tick(10000);
-    setInterval(() => this.tick(4000), 1000);
+    this.tick(100);
+    setInterval(() => this.tick(40), 1000);
   }
 
   tick(forceBound: number) {

@@ -1,7 +1,6 @@
 "use client";
 import { Canvas } from "@react-three/fiber";
-import { startGameUI } from "@/game/ui";
-import { MapControls, OrbitControls, useTexture } from "@react-three/drei";
+import { OrbitControls } from "@react-three/drei";
 import Ground from "./ground";
 import { useGameState } from "../store/gameState";
 import Entity from "./entity";
@@ -14,7 +13,7 @@ export default function Game() {
 
   return (
     <Canvas>
-      <Ground x={0} y={0} r={2000} />
+      <Ground x={0} y={0} r={200} />
 
       <ambientLight intensity={4} />
       <pointLight position={[10, 10, 10]} />
