@@ -20,7 +20,7 @@ export default function RootLayout({
       <body className={inter.className}>
         {children}
 
-        <Script src="https://www.googletagmanager.com/gtag/js?id=G-LYQ1KKE5FV" />
+        {/*         <Script src="https://www.googletagmanager.com/gtag/js?id=G-LYQ1KKE5FV" />
         <Script id="google-analytics">
           {`
           window.dataLayer = window.dataLayer || [];
@@ -29,7 +29,7 @@ export default function RootLayout({
  
           gtag('config', 'G-LYQ1KKE5FV');
         `}
-        </Script>
+        </Script> */}
       </body>
     </html>
   );
