@@ -1,34 +1,48 @@
 "use client";
-import { useCallback, useEffect, useState, useRef } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 type Props = {
-  height: number;
-  width: number;
-  stickHeight: number;
-  stickWidth: number;
-  className: string;
+  height?: number;
+  width?: number;
+  stickHeight?: number;
+  stickWidth?: number;
+  className?: string;
+  onMove: (position: { x: number; y: number }) => void;
 };
+
+const MAX_DIST_MULTIPLIER = 0.4;
 
 export default function JoyStick({
   height = 100,
   width = height,
   stickHeight = height * 0.6,
   stickWidth = width * 0.6,
+  className = "",
+  onMove,
 }: Props) {
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [landingPosition, setLandingPosition] = useState({ x: 0, y: 0 });
   const [isDragging, setIsDragging] = useState(false);
-  const ref = useRef<HTMLDivElement>(null);
+
+  const handleRelease = useCallback(() => setIsDragging(false), []);
+
+  const handleGrab = useCallback((event: MouseEvent | TouchEvent) => {
+    event.preventDefault();
+    const coords = "touches" in event ? event.touches[0] : event;
+    setLandingPosition({ x: coords.pageX, y: coords.pageY });
+    setIsDragging(true);
+  }, []);
 
   const handleMove = useCallback(
     (event: MouseEvent | TouchEvent) => {
       if (!isDragging) return;
+      event.preventDefault();
       const stats = event instanceof MouseEvent ? event : event.touches[0];
       const moveOffset = {
         x: stats.pageX - landingPosition.x,
         y: stats.pageY - landingPosition.y,
       };
-      const maxDist = width / 2;
+      const maxDist = width * MAX_DIST_MULTIPLIER;
       const dist = Math.sqrt(moveOffset.x ** 2 + moveOffset.y ** 2);
       const ratio = Math.max(dist, maxDist) / maxDist;
       moveOffset.x /= ratio;
@@ -43,28 +57,14 @@ export default function JoyStick({
   );
 
   useEffect(() => {
-    const node = ref.current;
-    if (!node) return;
-
-    const handleRelease = () => setIsDragging(false);
-    const handleGrab = (event: MouseEvent | TouchEvent) => {
-      const stats = event instanceof MouseEvent ? event : event.touches[0];
-      setLandingPosition({ x: stats.pageX, y: stats.pageY });
-      setIsDragging(true);
-    };
-
-    node.addEventListener("mousedown", handleGrab);
     window.addEventListener("mouseup", handleRelease);
-    node.addEventListener("touchstart", handleGrab);
     window.addEventListener("touchend", handleRelease);
 
     return () => {
-      node.removeEventListener("mousedown", handleGrab);
       window.removeEventListener("mouseup", handleRelease);
-      node.removeEventListener("touchstart", handleGrab);
       window.removeEventListener("touchend", handleRelease);
     };
-  }, [ref]);
+  }, [handleRelease]);
 
   useEffect(() => {
     window.addEventListener("mousemove", handleMove);
@@ -82,20 +82,26 @@ export default function JoyStick({
     }
   }, [isDragging]);
 
+  useEffect(() => {
+    onMove({
+      x: position.x / (width * MAX_DIST_MULTIPLIER),
+      y: position.y / (height * MAX_DIST_MULTIPLIER),
+    });
+  }, [width, height, position, onMove]);
+
   return (
     <div
-      className="fixed"
+      className={`fixed ${className}`}
       style={{
-        bottom: `${stickHeight / 2 + 5}px`,
-        left: `${stickWidth / 2 + 5}px`,
         height: `${height}px`,
         width: `${width}px`,
       }}
     >
-      <div className="absolute opacity-50 bg-white rounded-full inset-0"></div>
+      <div className="absolute 8 inset-0 bg-white rounded-full opacity-50 select-none"></div>
       <div
-        ref={ref}
-        className="absolute bg-white rounded-full z-10 cursor-pointer"
+        onMouseDown={handleGrab as any}
+        onTouchStart={handleGrab as any}
+        className="absolute bg-white rounded-full z-10 cursor-pointer select-none"
         style={{
           top: `${height * 0.5 - stickHeight * 0.5}px`,
           left: `${width * 0.5 - stickWidth * 0.5}px`,
