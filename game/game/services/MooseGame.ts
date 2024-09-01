@@ -12,13 +12,13 @@ import { container } from "@/game/container";
 // TODO: Solve the hacks in here that make the moose follow the player
 @injectable()
 export class MooseGame implements Game {
-  private playerId?: string
+  private playerId?: string;
 
   constructor(
     private readonly gameRunner: GameRunner,
     private readonly store: EntityStore,
     private readonly mooseFactory: MooseFactory,
-  ) { }
+  ) {}
 
   addPlayer(player: Entity): void {
     this.playerId = player.id;
@@ -50,7 +50,7 @@ export class MooseGame implements Game {
         const offsetX = (player.x - moose.x) * forceMultiplier;
         const offsetY = (player.y - moose.y) * forceMultiplier;
         moose.applyForce({ x: offsetX, y: offsetY });
-      }, 1000)
+      }, 1000);
       return moose;
     });
 
