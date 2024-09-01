@@ -128,5 +128,5 @@ export class Player extends Entity {
   }
 }
 
-export class PlayerFactory extends factoryOf(Player) { }
+export class PlayerFactory extends factoryOf(Player) {}
 container.bind(PlayerFactory).toSelf().inSingletonScope();
