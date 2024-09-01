@@ -41,7 +41,7 @@ export default function Button({
   }, []);
 
   const classes = [
-    "fixed bg-white rounded-full cursor-pointer",
+    "bg-white rounded-full cursor-pointer",
     pressed ? "opacity-70" : "opacity-50",
     className,
   ];

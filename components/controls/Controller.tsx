@@ -30,9 +30,9 @@ export function Controller() {
   }, [gameApp]);
 
   return (
-    <div>
-      <JoyStick className="bottom-8 left-8" onMove={move} />
-      <Button className="bottom-8 right-8" onPress={shoot} />
+    <div className="fixed bottom-0 right-0 left-0 flex justify-between p-8 select-none touch-none">
+      <JoyStick className="" onMove={move} />
+      <Button className="" onPress={shoot} />
     </div>
   );
 }

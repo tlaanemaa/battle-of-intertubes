@@ -24,7 +24,10 @@ export default function JoyStick({
   const [landingPosition, setLandingPosition] = useState({ x: 0, y: 0 });
   const [isDragging, setIsDragging] = useState(false);
 
-  const handleRelease = useCallback(() => setIsDragging(false), []);
+  const handleRelease = useCallback((event: MouseEvent | TouchEvent) => {
+    event.preventDefault();
+    setIsDragging(false);
+  }, []);
 
   const handleGrab = useCallback((event: MouseEvent | TouchEvent) => {
     event.preventDefault();
@@ -35,8 +38,8 @@ export default function JoyStick({
 
   const handleMove = useCallback(
     (event: MouseEvent | TouchEvent) => {
-      if (!isDragging) return;
       event.preventDefault();
+      if (!isDragging) return;
       const stats = event instanceof MouseEvent ? event : event.touches[0];
       const moveOffset = {
         x: stats.pageX - landingPosition.x,
@@ -91,7 +94,7 @@ export default function JoyStick({
 
   return (
     <div
-      className={`fixed ${className}`}
+      className={`relative ${className}`}
       style={{
         height: `${height}px`,
         width: `${width}px`,
