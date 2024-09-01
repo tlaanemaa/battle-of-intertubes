@@ -27,7 +27,7 @@ export default function Button({
     };
     triggerPresses();
     return () => clearTimeout(timeout);
-  }, [pressed]);
+  }, [pressed, onPress, pressInterval]);
 
   useEffect(() => {
     const handleRelease = () => setPressed(false);
