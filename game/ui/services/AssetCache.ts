@@ -17,7 +17,7 @@ export class AssetCache {
 
   private async loadAsset(src: string): Promise<string> {
     const blob = await fetch(new Request(src)).then((response) =>
-      response.blob()
+      response.blob(),
     );
     return URL.createObjectURL(blob);
   }

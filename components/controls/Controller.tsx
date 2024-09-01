@@ -22,7 +22,7 @@ export function Controller() {
         gameApp?.sendPlayerInput(INTENT.MOVE_DOWN);
       }
     },
-    [gameApp]
+    [gameApp],
   );
 
   const shoot = useCallback(() => {

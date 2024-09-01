@@ -16,7 +16,7 @@ type AnyConstructor<T> = new (...args: any) => T;
  */
 export const factoryOf = <T>(
   constructor: AnyConstructor<T>,
-  container = globalContainer
+  container = globalContainer,
 ) => {
   const rawFactoryId = Symbol.for(`raw-${constructor.name}-factory`);
 
@@ -24,7 +24,7 @@ export const factoryOf = <T>(
     .bind<interfaces.Factory<T>>(rawFactoryId)
     .toFactory<T>(
       (context: interfaces.Context) => () =>
-        context.container.resolve<T>(constructor)
+        context.container.resolve<T>(constructor),
     );
 
   @injectable()

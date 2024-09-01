@@ -9,7 +9,7 @@ export class Renderer {
 
   constructor(
     protected readonly canvas: Canvas,
-    protected readonly camera: Camera
+    protected readonly camera: Camera,
   ) {}
 
   protected cameraHasMoved(): boolean {

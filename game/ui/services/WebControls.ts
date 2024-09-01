@@ -16,7 +16,10 @@ export class WebControls {
 
   private readonly pressedKeys = new Set<string>();
 
-  constructor(clock: Clock, private readonly userInput: UserInput) {
+  constructor(
+    clock: Clock,
+    private readonly userInput: UserInput,
+  ) {
     this.attachListeners();
     clock.schedulePrimary(this.handlePressedKeys.bind(this));
   }
@@ -63,7 +66,7 @@ export class WebControls {
 
         this.handleTouch();
       },
-      { passive: false }
+      { passive: false },
     );
     window.addEventListener(
       "touchmove",
@@ -87,7 +90,7 @@ export class WebControls {
 
         this.handleTouch();
       },
-      { passive: false }
+      { passive: false },
     );
     window.addEventListener(
       "touchend",
@@ -102,7 +105,7 @@ export class WebControls {
 
         this.handleTouch();
       },
-      { passive: false }
+      { passive: false },
     );
   }
 
@@ -137,13 +140,13 @@ export class WebControls {
         this.pinchStartCoordinatesA.x,
         this.pinchStartCoordinatesA.y,
         this.pinchStartCoordinatesB.x,
-        this.pinchStartCoordinatesB.y
+        this.pinchStartCoordinatesB.y,
       );
       const currentDistance = this.distance(
         this.pinchCurrentCoordinatesA.x,
         this.pinchCurrentCoordinatesA.y,
         this.pinchCurrentCoordinatesB.x,
-        this.pinchCurrentCoordinatesB.y
+        this.pinchCurrentCoordinatesB.y,
       );
 
       if (currentDistance > startDistance) {

@@ -23,7 +23,7 @@ export class Collider {
           entity.x - this.collisionSearchRadius,
           entity.y - this.collisionSearchRadius,
           entity.x + this.collisionSearchRadius,
-          entity.y + this.collisionSearchRadius
+          entity.y + this.collisionSearchRadius,
         )
         .forEach((neighbor) => {
           // TODO: Optimize this
@@ -45,7 +45,7 @@ export class Collider {
               entity.velocity.x,
               entity.mass,
               neighbor.velocity.x,
-              neighbor.mass
+              neighbor.mass,
             );
 
           const { newVelocityA: newVelocityAy, newVelocityB: newVelocityBy } =
@@ -53,7 +53,7 @@ export class Collider {
               entity.velocity.y,
               entity.mass,
               neighbor.velocity.y,
-              neighbor.mass
+              neighbor.mass,
             );
 
           entity.velocity = { x: newVelocityAx, y: newVelocityAy };
@@ -92,7 +92,7 @@ export class Collider {
     velocityA: number,
     massA: number,
     velocityB: number,
-    massB: number
+    massB: number,
   ) {
     const elasticity = this.collisionElasticity;
     const totalMomentum = massA * velocityA + massB * velocityB;
@@ -112,7 +112,7 @@ export class Collider {
   // TODO: This is really wonky
   private areMovingApart(entityA: Entity, entityB: Entity): boolean {
     const distanceNow = Math.sqrt(
-      Math.pow(entityA.x - entityB.x, 2) + Math.pow(entityA.y - entityB.y, 2)
+      Math.pow(entityA.x - entityB.x, 2) + Math.pow(entityA.y - entityB.y, 2),
     );
 
     const distanceNext = Math.sqrt(
@@ -120,14 +120,14 @@ export class Collider {
         entityA.x +
           entityA.velocity.x / 1000000000 -
           (entityB.x + entityB.velocity.x / 1000000000),
-        2
+        2,
       ) +
         Math.pow(
           entityA.y +
             entityA.velocity.y / 1000000000 -
             (entityB.y + entityB.velocity.y / 1000000000),
-          2
-        )
+          2,
+        ),
     );
 
     return distanceNext > distanceNow;

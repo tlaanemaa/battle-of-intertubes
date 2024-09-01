@@ -54,7 +54,7 @@ export class EntityRenderer extends Renderer {
           Math.round(-scaledEntityWidth / 2),
           Math.round(-scaledEntityHeight / 2),
           Math.round(scaledEntityWidth),
-          Math.round(scaledEntityHeight)
+          Math.round(scaledEntityHeight),
         );
         ctx.strokeStyle = entity.isColliding ? "#FF0000" : "#00FF00";
         ctx.stroke();
@@ -69,7 +69,7 @@ export class EntityRenderer extends Renderer {
           Math.round(-scaledTextureWidth / 2),
           Math.round(-scaledTextureHeight / 2),
           Math.round(scaledTextureWidth),
-          Math.round(scaledTextureHeight)
+          Math.round(scaledTextureHeight),
         );
       }
 

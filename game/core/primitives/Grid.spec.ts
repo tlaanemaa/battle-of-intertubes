@@ -88,31 +88,31 @@ describe("Grid", () => {
           } else {
             expect(result).not.toContain(item);
           }
-        })
+        }),
       );
     });
 
     it("should get only the items in the area when boxSize is 3", () => {
-        const grid = new Grid(3);
-        const items = range(-10, 10).map((x) => {
-          return range(-10, 10).map((y) => {
-            const item = { id: `${x}_${y}`, x, y };
-            grid.set(item);
-            return item;
-          });
+      const grid = new Grid(3);
+      const items = range(-10, 10).map((x) => {
+        return range(-10, 10).map((y) => {
+          const item = { id: `${x}_${y}`, x, y };
+          grid.set(item);
+          return item;
         });
-  
-        // Considering box size of 3 (rounded down), the returned space should be -9, -6, 5, 11
-        const result = grid.getArea(-7, -5, 4, 9);
-        items.forEach((row) =>
-          row.forEach((item) => {
-            if (item.x >= -9 && item.x <= 5 && item.y >= -6 && item.y <= 11) {
-              expect(result).toContain(item);
-            } else {
-              expect(result).not.toContain(item);
-            }
-          })
-        );
       });
+
+      // Considering box size of 3 (rounded down), the returned space should be -9, -6, 5, 11
+      const result = grid.getArea(-7, -5, 4, 9);
+      items.forEach((row) =>
+        row.forEach((item) => {
+          if (item.x >= -9 && item.x <= 5 && item.y >= -6 && item.y <= 11) {
+            expect(result).toContain(item);
+          } else {
+            expect(result).not.toContain(item);
+          }
+        }),
+      );
+    });
   });
 });

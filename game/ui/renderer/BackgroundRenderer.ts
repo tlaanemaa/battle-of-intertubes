@@ -67,7 +67,7 @@ export class BackgroundRenderer extends Renderer {
     const ctx = this.canvas.getContext();
     ctx.translate(
       Math.round(renderX + canvasHalfWidth),
-      Math.round(renderY + canvasHalfHeight)
+      Math.round(renderY + canvasHalfHeight),
     );
 
     ctx.fillStyle = ctx.createPattern(this.image.element, "repeat")!;
@@ -76,7 +76,7 @@ export class BackgroundRenderer extends Renderer {
       Math.round(-canvasHalfWidth),
       Math.round(-canvasHalfHeight),
       Math.round(renderWidth),
-      Math.round(renderHeight)
+      Math.round(renderHeight),
     );
     // Reset current transformation matrix to the identity matrix
     ctx.setTransform(1, 0, 0, 1, 0, 0);
@@ -88,7 +88,7 @@ export class BackgroundRenderer extends Renderer {
   public createBackgroundImage() {
     this.image.resize(
       Math.round(this.imageWidth * this.camera.zoom),
-      Math.round(this.imageHeight * this.camera.zoom)
+      Math.round(this.imageHeight * this.camera.zoom),
     );
 
     this.image

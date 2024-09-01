@@ -1,8 +1,12 @@
-import { injectable, unmanaged as _unmanaged  } from "inversify";
+import { injectable, unmanaged as _unmanaged } from "inversify";
 import { DecoratorTarget } from "inversify/lib/annotation/decorator_utils";
 
 // TODO: Remove after https://github.com/inversify/InversifyJS/issues/1505 is resolved
-const unmanaged = _unmanaged as () => (target: DecoratorTarget, targetKey: string | undefined, index: number) => void;
+const unmanaged = _unmanaged as () => (
+  target: DecoratorTarget,
+  targetKey: string | undefined,
+  index: number,
+) => void;
 
 @injectable()
 export class Canvas {

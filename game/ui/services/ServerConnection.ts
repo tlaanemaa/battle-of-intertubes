@@ -17,7 +17,7 @@ export class ServerConnection {
 
   constructor(
     url: string,
-    private readonly onMessage: (message: AnyMessage) => void
+    private readonly onMessage: (message: AnyMessage) => void,
   ) {
     this.socket = new WebSocket(url);
     this.socket.addEventListener("open", this.handleOpen.bind(this));

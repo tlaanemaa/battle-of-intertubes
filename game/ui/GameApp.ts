@@ -13,7 +13,7 @@ import { AnyMessage } from "@/game/messaging";
 @injectable()
 export class GameApp {
   private gameStarted = false;
-  public readonly player: Player
+  public readonly player: Player;
   // private readonly serverConnection = new ServerConnection(
   //   "ws://localhost:8080",
   //   this.handleServerMessage.bind(this)
@@ -26,7 +26,7 @@ export class GameApp {
     private readonly gameRunner: GameRunner,
     private readonly backgroundRenderer: BackgroundRenderer,
     private readonly entityRenderer: EntityRenderer,
-    @inject(DEPENDENCIES.Game) private readonly game: Game
+    @inject(DEPENDENCIES.Game) private readonly game: Game,
   ) {
     this.render = this.render.bind(this);
     this.player = this.playerFactory.get();
