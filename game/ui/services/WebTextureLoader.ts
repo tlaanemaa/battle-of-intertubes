@@ -9,7 +9,7 @@ class WebTexture implements Texture {
   constructor(
     blobPromise: Promise<string>,
     public width: number = 10,
-    public height: number = 10
+    public height: number = 10,
   ) {
     blobPromise.then((src) => {
       this.image.src = src;

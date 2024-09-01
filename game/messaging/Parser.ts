@@ -22,8 +22,8 @@ export class Parser {
       case "state-update":
         return new StateUpdateMessage(
           objectLiteral.entities.map((entity) =>
-            Object.assign(new Entity(), entity)
-          )
+            Object.assign(new Entity(), entity),
+          ),
         );
 
       default:

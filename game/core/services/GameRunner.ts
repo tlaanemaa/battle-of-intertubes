@@ -12,7 +12,7 @@ export class GameRunner {
   constructor(
     private readonly clock: Clock,
     private readonly camera: Camera,
-    private readonly store: EntityStore
+    private readonly store: EntityStore,
   ) {
     this.clock.schedulePrimary(() => this.tick());
   }
@@ -30,7 +30,7 @@ export class GameRunner {
       this.camera.position.x - this.camera.viewRadius.x,
       this.camera.position.y - this.camera.viewRadius.y,
       this.camera.position.x + this.camera.viewRadius.x,
-      this.camera.position.y + this.camera.viewRadius.y
+      this.camera.position.y + this.camera.viewRadius.y,
     );
 
     const collider = new Collider(entities);

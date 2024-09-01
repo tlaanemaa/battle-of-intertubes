@@ -1,18 +1,19 @@
 import { inject, injectable } from "inversify";
 import { container } from "@/game/container";
-import { Camera, DEPENDENCIES, GameRunner } from "@/game/core";
-import type { Game } from "@/game/core";
-import { PlayerFactory } from "@/game/game";
+import { Camera, DEPENDENCIES, GameRunner, UserInput } from "@/game/core";
+import type { Game, INTENT } from "@/game/core";
+import { Player, PlayerFactory } from "@/game/game";
 import "./components";
 import "./renderer";
 import "./services";
-import { WebControls } from "./services/WebControls";
 import { BackgroundRenderer, EntityRenderer } from "./renderer";
 import { ServerConnection } from "./services";
 import { AnyMessage } from "@/game/messaging";
 
 @injectable()
-export class Application {
+export class GameApp {
+  private gameStarted = false;
+  public readonly player: Player;
   // private readonly serverConnection = new ServerConnection(
   //   "ws://localhost:8080",
   //   this.handleServerMessage.bind(this)
@@ -21,18 +22,29 @@ export class Application {
   constructor(
     private readonly camera: Camera,
     private readonly playerFactory: PlayerFactory,
-    private readonly webControls: WebControls,
+    private readonly userInput: UserInput,
     private readonly gameRunner: GameRunner,
     private readonly backgroundRenderer: BackgroundRenderer,
     private readonly entityRenderer: EntityRenderer,
-    @inject(DEPENDENCIES.Game) private readonly game: Game
+    @inject(DEPENDENCIES.Game) private readonly game: Game,
   ) {
     this.render = this.render.bind(this);
-    const player = this.playerFactory.get();
-    this.webControls.target = player.id;
-    this.game.addPlayer(player);
+    this.player = this.playerFactory.get();
+    this.game.addPlayer(this.player);
+  }
+
+  public start() {
+    if (this.gameStarted) {
+      console.error("Game already started");
+      return;
+    }
+    this.gameStarted = true;
     this.game.init();
     window.requestAnimationFrame(this.render);
+  }
+
+  public sendPlayerInput(intent: INTENT) {
+    this.userInput.trigger(this.player.id, intent);
   }
 
   private render() {
@@ -55,4 +67,4 @@ export class Application {
   }
 }
 
-container.bind(Application).toSelf().inSingletonScope();
+container.bind(GameApp).toSelf().inSingletonScope();

@@ -20,7 +20,7 @@ export class Clock {
   public start() {
     this.primaryTimer = setInterval(
       () => this.runPrimary(),
-      this.TICK_INTERVAL_MS
+      this.TICK_INTERVAL_MS,
     );
     this.secondaryTasks.forEach((task) => this.startSecondaryTask(task));
     this.started = true;

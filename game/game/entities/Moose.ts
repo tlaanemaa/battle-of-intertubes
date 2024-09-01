@@ -22,7 +22,7 @@ class Moose extends Entity {
 
   constructor(
     @inject(DEPENDENCIES.TextureLoader)
-    private readonly textureLoader: TextureLoader
+    private readonly textureLoader: TextureLoader,
   ) {
     super();
 
@@ -32,7 +32,7 @@ class Moose extends Entity {
     this.texture = this.textureLoader.load(
       this.images[Math.floor(Math.random() * this.images.length)],
       100,
-      100
+      100,
     );
 
     this.tick(10000);

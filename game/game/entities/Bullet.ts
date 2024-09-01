@@ -14,12 +14,12 @@ class Bullet extends Entity {
   public readonly texture = this.textureLoader.load(
     "/img/red-rocket.png",
     50,
-    50
+    50,
   );
 
   constructor(
     @inject(DEPENDENCIES.TextureLoader)
-    private readonly textureLoader: TextureLoader
+    private readonly textureLoader: TextureLoader,
   ) {
     super();
   }

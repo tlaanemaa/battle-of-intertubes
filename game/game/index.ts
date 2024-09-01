@@ -1,2 +1,2 @@
 export { MooseGame } from "./services";
-export { PlayerFactory, Player } from './entities'
+export { PlayerFactory, Player } from "./entities";

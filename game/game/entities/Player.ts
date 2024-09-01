@@ -22,7 +22,7 @@ export class Player extends Entity {
   public readonly texture = this.textureLoader.load(
     "/img/hero1.png",
     this.width,
-    this.height
+    this.height,
   );
 
   private collisionSound = this.audioLoader.load("/audio/big-pipe-hit.mp3");
@@ -37,7 +37,7 @@ export class Player extends Entity {
     private readonly textureLoader: TextureLoader,
     @inject(DEPENDENCIES.AudioLoader)
     private readonly audioLoader: AudioLoader,
-    private readonly bulletFactory: BulletFactory
+    private readonly bulletFactory: BulletFactory,
   ) {
     super();
     this.x = 0;
@@ -96,11 +96,11 @@ export class Player extends Entity {
 
     this.camera.position.x = Math.max(
       Math.min(this.camera.position.x, this.x + horizontalSpace),
-      this.x - horizontalSpace
+      this.x - horizontalSpace,
     );
     this.camera.position.y = Math.max(
       Math.min(this.camera.position.y, this.y + verticalSpace),
-      this.y - verticalSpace
+      this.y - verticalSpace,
     );
   }
 

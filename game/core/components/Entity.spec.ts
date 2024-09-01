@@ -16,7 +16,7 @@ describe("PhysicalEntity", () => {
       const physicalEntity = new MockEntity();
 
       expect(
-        round(physicalEntity["calculateDistanceTraveled"](50, 5.4, 0.05), 9)
+        round(physicalEntity["calculateDistanceTraveled"](50, 5.4, 0.05), 9),
       ).toBe(235.833179933);
 
       expect(
@@ -24,10 +24,10 @@ describe("PhysicalEntity", () => {
           physicalEntity["calculateDistanceTraveled"](
             75.07543,
             7.80643,
-            0.017902
+            0.017902,
           ),
-          9
-        )
+          9,
+        ),
       ).toBe(546.623985394);
 
       expect(
@@ -35,10 +35,10 @@ describe("PhysicalEntity", () => {
           physicalEntity["calculateDistanceTraveled"](
             662.0949877,
             0.069823,
-            0.9052655
+            0.9052655,
           ),
-          9
-        )
+          9,
+        ),
       ).toBe(42.626240409);
     });
   });
@@ -49,7 +49,7 @@ describe("PhysicalEntity", () => {
       const physicalEntity = new MockEntity();
 
       expect(
-        round(physicalEntity["calculateCurrentVelocity"](50, 5.4, 0.05), 3)
+        round(physicalEntity["calculateCurrentVelocity"](50, 5.4, 0.05), 3),
       ).toBe(37.903);
 
       expect(
@@ -57,10 +57,10 @@ describe("PhysicalEntity", () => {
           physicalEntity["calculateCurrentVelocity"](
             75.07543,
             7.80643,
-            0.017902
+            0.017902,
           ),
-          10
-        )
+          10,
+        ),
       ).toBe(65.2011163329);
 
       expect(
@@ -68,10 +68,10 @@ describe("PhysicalEntity", () => {
           physicalEntity["calculateCurrentVelocity"](
             662.0949877,
             0.069823,
-            0.9052655
+            0.9052655,
           ),
-          10
-        )
+          10,
+        ),
       ).toBe(561.6387057634);
     });
   });

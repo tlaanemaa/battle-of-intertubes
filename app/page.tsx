@@ -1,4 +1,6 @@
+"use client";
 import Game from "./game";
+import { Controller } from "@/components/controls/Controller";
 
 export default function Home() {
   return (
@@ -13,6 +15,7 @@ export default function Home() {
         className="fixed top-0 left-0 h-full w-full shadow-[inset_0_0_20px_20px_black]"
       ></div>
       <Game />
+      <Controller />
     </main>
   );
 }

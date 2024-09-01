@@ -14,7 +14,7 @@ export class MooseGame implements Game {
   constructor(
     private readonly gameRunner: GameRunner,
     private readonly store: EntityStore,
-    private readonly mooseFactory: MooseFactory
+    private readonly mooseFactory: MooseFactory,
   ) {}
 
   addPlayer(player: Entity): void {
@@ -31,10 +31,10 @@ export class MooseGame implements Game {
     new Array(count).fill(1).map(() => {
       const moose = this.mooseFactory.get();
       moose.x = Math.round(
-        Math.random() * count * spaceFactor * 2 - count * spaceFactor
+        Math.random() * count * spaceFactor * 2 - count * spaceFactor,
       );
       moose.y = Math.round(
-        Math.random() * count * spaceFactor * 2 - count * spaceFactor
+        Math.random() * count * spaceFactor * 2 - count * spaceFactor,
       );
 
       this.store.add(moose);

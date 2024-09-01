@@ -89,11 +89,11 @@ export class Entity {
     this.y += this.calculateDistanceTraveled(this.velocity.y, secondsElapsed);
     this.velocity.x = this.calculateCurrentVelocity(
       this.velocity.x,
-      secondsElapsed
+      secondsElapsed,
     );
     this.velocity.y = this.calculateCurrentVelocity(
       this.velocity.y,
-      secondsElapsed
+      secondsElapsed,
     );
     if (this.keepHeading) this.setRotation(this.getHeading());
     this.rotation += this.calculateRotationChange(secondsElapsed);
@@ -127,7 +127,7 @@ export class Entity {
   private calculateDistanceTraveled(
     initialVelocity: number,
     secondsElapsed: number,
-    dragCoefficient = this.dragCoefficient
+    dragCoefficient = this.dragCoefficient,
   ) {
     // A good calculator to visualize this stuff: https://www.desmos.com/calculator
     const dragMultiplier = 1 - dragCoefficient;
@@ -157,7 +157,7 @@ export class Entity {
   private calculateCurrentVelocity(
     initialVelocity: number,
     secondsElapsed: number,
-    dragCoefficient = this.dragCoefficient
+    dragCoefficient = this.dragCoefficient,
   ) {
     const dragMultiplier = 1 - dragCoefficient;
     return initialVelocity * Math.pow(dragMultiplier, secondsElapsed);
@@ -172,12 +172,12 @@ export class Entity {
     if (rotationRemaining > 0) {
       return Math.min(
         this.rotationDegreesPerSec * secondsElapsed,
-        rotationRemaining
+        rotationRemaining,
       );
     } else if (rotationRemaining < 0) {
       return Math.max(
         -this.rotationDegreesPerSec * secondsElapsed,
-        rotationRemaining
+        rotationRemaining,
       );
     } else {
       return 0;

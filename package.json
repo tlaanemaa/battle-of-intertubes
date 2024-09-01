@@ -6,7 +6,10 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "prettier": "prettier --write .",
+    "check-types": "tsc --noEmit",
+    "all-checks": "npm run prettier && npm run lint && npm run check-types && echo All good! 👍"
   },
   "dependencies": {
     "@types/node": "20.5.8",
@@ -26,6 +29,8 @@
     "uuid": "^9.0.0"
   },
   "devDependencies": {
-    "@types/uuid": "^9.0.3"
+    "@types/jest": "^29.5.12",
+    "@types/uuid": "^9.0.3",
+    "prettier": "^3.3.3"
   }
 }

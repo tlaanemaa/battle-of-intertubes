@@ -1,10 +1,11 @@
 "use client";
-import { startGameUI } from "@/game/ui";
 import { useEffect } from "react";
+import useGameApp from "@/hooks/useGameApp";
 
 export default function Game() {
+  const gameApp = useGameApp();
   useEffect(() => {
-    startGameUI();
-  }, []);
+    gameApp?.start();
+  }, [gameApp]);
   return null;
 }
