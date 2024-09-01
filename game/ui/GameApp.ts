@@ -7,7 +7,7 @@ import "./components";
 import "./renderer";
 import "./services";
 import { BackgroundRenderer, EntityRenderer } from "./renderer";
-import { ServerConnection } from "./services";
+import { ServerConnection, WebControls } from "./services";
 import { AnyMessage } from "@/game/messaging";
 
 @injectable()
@@ -22,6 +22,7 @@ export class GameApp {
   constructor(
     private readonly camera: Camera,
     private readonly playerFactory: PlayerFactory,
+    private readonly webControls: WebControls,
     private readonly userInput: UserInput,
     private readonly gameRunner: GameRunner,
     private readonly backgroundRenderer: BackgroundRenderer,
@@ -30,6 +31,7 @@ export class GameApp {
   ) {
     this.render = this.render.bind(this);
     this.player = this.playerFactory.get();
+    webControls.target = this.player.id;
     this.game.addPlayer(this.player);
   }
 
