@@ -88,20 +88,22 @@ export class Player extends Entity {
   }
 
   private setCamera() {
-    const margin =
-      (Math.min(window.innerWidth, window.innerHeight) / this.camera.zoom) *
-      0.3;
-    const horizontalSpace = window.innerWidth / this.camera.zoom / 2 - margin;
-    const verticalSpace = window.innerHeight / this.camera.zoom / 2 - margin;
+    // const margin =
+    //   (Math.min(window.innerWidth, window.innerHeight) / this.camera.zoom) *
+    //   0.3;
+    // const horizontalSpace = window.innerWidth / this.camera.zoom / 2 - margin;
+    // const verticalSpace = window.innerHeight / this.camera.zoom / 2 - margin;
 
-    this.camera.position.x = Math.max(
-      Math.min(this.camera.position.x, this.x + horizontalSpace),
-      this.x - horizontalSpace,
-    );
-    this.camera.position.y = Math.max(
-      Math.min(this.camera.position.y, this.y + verticalSpace),
-      this.y - verticalSpace,
-    );
+    // this.camera.position.x = Math.max(
+    //   Math.min(this.camera.position.x, this.x + horizontalSpace),
+    //   this.x - horizontalSpace,
+    // );
+    // this.camera.position.y = Math.max(
+    //   Math.min(this.camera.position.y, this.y + verticalSpace),
+    //   this.y - verticalSpace,
+    // );
+    this.camera.position.x = this.x;
+    this.camera.position.y = this.y;
   }
 
   public shoot() {
@@ -126,5 +128,5 @@ export class Player extends Entity {
   }
 }
 
-export class PlayerFactory extends factoryOf(Player) {}
+export class PlayerFactory extends factoryOf(Player) { }
 container.bind(PlayerFactory).toSelf().inSingletonScope();
