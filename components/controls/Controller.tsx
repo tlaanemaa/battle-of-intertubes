@@ -3,6 +3,7 @@ import { INTENT } from "@/game/core";
 import useGameApp from "@/hooks/useGameApp";
 import Button from "./Button";
 import JoyStick from "./JoyStick";
+import PinchToZoom from "./PinchToZoom";
 
 export function Controller() {
   const gameApp = useGameApp();
@@ -26,10 +27,20 @@ export function Controller() {
     [gameApp]
   );
 
+  const zoom = useCallback(
+    (direction: number) => {
+      if (!gameApp) return;
+      gameApp.setPlayerInput(INTENT.ZOOM_IN, Math.max(direction, 0));
+      gameApp.setPlayerInput(INTENT.ZOOM_OUT, Math.max(-direction, 0));
+    },
+    [gameApp]
+  );
+
   return (
     <div className="fixed bottom-0 right-0 left-0 flex justify-between p-8 select-none touch-none">
-      <JoyStick className="" onMove={move} />
-      <Button className="" onPress={shoot} />
+      <PinchToZoom onZoom={zoom} />
+      <JoyStick onMove={move} />
+      <Button onPress={shoot} />
     </div>
   );
 }

@@ -1,5 +1,5 @@
 "use client";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 type Props = {
   height?: number;
@@ -20,26 +20,17 @@ export default function JoyStick({
   className = "",
   onMove,
 }: Props) {
+  const ref = useRef<HTMLDivElement>(null);
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [landingPosition, setLandingPosition] = useState({ x: 0, y: 0 });
   const [isDragging, setIsDragging] = useState(false);
 
-  const handleRelease = useCallback((event: MouseEvent | TouchEvent) => {
-    event.preventDefault();
-    setIsDragging(false);
-  }, []);
-
-  const handleGrab = useCallback((event: MouseEvent | TouchEvent) => {
-    event.preventDefault();
-    const coords = "touches" in event ? event.touches[0] : event;
-    setLandingPosition({ x: coords.pageX, y: coords.pageY });
-    setIsDragging(true);
-  }, []);
-
   const handleMove = useCallback(
     (event: MouseEvent | TouchEvent) => {
-      event.preventDefault();
       if (!isDragging) return;
+      event.preventDefault();
+      event.stopPropagation();
+
       const stats = event instanceof MouseEvent ? event : event.touches[0];
       const moveOffset = {
         x: stats.pageX - landingPosition.x,
@@ -60,18 +51,44 @@ export default function JoyStick({
   );
 
   useEffect(() => {
-    window.addEventListener("mouseup", handleRelease);
-    window.addEventListener("touchend", handleRelease);
+    const elem = ref.current;
+    if (!elem) return;
+
+    const handleGrab = (event: MouseEvent | TouchEvent) => {
+      event.preventDefault();
+      event.stopPropagation();
+      const coords = "touches" in event ? event.touches[0] : event;
+      setLandingPosition({ x: coords.pageX, y: coords.pageY });
+      setIsDragging(true);
+    };
+
+    elem.addEventListener("mousedown", handleGrab, { passive: false });
+    elem.addEventListener("touchstart", handleGrab, { passive: false });
+    return () => {
+      elem.removeEventListener("mousedown", handleGrab);
+      elem.removeEventListener("touchstart", handleGrab);
+    };
+  }, []);
+
+  useEffect(() => {
+    const handleRelease = (event: MouseEvent | TouchEvent) => {
+      event.preventDefault();
+      event.stopPropagation();
+      setIsDragging(false);
+    };
+
+    window.addEventListener("mouseup", handleRelease, { passive: false });
+    window.addEventListener("touchend", handleRelease, { passive: false });
 
     return () => {
       window.removeEventListener("mouseup", handleRelease);
       window.removeEventListener("touchend", handleRelease);
     };
-  }, [handleRelease]);
+  }, []);
 
   useEffect(() => {
-    window.addEventListener("mousemove", handleMove);
-    window.addEventListener("touchmove", handleMove);
+    window.addEventListener("mousemove", handleMove, { passive: false });
+    window.addEventListener("touchmove", handleMove, { passive: false });
     return () => {
       window.removeEventListener("mousemove", handleMove);
       window.removeEventListener("touchmove", handleMove);
@@ -102,8 +119,7 @@ export default function JoyStick({
     >
       <div className="absolute 8 inset-0 bg-white rounded-full opacity-50 select-none"></div>
       <div
-        onMouseDown={handleGrab as any}
-        onTouchStart={handleGrab as any}
+        ref={ref}
         className="absolute bg-white rounded-full z-10 cursor-pointer select-none"
         style={{
           top: `${height * 0.5 - stickHeight * 0.5}px`,

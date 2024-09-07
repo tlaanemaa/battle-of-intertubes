@@ -61,8 +61,8 @@ export class Player extends Entity {
 
     intents.forEach((value, key) => {
       if (key === INTENT.SHOOT) this.shoot();
-      if (key === INTENT.ZOOM_IN) this.camera.zoom *= 1.1;
-      if (key === INTENT.ZOOM_OUT) this.camera.zoom *= 0.9;
+      if (key === INTENT.ZOOM_IN) this.camera.zoom *= 1.05;
+      if (key === INTENT.ZOOM_OUT) this.camera.zoom *= 0.95;
       if (key === INTENT.MOVE_UP) movementForce.y = -speed * value * this.mass * 2;
       if (key === INTENT.MOVE_RIGHT) movementForce.x = speed * value * this.mass * 2;
       if (key === INTENT.MOVE_DOWN) movementForce.y = speed * value * this.mass * 2;

@@ -1,11 +1,5 @@
 "use client";
-import {
-  useCallback,
-  useEffect,
-  useState,
-  MouseEvent,
-  TouchEvent,
-} from "react";
+import { useEffect, useState, useRef } from "react";
 
 type Props = {
   height?: number;
@@ -20,26 +14,50 @@ export default function Button({
   className,
   onPress,
 }: Props) {
+  const ref = useRef<HTMLDivElement>(null);
   const [pressed, setPressed] = useState(false);
 
-  const handlePress = useCallback(
-    (event: MouseEvent | TouchEvent) => {
+  // Handle press event
+  useEffect(() => {
+    const element = ref.current;
+    if (!element) return;
+
+    const handlePress = (event: MouseEvent | TouchEvent) => {
       event.stopPropagation();
       event.preventDefault();
       setPressed(true);
-    },
-    [setPressed]
-  );
+    };
 
-  const handleRelease = useCallback(
-    (event: MouseEvent | TouchEvent) => {
+    element.addEventListener("mousedown", handlePress);
+    element.addEventListener("touchstart", handlePress);
+
+    return () => {
+      element.removeEventListener("mousedown", handlePress);
+      element.removeEventListener("touchstart", handlePress);
+    };
+  }, [ref]);
+
+  // Handle release event
+  useEffect(() => {
+    const element = ref.current;
+    if (!element) return;
+
+    const handleRelease = (event: MouseEvent | TouchEvent) => {
       event.stopPropagation();
       event.preventDefault();
       setPressed(false);
-    },
-    [setPressed]
-  );
+    };
 
+    element.addEventListener("mouseup", handleRelease);
+    element.addEventListener("touchend", handleRelease);
+
+    return () => {
+      element.removeEventListener("mouseup", handleRelease);
+      element.removeEventListener("touchend", handleRelease);
+    };
+  }, [ref]);
+
+  // Send pressed state to parent component
   useEffect(() => {
     onPress(pressed);
   }, [pressed, onPress]);
@@ -52,11 +70,8 @@ export default function Button({
 
   return (
     <div
+      ref={ref}
       className={classes.filter(Boolean).join(" ")}
-      onMouseDown={handlePress}
-      onMouseUp={handleRelease}
-      onTouchStart={handlePress}
-      onTouchEnd={handleRelease}
       style={{
         height: `${height}px`,
         width: `${width}px`,

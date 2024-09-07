@@ -31,7 +31,7 @@ export class GameApp {
   ) {
     this.render = this.render.bind(this);
     this.player = this.playerFactory.get();
-    webControls.target = this.player.id;
+    // webControls.target = this.player.id;
     this.game.addPlayer(this.player);
   }
 
