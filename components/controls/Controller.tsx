@@ -16,7 +16,7 @@ export function Controller() {
       gameApp.setPlayerInput(INTENT.MOVE_UP, Math.max(-pos.y, 0));
       gameApp.setPlayerInput(INTENT.MOVE_DOWN, Math.max(pos.y, 0));
     },
-    [gameApp]
+    [gameApp],
   );
 
   const shoot = useCallback(
@@ -24,7 +24,7 @@ export function Controller() {
       if (!gameApp) return;
       gameApp.setPlayerInput(INTENT.SHOOT, pressed ? 1 : 0);
     },
-    [gameApp]
+    [gameApp],
   );
 
   const zoom = useCallback(
@@ -33,7 +33,7 @@ export function Controller() {
       gameApp.setPlayerInput(INTENT.ZOOM_IN, Math.max(direction, 0));
       gameApp.setPlayerInput(INTENT.ZOOM_OUT, Math.max(-direction, 0));
     },
-    [gameApp]
+    [gameApp],
   );
 
   return (

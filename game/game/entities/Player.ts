@@ -63,10 +63,14 @@ export class Player extends Entity {
       if (key === INTENT.SHOOT) this.shoot();
       if (key === INTENT.ZOOM_IN) this.camera.zoom *= 1.05;
       if (key === INTENT.ZOOM_OUT) this.camera.zoom *= 0.95;
-      if (key === INTENT.MOVE_UP) movementForce.y = -speed * value * this.mass * 2;
-      if (key === INTENT.MOVE_RIGHT) movementForce.x = speed * value * this.mass * 2;
-      if (key === INTENT.MOVE_DOWN) movementForce.y = speed * value * this.mass * 2;
-      if (key === INTENT.MOVE_LEFT) movementForce.x = -speed * value * this.mass * 2;
+      if (key === INTENT.MOVE_UP)
+        movementForce.y = -speed * value * this.mass * 2;
+      if (key === INTENT.MOVE_RIGHT)
+        movementForce.x = speed * value * this.mass * 2;
+      if (key === INTENT.MOVE_DOWN)
+        movementForce.y = speed * value * this.mass * 2;
+      if (key === INTENT.MOVE_LEFT)
+        movementForce.x = -speed * value * this.mass * 2;
     });
 
     if (movementForce.x !== 0 || movementForce.y !== 0) {
@@ -115,5 +119,5 @@ export class Player extends Entity {
   }
 }
 
-export class PlayerFactory extends factoryOf(Player) { }
+export class PlayerFactory extends factoryOf(Player) {}
 container.bind(PlayerFactory).toSelf().inSingletonScope();

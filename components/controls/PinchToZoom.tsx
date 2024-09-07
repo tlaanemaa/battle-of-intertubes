@@ -14,7 +14,7 @@ export default function PinchToZoom({ onZoom }: Props) {
       if (touches.length < 2) return onZoom(0);
       const dist = Math.hypot(
         touches[0].pageX - touches[1].pageX,
-        touches[0].pageY - touches[1].pageY
+        touches[0].pageY - touches[1].pageY,
       );
       onZoom(Math.sign(dist - previousDist));
       previousDist = dist;
