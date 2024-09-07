@@ -56,7 +56,7 @@ export default function JoyStick({
         y: moveOffset.y,
       });
     },
-    [width, isDragging, landingPosition, setPosition],
+    [width, isDragging, landingPosition, setPosition]
   );
 
   useEffect(() => {
