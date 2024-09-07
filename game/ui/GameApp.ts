@@ -45,8 +45,8 @@ export class GameApp {
     window.requestAnimationFrame(this.render);
   }
 
-  public sendPlayerInput(intent: INTENT) {
-    this.userInput.trigger(this.player.id, intent);
+  public setPlayerInput(intent: INTENT, magnitude: number) {
+    this.userInput.set(this.player.id, intent, magnitude);
   }
 
   private render() {

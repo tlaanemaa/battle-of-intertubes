@@ -11,8 +11,7 @@ type Props = {
   height?: number;
   width?: number;
   className?: string;
-  onPress: () => void;
-  pressInterval?: number;
+  onPress: (pressed: boolean) => void;
 };
 
 export default function Button({
@@ -20,7 +19,6 @@ export default function Button({
   width = height,
   className,
   onPress,
-  pressInterval = 100,
 }: Props) {
   const [pressed, setPressed] = useState(false);
 
@@ -43,15 +41,8 @@ export default function Button({
   );
 
   useEffect(() => {
-    let timeout: NodeJS.Timeout;
-    const triggerPresses = () => {
-      if (!pressed) return;
-      onPress();
-      timeout = setTimeout(triggerPresses, pressInterval);
-    };
-    triggerPresses();
-    return () => clearTimeout(timeout);
-  }, [pressed, onPress, pressInterval]);
+    onPress(pressed);
+  }, [pressed, onPress]);
 
   const classes = [
     "bg-white rounded-full cursor-pointer",

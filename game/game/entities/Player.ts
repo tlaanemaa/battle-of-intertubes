@@ -52,38 +52,25 @@ export class Player extends Entity {
     super.triggerOnChange();
   }
 
-  private handleInputs(intents: Set<INTENT>) {
+  private handleInputs(intents: Map<INTENT, number>) {
     const speed = 40;
     const movementForce: Object2D = {
       x: 0,
       y: 0,
     };
 
-    if (intents.has(INTENT.MOVE_UP)) {
-      movementForce.y = -speed * this.mass * 2;
-    }
-    if (intents.has(INTENT.MOVE_RIGHT)) {
-      movementForce.x = speed * this.mass * 2;
-    }
-    if (intents.has(INTENT.MOVE_DOWN)) {
-      movementForce.y = speed * this.mass * 2;
-    }
-    if (intents.has(INTENT.MOVE_LEFT)) {
-      movementForce.x = -speed * this.mass * 2;
-    }
-    if (intents.has(INTENT.SHOOT)) {
-      this.shoot();
-    }
+    intents.forEach((value, key) => {
+      if (key === INTENT.SHOOT) this.shoot();
+      if (key === INTENT.ZOOM_IN) this.camera.zoom *= 1.1;
+      if (key === INTENT.ZOOM_OUT) this.camera.zoom *= 0.9;
+      if (key === INTENT.MOVE_UP) movementForce.y = -speed * value * this.mass * 2;
+      if (key === INTENT.MOVE_RIGHT) movementForce.x = speed * value * this.mass * 2;
+      if (key === INTENT.MOVE_DOWN) movementForce.y = speed * value * this.mass * 2;
+      if (key === INTENT.MOVE_LEFT) movementForce.x = -speed * value * this.mass * 2;
+    });
 
     if (movementForce.x !== 0 || movementForce.y !== 0) {
       this.applyForce(movementForce);
-    }
-
-    if (intents.has(INTENT.ZOOM_IN)) {
-      this.camera.zoom *= 1.1;
-    }
-    if (intents.has(INTENT.ZOOM_OUT)) {
-      this.camera.zoom *= 0.9;
     }
   }
 
@@ -128,5 +115,5 @@ export class Player extends Entity {
   }
 }
 
-export class PlayerFactory extends factoryOf(Player) {}
+export class PlayerFactory extends factoryOf(Player) { }
 container.bind(PlayerFactory).toSelf().inSingletonScope();

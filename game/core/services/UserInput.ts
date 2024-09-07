@@ -13,11 +13,11 @@ export enum INTENT {
 }
 
 type TargetID = string;
-type ActionHandler = (unhandledIntents: Set<INTENT>) => void;
+type ActionHandler = (intentValues: Map<INTENT, number>) => void;
 
 @injectable()
 export class UserInput {
-  private readonly unhandledIntents = new Map<TargetID, Set<INTENT>>();
+  private readonly intentValues = new Map<TargetID, Map<INTENT, number>>();
   private readonly actionHandlers = new Map<TargetID, Set<ActionHandler>>();
 
   constructor(clock: Clock) {
@@ -30,36 +30,22 @@ export class UserInput {
     this.actionHandlers.set(target, handlerSet);
   }
 
-  public removeActionHandler(target: TargetID, handler: ActionHandler) {
-    const handlerSet = this.actionHandlers.get(target);
-    if (!handlerSet) return;
-    handlerSet.delete(handler);
-    if (handlerSet.size === 0) this.actionHandlers.delete(target);
-  }
-
-  public clearIntents(target: TargetID) {
-    this.unhandledIntents.delete(target);
-  }
-
   private runHandlers() {
     this.actionHandlers.forEach((handlers, targetID) => {
-      const unhandledIntens = this.unhandledIntents.get(targetID);
-      if (unhandledIntens == null || unhandledIntens.size === 0) return;
-      handlers.forEach((handler) => handler(unhandledIntens));
-      this.unhandledIntents.delete(targetID);
+      const intents = this.intentValues.get(targetID);
+      if (!intents) return;
+      handlers.forEach((handler) => handler(intents));
     });
   }
 
-  private createIntentSet(target: TargetID) {
-    const intents = new Set<INTENT>();
-    this.unhandledIntents.set(target, intents);
-    return intents;
-  }
-
-  public trigger(target: TargetID, intent: INTENT) {
-    const intents =
-      this.unhandledIntents.get(target) ?? this.createIntentSet(target);
-    intents.add(intent);
+  public set(target: TargetID, intent: INTENT, value: number) {
+    const intentValues = this.intentValues.get(target) ?? new Map();
+    if (value === 0) {
+      intentValues.delete(intent);
+    } else {
+      intentValues.set(intent, value);
+    }
+    this.intentValues.set(target, intentValues);
   }
 }
 

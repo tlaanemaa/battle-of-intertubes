@@ -9,25 +9,22 @@ export function Controller() {
 
   const move = useCallback(
     (pos: { x: number; y: number }) => {
-      if (pos.x < 0) {
-        gameApp?.sendPlayerInput(INTENT.MOVE_LEFT);
-      }
-      if (pos.x > 0) {
-        gameApp?.sendPlayerInput(INTENT.MOVE_RIGHT);
-      }
-      if (pos.y < 0) {
-        gameApp?.sendPlayerInput(INTENT.MOVE_UP);
-      }
-      if (pos.y > 0) {
-        gameApp?.sendPlayerInput(INTENT.MOVE_DOWN);
-      }
+      if (!gameApp) return;
+      gameApp.setPlayerInput(INTENT.MOVE_LEFT, Math.max(-pos.x, 0));
+      gameApp.setPlayerInput(INTENT.MOVE_RIGHT, Math.max(pos.x, 0));
+      gameApp.setPlayerInput(INTENT.MOVE_UP, Math.max(-pos.y, 0));
+      gameApp.setPlayerInput(INTENT.MOVE_DOWN, Math.max(pos.y, 0));
     },
-    [gameApp],
+    [gameApp]
   );
 
-  const shoot = useCallback(() => {
-    gameApp?.sendPlayerInput(INTENT.SHOOT);
-  }, [gameApp]);
+  const shoot = useCallback(
+    (pressed: boolean) => {
+      if (!gameApp) return;
+      gameApp.setPlayerInput(INTENT.SHOOT, pressed ? 1 : 0);
+    },
+    [gameApp]
+  );
 
   return (
     <div className="fixed bottom-0 right-0 left-0 flex justify-between p-8 select-none touch-none">
