@@ -1,5 +1,11 @@
 "use client";
-import { useEffect, useState } from "react";
+import {
+  useCallback,
+  useEffect,
+  useState,
+  MouseEvent,
+  TouchEvent,
+} from "react";
 
 type Props = {
   height?: number;
@@ -18,6 +24,24 @@ export default function Button({
 }: Props) {
   const [pressed, setPressed] = useState(false);
 
+  const handlePress = useCallback(
+    (event: MouseEvent | TouchEvent) => {
+      event.stopPropagation();
+      event.preventDefault();
+      setPressed(true);
+    },
+    [setPressed]
+  );
+
+  const handleRelease = useCallback(
+    (event: MouseEvent | TouchEvent) => {
+      event.stopPropagation();
+      event.preventDefault();
+      setPressed(false);
+    },
+    [setPressed]
+  );
+
   useEffect(() => {
     let timeout: NodeJS.Timeout;
     const triggerPresses = () => {
@@ -29,17 +53,6 @@ export default function Button({
     return () => clearTimeout(timeout);
   }, [pressed, onPress, pressInterval]);
 
-  useEffect(() => {
-    const handleRelease = () => setPressed(false);
-    window.addEventListener("mouseup", handleRelease);
-    window.addEventListener("touchend", handleRelease);
-
-    return () => {
-      window.removeEventListener("mouseup", handleRelease);
-      window.removeEventListener("touchend", handleRelease);
-    };
-  }, []);
-
   const classes = [
     "bg-white rounded-full cursor-pointer",
     pressed ? "opacity-70" : "opacity-50",
@@ -49,8 +62,10 @@ export default function Button({
   return (
     <div
       className={classes.filter(Boolean).join(" ")}
-      onMouseDown={() => setPressed(true)}
-      onTouchStart={() => setPressed(true)}
+      onMouseDown={handlePress}
+      onMouseUp={handleRelease}
+      onTouchStart={handlePress}
+      onTouchEnd={handleRelease}
       style={{
         height: `${height}px`,
         width: `${width}px`,
