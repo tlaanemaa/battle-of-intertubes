@@ -7,7 +7,7 @@ import "./components";
 import "./renderer";
 import "./services";
 import { BackgroundRenderer, EntityRenderer } from "./renderer";
-import { ServerConnection, WebControls } from "./services";
+import { ServerConnection } from "./services";
 import { AnyMessage } from "@/game/messaging";
 
 @injectable()
@@ -22,7 +22,6 @@ export class GameApp {
   constructor(
     private readonly camera: Camera,
     private readonly playerFactory: PlayerFactory,
-    private readonly webControls: WebControls,
     private readonly userInput: UserInput,
     private readonly gameRunner: GameRunner,
     private readonly backgroundRenderer: BackgroundRenderer,
