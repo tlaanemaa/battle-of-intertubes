@@ -46,21 +46,18 @@ export default function JoyStick({
   }, []);
 
   useEffect(() => {
-    const elem = ref.current;
-    if (!elem) return;
-
     const handleRelease = (event: MouseEvent | TouchEvent) => {
       event.preventDefault();
       event.stopPropagation();
       setIsDragging(false);
     };
 
-    elem.addEventListener("mouseup", handleRelease, { passive: false });
-    elem.addEventListener("touchend", handleRelease, { passive: false });
+    window.addEventListener("mouseup", handleRelease, { passive: false });
+    window.addEventListener("touchend", handleRelease, { passive: false });
 
     return () => {
-      elem.removeEventListener("mouseup", handleRelease);
-      elem.removeEventListener("touchend", handleRelease);
+      window.removeEventListener("mouseup", handleRelease);
+      window.removeEventListener("touchend", handleRelease);
     };
   }, [ref]);
 
@@ -78,11 +75,11 @@ export default function JoyStick({
         x: stats.pageX - landingPosition.x,
         y: stats.pageY - landingPosition.y,
       };
-      // const maxDist = width * MAX_DIST_MULTIPLIER;
-      // const dist = Math.sqrt(moveOffset.x ** 2 + moveOffset.y ** 2);
-      // const ratio = Math.max(dist, maxDist) / maxDist;
-      // moveOffset.x /= ratio;
-      // moveOffset.y /= ratio;
+      const maxDist = width * MAX_DIST_MULTIPLIER;
+      const dist = Math.sqrt(moveOffset.x ** 2 + moveOffset.y ** 2);
+      const ratio = Math.max(dist, maxDist) / maxDist;
+      moveOffset.x /= ratio;
+      moveOffset.y /= ratio;
 
       setPosition({
         x: moveOffset.x,
@@ -90,13 +87,13 @@ export default function JoyStick({
       });
     };
 
-    elem.addEventListener("mousemove", handleMove, { passive: false });
-    elem.addEventListener("touchmove", handleMove, { passive: false });
+    window.addEventListener("mousemove", handleMove, { passive: false });
+    window.addEventListener("touchmove", handleMove, { passive: false });
     return () => {
-      elem.removeEventListener("mousemove", handleMove);
-      elem.removeEventListener("touchmove", handleMove);
+      window.removeEventListener("mousemove", handleMove);
+      window.removeEventListener("touchmove", handleMove);
     };
-  }, [ref, isDragging, landingPosition]);
+  }, [ref, width, isDragging, landingPosition]);
 
   useEffect(() => {
     if (!isDragging) {

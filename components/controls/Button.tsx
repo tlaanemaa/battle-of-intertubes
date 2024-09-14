@@ -1,18 +1,19 @@
 "use client";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, PropsWithChildren } from "react";
 
-type Props = {
+interface Props extends PropsWithChildren {
   height?: number;
   width?: number;
   className?: string;
   onPress: (pressed: boolean) => void;
-};
+}
 
 export default function Button({
   height = 100,
   width = height,
   className,
   onPress,
+  children,
 }: Props) {
   const ref = useRef<HTMLDivElement>(null);
   const [pressed, setPressed] = useState(false);
@@ -63,8 +64,9 @@ export default function Button({
   }, [pressed, onPress]);
 
   const classes = [
+    "flex items-center justify-center",
     "bg-white rounded-full cursor-pointer",
-    pressed ? "opacity-70" : "opacity-50",
+    pressed ? "bg-opacity-70" : "bg-opacity-50",
     className,
   ];
 
@@ -76,6 +78,8 @@ export default function Button({
         height: `${height}px`,
         width: `${width}px`,
       }}
-    ></div>
+    >
+      {children}
+    </div>
   );
 }

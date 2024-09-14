@@ -13,6 +13,7 @@
     "all-checks": "npm run prettier && npm run lint && npm run check-types && npm test && echo All good! 👍"
   },
   "dependencies": {
+    "@tabler/icons-react": "^3.16.0",
     "@types/node": "22.5.2",
     "@types/react": "18.3.5",
     "@types/react-dom": "18.3.0",
