@@ -12,6 +12,9 @@ type Props = {
 
 const MAX_DIST_MULTIPLIER = 0.4;
 
+const leftMostTouch = (event: TouchEvent) =>
+  Array.from(event.touches).sort((a, b) => a.clientX - b.clientX)[0];
+
 export default function JoyStick({
   height = 100,
   width = height,
@@ -32,7 +35,7 @@ export default function JoyStick({
     const handleGrab = (event: MouseEvent | TouchEvent) => {
       event.preventDefault();
       event.stopPropagation();
-      const coords = "touches" in event ? event.touches[0] : event;
+      const coords = "touches" in event ? leftMostTouch(event) : event;
       setLandingPosition({ x: coords.pageX, y: coords.pageY });
       setIsDragging(true);
     };
@@ -70,7 +73,7 @@ export default function JoyStick({
       event.preventDefault();
       event.stopPropagation();
 
-      const stats = event instanceof MouseEvent ? event : event.touches[0];
+      const stats = event instanceof MouseEvent ? event : leftMostTouch(event);
       const moveOffset = {
         x: stats.pageX - landingPosition.x,
         y: stats.pageY - landingPosition.y,
