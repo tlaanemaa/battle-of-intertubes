@@ -17,7 +17,7 @@ export function Controller() {
       gameApp.setPlayerInput(INTENT.MOVE_UP, Math.max(-pos.y, 0));
       gameApp.setPlayerInput(INTENT.MOVE_DOWN, Math.max(pos.y, 0));
     },
-    [gameApp]
+    [gameApp],
   );
 
   const shoot = useCallback(
@@ -25,7 +25,7 @@ export function Controller() {
       if (!gameApp) return;
       gameApp.setPlayerInput(INTENT.SHOOT, pressed ? 1 : 0);
     },
-    [gameApp]
+    [gameApp],
   );
 
   const zoomIn = useCallback(
@@ -33,7 +33,7 @@ export function Controller() {
       if (!gameApp) return;
       gameApp.setPlayerInput(INTENT.ZOOM_IN, pressed ? 1 : 0);
     },
-    [gameApp]
+    [gameApp],
   );
 
   const zoomOut = useCallback(
@@ -41,7 +41,7 @@ export function Controller() {
       if (!gameApp) return;
       gameApp.setPlayerInput(INTENT.ZOOM_OUT, pressed ? 1 : 0);
     },
-    [gameApp]
+    [gameApp],
   );
 
   const iconColor = "#000033";
