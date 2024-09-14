@@ -29,8 +29,8 @@ export default function Button({
       setPressed(true);
     };
 
-    element.addEventListener("mousedown", handlePress);
-    element.addEventListener("touchstart", handlePress);
+    element.addEventListener("mousedown", handlePress, { passive: false });
+    element.addEventListener("touchstart", handlePress, { passive: false });
 
     return () => {
       element.removeEventListener("mousedown", handlePress);
@@ -49,8 +49,8 @@ export default function Button({
       setPressed(false);
     };
 
-    element.addEventListener("mouseup", handleRelease);
-    element.addEventListener("touchend", handleRelease);
+    element.addEventListener("mouseup", handleRelease, { passive: false });
+    element.addEventListener("touchend", handleRelease, { passive: false });
 
     return () => {
       element.removeEventListener("mouseup", handleRelease);

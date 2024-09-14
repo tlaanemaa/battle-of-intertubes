@@ -43,7 +43,7 @@ export default function JoyStick({
       elem.removeEventListener("mousedown", handleGrab);
       elem.removeEventListener("touchstart", handleGrab);
     };
-  }, []);
+  }, [ref]);
 
   useEffect(() => {
     const handleRelease = (event: MouseEvent | TouchEvent) => {
@@ -59,7 +59,7 @@ export default function JoyStick({
       window.removeEventListener("mouseup", handleRelease);
       window.removeEventListener("touchend", handleRelease);
     };
-  }, [ref]);
+  }, []);
 
   useEffect(() => {
     const elem = ref.current;
@@ -93,7 +93,7 @@ export default function JoyStick({
       window.removeEventListener("mousemove", handleMove);
       window.removeEventListener("touchmove", handleMove);
     };
-  }, [ref, width, isDragging, landingPosition]);
+  }, [width, isDragging, landingPosition]);
 
   useEffect(() => {
     if (!isDragging) {
