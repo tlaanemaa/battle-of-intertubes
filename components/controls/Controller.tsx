@@ -4,6 +4,7 @@ import useGameApp from "@/hooks/useGameApp";
 import Button from "./Button";
 import JoyStick from "./JoyStick";
 import { IconRocket, IconPlus, IconMinus } from "@tabler/icons-react";
+import { KeyboardControls } from "./KeyboardControls";
 
 export function Controller() {
   const gameApp = useGameApp();
@@ -47,6 +48,12 @@ export function Controller() {
 
   return (
     <>
+      <KeyboardControls
+        onMove={move}
+        onShoot={shoot}
+        onZoomIn={zoomIn}
+        onZoomOut={zoomOut}
+      />
       <div className="fixed bottom-top right-0 flex flex-col gap-2 justify-between p-2 select-none touch-none">
         <Button height={50} onPress={zoomIn}>
           <IconPlus opacity={0.4} color={iconColor} size={32} />
