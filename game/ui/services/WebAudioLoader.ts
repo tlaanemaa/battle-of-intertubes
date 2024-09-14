@@ -3,10 +3,18 @@ import { Audio, AudioLoader, DEPENDENCIES } from "@/game/core";
 import { AssetCache } from "./AssetCache";
 import { container } from "@/game/container";
 
+// Debounce audio to prevent spamming
+const DEBOUNCE_TIME = 50;
+let lastAudioTime = 0;
+
 class WebAudio implements Audio {
   constructor(private readonly blobPromise: Promise<string>) { }
 
   async play() {
+    const now = Date.now();
+    if (now - lastAudioTime < DEBOUNCE_TIME) return;
+    lastAudioTime = now;
+
     const blob = await this.blobPromise;
     try {
       const audio = new window.Audio(blob)
