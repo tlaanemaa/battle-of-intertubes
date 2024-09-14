@@ -55,7 +55,7 @@ export function Controller() {
           <IconMinus opacity={0.4} color={iconColor} size={32} />
         </Button>
       </div>
-      <div className="fixed bottom-0 right-0 left-0 flex gap-5 justify-between p-5 select-none touch-none">
+      <div className="fixed bottom-0 right-0 left-0 flex gap-5 justify-between p-8 select-none touch-none">
         <JoyStick onMove={move} />
         <Button onPress={shoot}>
           <IconRocket opacity={0.4} color={iconColor} size={42} />
